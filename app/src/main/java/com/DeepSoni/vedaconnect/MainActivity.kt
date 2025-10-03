@@ -1,47 +1,26 @@
 package com.DeepSoni.vedaconnect
 
+// This file is located at: app/src/main/java/com/DeepSoni/vedaconnect/MainActivity.kt
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.DeepSoni.vedaconnect.ui.theme.VedaConnectTheme
+import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
+import com.DeepSoni.vedaconnect.ui.theme.VedaConnectTheme // This is your app's theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
+            // VedaConnectTheme is the main theme for your app.
             VedaConnectTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                // We are calling your WelcomeScreen composable here, making it the first thing the user sees.
+                WelcomeScreen()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    VedaConnectTheme {
-        Greeting("Android")
     }
 }
