@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.DeepSoni.vedaconnect.R // Important: Import your project's R file
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(onNavigateToHome: () -> Unit) { // <-- MODIFIED: Added lambda parameter
     var name by remember { mutableStateOf(TextFieldValue("")) }
 
     Surface(
@@ -33,7 +33,7 @@ fun WelcomeScreen() {
                 .fillMaxSize()
                 .padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center // 👈 Everything will be centered
+            verticalArrangement = Arrangement.Center
         ) {
             // Logo
             Image(
@@ -86,7 +86,7 @@ fun WelcomeScreen() {
 
             // Begin Your Journey Button
             Button(
-                onClick = { /* Handle button click */ },
+                onClick = onNavigateToHome, // <-- MODIFIED: Call the passed lambda
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -127,5 +127,6 @@ fun WelcomeScreen() {
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
-    WelcomeScreen()
+    // The preview doesn't need to navigate, so we pass an empty lambda
+    WelcomeScreen(onNavigateToHome = {})
 }
