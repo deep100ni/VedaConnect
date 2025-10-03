@@ -78,7 +78,9 @@ fun WelcomeScreen(onNavigateToHome: () -> Unit) { // <-- MODIFIED: Added lambda 
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFE67E22),
-                    unfocusedBorderColor = Color.LightGray
+                    unfocusedBorderColor = Color.LightGray,
+                    focusedTextColor = Color.Black, // Set text color when focused
+                    unfocusedTextColor = Color.Black // Set text color when not focused
                 )
             )
 
@@ -91,7 +93,7 @@ fun WelcomeScreen(onNavigateToHome: () -> Unit) { // <-- MODIFIED: Added lambda 
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD39C7E))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF57C00))
             ) {
                 Text(
                     text = "Begin Your Journey",
