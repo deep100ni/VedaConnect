@@ -11,7 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.* // Import all outlined icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,7 +61,6 @@ fun HomeHeader() {
     val headerOrangeGradient = Brush.verticalGradient(
         colors = listOf(Color(0xFFF57C00), Color(0xFFFB8C00), Color(0xFFFF9800))
     )
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -121,18 +120,15 @@ fun DailyDharmaDropCard() {
                         color = Color.Gray
                     )
                 }
-                Icon(
+                Image(
                     painter = painterResource(id = R.drawable.ic_om_symbol),
                     contentDescription = "Dharma Icon",
                     modifier = Modifier
                         .size(40.dp)
-                        .background(Color(0xFFE8E0F8), CircleShape)
-                        .padding(8.dp),
-                    tint = Color(0xFF673AB7)
+                        .background(Color(0xFFE8E0F8), CircleShape) // This is your purple background
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-
             // Inner quote card
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -224,9 +220,10 @@ fun SadhanaStreakCard() {
                     color = Color.White.copy(alpha = 0.9f)
                 )
             }
-            Image(
-                painter = painterResource(id = R.drawable.ic_flame),
+            Icon(
+                imageVector = Icons.Outlined.Whatshot, // Using Whatshot for the flame icon
                 contentDescription = "Streak Flame",
+                tint = Color.White,
                 modifier = Modifier.size(70.dp)
             )
         }
@@ -256,7 +253,11 @@ fun QuickActions() {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             QuickActionItem(icon = Icons.Outlined.Article, text = "Articles", modifier = Modifier.weight(1f))
-            QuickActionItem(icon = Icons.Outlined.Autorenew, text = "My Streaks", modifier = Modifier.weight(1f))
+            QuickActionItem(
+                icon = Icons.Outlined.Whatshot, // Changed to Whatshot icon for My Streaks
+                text = "My Streaks",
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
@@ -314,7 +315,7 @@ fun BottomNavigationBar() {
         NavigationBarItem(
             selected = false,
             onClick = { /* TODO */ },
-            icon = { Icon(painterResource(id = R.drawable.ic_flame_outline), contentDescription = "Streaks", modifier = Modifier.size(24.dp)) },
+            icon = { Icon(Icons.Outlined.Whatshot, contentDescription = "Streaks", modifier = Modifier.size(24.dp)) }, // Changed to Whatshot icon for bottom nav Streaks
             label = { Text("Streaks") },
             colors = NavigationBarItemDefaults.colors(
                 unselectedIconColor = Color.Gray,
@@ -353,7 +354,6 @@ fun BottomNavigationBar() {
         )
     }
 }
-
 
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable
