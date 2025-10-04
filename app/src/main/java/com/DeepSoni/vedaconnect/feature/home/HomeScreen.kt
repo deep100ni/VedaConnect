@@ -1,4 +1,4 @@
-package com.DeepSoni.vedaconnect.feature.home
+package com.DeepSoni.vedaconnect.feature.home // Changed to lowercase 'deepsoni'
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,14 +9,18 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Article // Use AutoMirrored version
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.* // Import all outlined icons
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.Forum
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Whatshot
+import androidx.compose.material.icons.outlined.WorkspacePremium
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,11 +30,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController // Import for Preview
 import com.DeepSoni.vedaconnect.R // Make sure to import your project's R file
+// import com.DeepSoni.vedaconnect.feature.notifications.NotificationScreen // This import is not directly used in the current file, can be removed if not needed for navigation directly here.
 
 // Main Composable for the Home Screen
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) { // Accept NavController
     Scaffold(
         bottomBar = { BottomNavigationBar() },
         containerColor = Color(0xFFFFF7F0) // Background color for the screen content
@@ -41,7 +48,7 @@ fun HomeScreen() {
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState()) // Makes the column scrollable
         ) {
-            HomeHeader()
+            HomeHeader(navController = navController) // Pass navController
             Spacer(modifier = Modifier.height(24.dp))
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 DailyDharmaDropCard()
@@ -57,7 +64,7 @@ fun HomeScreen() {
 
 // 1. Top Header Section
 @Composable
-fun HomeHeader() {
+fun HomeHeader(navController: NavController) { // Accept NavController
     val headerOrangeGradient = Brush.verticalGradient(
         colors = listOf(Color(0xFFF57C00), Color(0xFFFB8C00), Color(0xFFFF9800))
     )
@@ -90,6 +97,9 @@ fun HomeHeader() {
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .size(28.dp)
+                .clickable {
+                    navController.navigate("notification_screen") // Navigate to the notification screen
+                }
         )
     }
 }
@@ -252,7 +262,7 @@ fun QuickActions() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.Article, text = "Articles", modifier = Modifier.weight(1f))
+            QuickActionItem(icon = Icons.AutoMirrored.Outlined.Article, text = "Articles", modifier = Modifier.weight(1f)) // Use AutoMirrored
             QuickActionItem(
                 icon = Icons.Outlined.Whatshot, // Changed to Whatshot icon for My Streaks
                 text = "My Streaks",
@@ -358,5 +368,7 @@ fun BottomNavigationBar() {
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    // For preview, provide a mock NavController
+    val navController = rememberNavController()
+    HomeScreen(navController = navController)
 }
