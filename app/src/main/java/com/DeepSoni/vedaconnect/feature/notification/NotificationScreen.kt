@@ -34,7 +34,7 @@ fun NotificationScreen(navController: NavController) { // Changed to accept NavC
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val fullHeaderBlueGradient = Brush.verticalGradient(
-                colors = listOf(Color(0xFF64B5F6), Color(0xFF42A5F5), Color(0xFF2196F3))
+                colors = listOf(Color(0xFFF57C00), Color(0xFFFB8C00), Color(0xFFFF9800))
             )
 
             Box(
@@ -89,7 +89,7 @@ fun NotificationScreen(navController: NavController) { // Changed to accept NavC
                             Icon(
                                 imageVector = Icons.Outlined.Schedule, // A clock icon
                                 contentDescription = "Set Time",
-                                tint = Color(0xFF64B5F6), // Blue
+                                tint = Color(0xFFF57C00), // Blue
                                 modifier = Modifier.size(28.dp)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
@@ -112,7 +112,7 @@ fun NotificationScreen(navController: NavController) { // Changed to accept NavC
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(100.dp)
-                                .background(Color(0xFFE0F2F7), RoundedCornerShape(12.dp)), // Light blue background
+                                .background(Color(0xFFFFF7E6), RoundedCornerShape(12.dp)), // Light blue background
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
