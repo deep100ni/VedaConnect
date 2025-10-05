@@ -1,6 +1,5 @@
 package com.DeepSoni.vedaconnect.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -39,12 +38,9 @@ private val LightColorScheme = lightColorScheme(
 // Theme Colors
 object VedaTheme {
     val Orange = Color(0xFFFF9800)
-    val LightOrange = Color(0xFFFFB74D)
     val Cream = Color(0xFFFFF8E1)
     val DarkOrange = Color(0xFFF57C00)
-    val White = Color(0xFFFFFFFF)
     val TextGray = Color(0xFF666666)
-    val LightGray = Color(0xFFF5F5F5)
 }
 
 @Composable
