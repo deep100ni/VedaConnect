@@ -11,12 +11,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.* // Import all outlined icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,11 +25,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.DeepSoni.vedaconnect.R // Make sure to import your project's R file
+import androidx.navigation.NavController
+import com.DeepSoni.vedaconnect.R
+import com.DeepSoni.vedaconnect.feature.NavGraph
 
 // Main Composable for the Home Screen
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
+
     Scaffold(
         bottomBar = { BottomNavigationBar() },
         containerColor = Color(0xFFFFF7F0) // Background color for the screen content
@@ -48,7 +50,7 @@ fun HomeScreen() {
                 Spacer(modifier = Modifier.height(24.dp))
                 SadhanaStreakCard()
                 Spacer(modifier = Modifier.height(24.dp))
-                QuickActions()
+                QuickActions(navController = navController)
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
@@ -232,7 +234,7 @@ fun SadhanaStreakCard() {
 
 // 4. Quick Actions Section
 @Composable
-fun QuickActions() {
+fun QuickActions(navController: NavController) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Quick Actions",
@@ -244,28 +246,51 @@ fun QuickActions() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.WorkspacePremium, text = "Weekly Quiz", modifier = Modifier.weight(1f))
-            QuickActionItem(icon = Icons.Outlined.Forum, text = "Forum", modifier = Modifier.weight(1f))
+            QuickActionItem(
+                icon = Icons.Outlined.WorkspacePremium,
+                text = "Weekly Quiz",
+                modifier = Modifier.weight(1f),
+                onClick = {
+                    navController.navigate("weekly_quiz_screen")
+                })
+            QuickActionItem(
+                icon = Icons.Outlined.Forum,
+                text = "Forum",
+                modifier = Modifier.weight(1f),
+                onClick = {
+
+                }
+            )
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.Article, text = "Articles", modifier = Modifier.weight(1f))
+            QuickActionItem(
+                icon = Icons.Outlined.Article,
+                text = "Articles",
+                modifier = Modifier.weight(1f),
+                onClick = {
+
+                }
+            )
             QuickActionItem(
                 icon = Icons.Outlined.Whatshot, // Changed to Whatshot icon for My Streaks
                 text = "My Streaks",
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                onClick = {
+
+                }
             )
         }
     }
 }
 
 @Composable
-fun QuickActionItem(icon: ImageVector, text: String, modifier: Modifier = Modifier) {
+fun QuickActionItem(icon: ImageVector, text: String, modifier: Modifier = Modifier,onClick: () -> Unit) {
     Card(
-        modifier = modifier.clickable { /* TODO */ },
+        modifier = modifier.clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -355,8 +380,9 @@ fun BottomNavigationBar() {
     }
 }
 
+/*
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable
 fun HomeScreenPreview() {
     HomeScreen()
-}
+}*/

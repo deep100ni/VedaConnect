@@ -8,6 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.navigation.compose.rememberNavController
+import com.DeepSoni.vedaconnect.feature.NavGraph
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.ui.theme.VedaConnectTheme // Change this to your actual theme name
@@ -19,7 +21,8 @@ class MainActivity : ComponentActivity() {
             // It's good practice to wrap your app in your theme composable
             VedaConnectTheme {
                 // Call your navigation controller here. This will be the root of your UI.
-                AppNavigation()
+                val navController = rememberNavController()
+                NavGraph(navController)
             }
         }
     }
@@ -35,7 +38,7 @@ fun AppNavigation() {
     var showHomeScreen by remember { mutableStateOf(false) }
 
     if (showHomeScreen) {
-        HomeScreen()
+        HomeScreen(navController = rememberNavController())
     } else {
         // Pass a lambda to WelcomeScreen. When it's called, we update the state.
         WelcomeScreen(onNavigateToHome = { showHomeScreen = true })
