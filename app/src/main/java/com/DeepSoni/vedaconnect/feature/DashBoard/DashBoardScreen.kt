@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,7 +34,7 @@ import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MantraListScreen(navController: NavHostController, showBackButton: Boolean = true) {
+fun MantraListScreen(navController: NavHostController) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedTab by remember { mutableStateOf(0) }
 
@@ -243,7 +244,7 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Back"
                     )
                 }
