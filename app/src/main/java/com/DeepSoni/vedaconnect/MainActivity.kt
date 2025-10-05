@@ -7,6 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.DeepSoni.vedaconnect.Repository.MantraRepository
+import com.DeepSoni.vedaconnect.feature.DashBoard.MantraDetailScreen
+import com.DeepSoni.vedaconnect.feature.DashBoard.MantraListScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.ui.theme.VedaConnectTheme
@@ -50,6 +53,20 @@ fun AppNavigation() {
 
              NotificationScreen(navController = navController)
 
+        }
+
+        // DashBoard Navigation
+        composable("mantra_list_screen") {
+            MantraListScreen(navController)
+        }
+
+        // Mantra Detail Screen
+        composable("detail/{mantraId}") { backStackEntry ->
+            val mantraId = backStackEntry.arguments?.getString("mantraId")
+            val mantra = MantraRepository.mantras.find { it.id == mantraId }
+            mantra?.let {
+                MantraDetailScreen(navController, it)
+            }
         }
 
     }

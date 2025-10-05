@@ -39,7 +39,7 @@ import com.DeepSoni.vedaconnect.R // Make sure to import your project's R file
 @Composable
 fun HomeScreen(navController: NavController) { // Accept NavController
     Scaffold(
-        bottomBar = { BottomNavigationBar() },
+        bottomBar = { BottomNavigationBar(navController) },   // Modified: Pass navController
         containerColor = Color(0xFFFFF7F0) // Background color for the screen content
     ) { paddingValues ->
         Column(
@@ -306,7 +306,7 @@ fun QuickActionItem(icon: ImageVector, text: String, modifier: Modifier = Modifi
 
 // 5. Bottom Navigation Bar
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(navController: NavController) {  // Modified to accept NavController
     NavigationBar(
         containerColor = Color.White,
         contentColor = Color(0xFFF57C00)
@@ -334,9 +334,10 @@ fun BottomNavigationBar() {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { /* TODO */ },
-            icon = { Icon(Icons.Outlined.Forum, contentDescription = "Forum") },
-            label = { Text("Forum") },
+            onClick = { navController.navigate("mantra_list_screen") // Navigating to the DashBoard Screen
+            },   // Navigating to the DashBoard Screen
+            icon = { Icon(Icons.Outlined.Forum, contentDescription = "DashBoard") },
+            label = { Text("DashBoard") },   // Text for the Forum to DashBoard
             colors = NavigationBarItemDefaults.colors(
                 unselectedIconColor = Color.Gray,
                 unselectedTextColor = Color.Gray
