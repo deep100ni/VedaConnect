@@ -11,12 +11,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.* // Import all outlined icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,36 +25,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.DeepSoni.vedaconnect.R // Make sure to import your project's R file
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.DeepSoni.vedaconnect.R
 
-// Main Composable for the Home Screen
 @Composable
-fun HomeScreen() {
-    Scaffold(
-        bottomBar = { BottomNavigationBar() },
-        containerColor = Color(0xFFFFF7F0) // Background color for the screen content
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState()) // Makes the column scrollable
-        ) {
-            HomeHeader()
+fun HomeScreen(navController: NavController) {
+    // The Scaffold is now in AppNavigation.kt, so we just provide the content.
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .background(Color(0xFFFFF7F0)) // Set background here
+    ) {
+        HomeHeader()
+        Spacer(modifier = Modifier.height(24.dp))
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            DailyDharmaDropCard()
             Spacer(modifier = Modifier.height(24.dp))
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                DailyDharmaDropCard()
-                Spacer(modifier = Modifier.height(24.dp))
-                SadhanaStreakCard()
-                Spacer(modifier = Modifier.height(24.dp))
-                QuickActions()
-                Spacer(modifier = Modifier.height(24.dp))
-            }
+            SadhanaStreakCard()
+            Spacer(modifier = Modifier.height(24.dp))
+            QuickActions(navController = navController) // Pass NavController
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
-// 1. Top Header Section
 @Composable
 fun HomeHeader() {
     val headerOrangeGradient = Brush.verticalGradient(
@@ -94,7 +89,6 @@ fun HomeHeader() {
     }
 }
 
-// 2. Daily Dharma Drop Card
 @Composable
 fun DailyDharmaDropCard() {
     Card(
@@ -125,11 +119,10 @@ fun DailyDharmaDropCard() {
                     contentDescription = "Dharma Icon",
                     modifier = Modifier
                         .size(40.dp)
-                        .background(Color(0xFFE8E0F8), CircleShape) // This is your purple background
+                        .background(Color(0xFFE8E0F8), CircleShape)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            // Inner quote card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
@@ -151,8 +144,6 @@ fun DailyDharmaDropCard() {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Play Audio Button
             Button(
                 onClick = { /* TODO: Implement audio playback */ },
                 modifier = Modifier
@@ -173,7 +164,6 @@ fun DailyDharmaDropCard() {
     }
 }
 
-// 3. Sadhana Streak Card
 @Composable
 fun SadhanaStreakCard() {
     Card(
@@ -221,7 +211,7 @@ fun SadhanaStreakCard() {
                 )
             }
             Icon(
-                imageVector = Icons.Outlined.Whatshot, // Using Whatshot for the flame icon
+                imageVector = Icons.Outlined.Whatshot,
                 contentDescription = "Streak Flame",
                 tint = Color.White,
                 modifier = Modifier.size(70.dp)
@@ -230,9 +220,8 @@ fun SadhanaStreakCard() {
     }
 }
 
-// 4. Quick Actions Section
 @Composable
-fun QuickActions() {
+fun QuickActions(navController: NavController) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Quick Actions",
@@ -244,18 +233,19 @@ fun QuickActions() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.WorkspacePremium, text = "Weekly Quiz", modifier = Modifier.weight(1f))
-            QuickActionItem(icon = Icons.Outlined.Forum, text = "Forum", modifier = Modifier.weight(1f))
+            QuickActionItem(icon = Icons.Outlined.WorkspacePremium, text = "Weekly Quiz", onClick = { navController.navigate("quiz") }, modifier = Modifier.weight(1f))
+            QuickActionItem(icon = Icons.Outlined.Forum, text = "Forum", onClick = { navController.navigate("forum") }, modifier = Modifier.weight(1f))
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.Article, text = "Articles", modifier = Modifier.weight(1f))
+            QuickActionItem(icon = Icons.Outlined.Article, text = "Articles", onClick = { /* TODO */ }, modifier = Modifier.weight(1f))
             QuickActionItem(
-                icon = Icons.Outlined.Whatshot, // Changed to Whatshot icon for My Streaks
+                icon = Icons.Outlined.Whatshot,
                 text = "My Streaks",
+                onClick = { navController.navigate("streaks") }, // Navigate to streaks
                 modifier = Modifier.weight(1f)
             )
         }
@@ -263,9 +253,9 @@ fun QuickActions() {
 }
 
 @Composable
-fun QuickActionItem(icon: ImageVector, text: String, modifier: Modifier = Modifier) {
+fun QuickActionItem(icon: ImageVector, text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.clickable { /* TODO */ },
+        modifier = modifier.clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -294,69 +284,8 @@ fun QuickActionItem(icon: ImageVector, text: String, modifier: Modifier = Modifi
     }
 }
 
-// 5. Bottom Navigation Bar
-@Composable
-fun BottomNavigationBar() {
-    NavigationBar(
-        containerColor = Color.White,
-        contentColor = Color(0xFFF57C00)
-    ) {
-        NavigationBarItem(
-            selected = true,
-            onClick = { /* TODO */ },
-            icon = { Icon(Icons.Outlined.Home, contentDescription = "Home") },
-            label = { Text("Home") },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color(0xFFF57C00),
-                selectedTextColor = Color(0xFFF57C00),
-                indicatorColor = Color(0xFFFFE0B2)
-            )
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /* TODO */ },
-            icon = { Icon(Icons.Outlined.Whatshot, contentDescription = "Streaks", modifier = Modifier.size(24.dp)) }, // Changed to Whatshot icon for bottom nav Streaks
-            label = { Text("Streaks") },
-            colors = NavigationBarItemDefaults.colors(
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray
-            )
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /* TODO */ },
-            icon = { Icon(Icons.Outlined.Forum, contentDescription = "Forum") },
-            label = { Text("Forum") },
-            colors = NavigationBarItemDefaults.colors(
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray
-            )
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /* TODO */ },
-            icon = { Icon(Icons.Outlined.WorkspacePremium, contentDescription = "Quiz") },
-            label = { Text("Quiz") },
-            colors = NavigationBarItemDefaults.colors(
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray
-            )
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /* TODO */ },
-            icon = { Icon(Icons.Outlined.Book, contentDescription = "Awareness") },
-            label = { Text("Awareness") },
-            colors = NavigationBarItemDefaults.colors(
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray
-            )
-        )
-    }
-}
-
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(navController = rememberNavController())
 }
