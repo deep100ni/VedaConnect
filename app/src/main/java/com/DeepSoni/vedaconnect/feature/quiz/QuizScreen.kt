@@ -1,6 +1,7 @@
 package com.DeepSoni.vedaconnect.feature.weeklyquiz
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,17 +12,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.DeepSoni.vedaconnect.Screen
 
+// Color definitions used within this screen
 val OrangePrimary = Color(0xFFF77F00)
 val LightOrangeBg: Color = Color(0xFFFFEEE0)
 
+/**
+ * The main entry point for the Quiz feature screen.
+ * It displays the header, the current weekly challenge, and a list of previous quizzes.
+ */
 @Composable
 fun QuizScreen(navController: NavHostController) {
     val scrollState = rememberScrollState()
@@ -31,7 +40,7 @@ fun QuizScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Header
+        // Header section with the orange background
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,7 +67,7 @@ fun QuizScreen(navController: NavHostController) {
             }
         }
 
-        // Body Content
+        // Scrollable body content
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -68,19 +77,29 @@ fun QuizScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             WeeklyChallengeCard(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                navController = navController
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            PreviousWeekSection()
-            Spacer(modifier = Modifier.height(60.dp))
+
+            // The list of previous weeks now requires the NavController
+            PreviousWeekSection(
+                modifier = Modifier.fillMaxWidth(),
+                navController = navController
+            )
+
+            Spacer(modifier = Modifier.height(60.dp)) // Padding at the bottom
         }
     }
 }
 
-
+/**
+ * Displays a list of previous weekly quizzes. Each item in the list is clickable
+ * and navigates to the QuizComplete screen.
+ */
 @Composable
-fun PreviousWeekSection(modifier: Modifier = Modifier) {
+fun PreviousWeekSection(modifier: Modifier = Modifier, navController: NavController) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -93,7 +112,7 @@ fun PreviousWeekSection(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Hardcoded list for demonstration
+        // Hardcoded list for demonstration purposes
         val previousWeeks = listOf(
             "Week 1" to 0.8f,
             "Week 2" to 0.6f,
@@ -106,7 +125,14 @@ fun PreviousWeekSection(modifier: Modifier = Modifier) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                    // Apply clipping before clickable to ensure the ripple effect respects the rounded corners
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable {
+                        // Navigate to the completion screen when a previous quiz is clicked.
+                        // In a real app, you would pass a specific quiz ID here.
+                        navController.navigate(Screen.QuizComplete.route)
+                    }
+                    .background(Color.LightGray) // The shape is now handled by the clip modifier
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -119,7 +145,7 @@ fun PreviousWeekSection(modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                     LinearProgressIndicator(
-                        progress = progress,
+                        progress = { progress }, // Updated syntax for progress
                         modifier = Modifier
                             .weight(1f)
                             .height(10.dp),
@@ -145,6 +171,9 @@ fun PreviousWeekSection(modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * A generic card for displaying statistics. (Not used in the final layout but kept for completeness).
+ */
 @Composable
 fun StateCard(icon: ImageVector, label: String, value: String, modifier: Modifier = Modifier) {
     Card(
@@ -185,8 +214,12 @@ fun StateCard(icon: ImageVector, label: String, value: String, modifier: Modifie
     }
 }
 
+/**
+ * A card that presents the current weekly challenge and a button to start it.
+ * The "Start Quiz" button's navigation has been removed as requested.
+ */
 @Composable
-fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
+fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavHostController) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -198,7 +231,6 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Placeholder for an icon
             Icon(
                 imageVector = Icons.Outlined.WorkspacePremium,
                 contentDescription = "Weekly Challenge Icon",
@@ -236,8 +268,13 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
             }
             Spacer(modifier = Modifier.height(24.dp))
 
+            // The button to start the current week's quiz
             Button(
-                onClick = { /* TODO: Handle quiz start */ },
+                onClick = {
+                    // TODO: Implement navigation to the actual quiz-taking screen.
+                    // For now, this button does nothing as per the request.
+                    // Example: navController.navigate("quiz_questions_route")
+                },
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary),
                 modifier = Modifier
@@ -250,6 +287,9 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * A small composable to display a piece of quiz information (e.g., "10 Questions").
+ */
 @Composable
 fun QuizInfoItem(value: String, label: String) {
     Column(

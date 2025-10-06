@@ -13,3 +13,18 @@ data class Mantra(
     val preview: String,
     val audioResId: Int? = null
 )
+
+data class QuizResult(
+    val correctAnswers: Int,
+    val totalQuestions: Int,
+    val pointsEarned: Int,
+    val totalScore: Int
+)
+
+data class LeaderboardEntry(
+    val name: String,
+    val rank: Int,
+    val points: Int,
+    val isCurrentUser: Boolean = false,
+    val medal: Medal? = null
+)

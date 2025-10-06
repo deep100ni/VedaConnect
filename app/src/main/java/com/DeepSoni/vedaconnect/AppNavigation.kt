@@ -15,7 +15,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.DeepSoni.vedaconnect.Data.LeaderboardEntry
+import com.DeepSoni.vedaconnect.Data.Medal
+import com.DeepSoni.vedaconnect.Data.QuizResult
 import com.DeepSoni.vedaconnect.Repository.MantraRepository
+import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.community.CommunityScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
@@ -36,6 +40,8 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
     object Community : Screen("community", "Community", Icons.Outlined.Article)
+
+    object QuizComplete : Screen("quizComplete")
     object Notification : Screen("notification")
     object MantraDetail : Screen("detail/{mantraId}") {
         fun createRoute(mantraId: String) = "detail/$mantraId"
@@ -95,6 +101,34 @@ fun AppNavigation() {
             // Quiz Screen (with bottom bar)
             composable(Screen.Quiz.route) {
                 QuizScreen(navController = navController)
+            }
+
+            composable(Screen.QuizComplete.route) {
+                // Dummy data for demonstration
+                val dummyQuizResult = QuizResult(
+                    correctAnswers = 7,
+                    totalQuestions = 10,
+                    pointsEarned = 70,
+                    totalScore = 850
+                )
+                val dummyLeaderboard = listOf(
+                    LeaderboardEntry("Priya K.", 1, 950, medal = Medal.GOLD),
+                    LeaderboardEntry("Rahul M.", 2, 920, medal = Medal.SILVER),
+                    LeaderboardEntry("Ananya S.", 3, 890, medal = Medal.BRONZE),
+                    LeaderboardEntry("You", 4, 850, isCurrentUser = true),
+                    LeaderboardEntry("Dr. Sharma", 5, 820)
+                )
+
+                QuizCompleteScreen(
+                    quizResult = dummyQuizResult,
+                    leaderboardEntries = dummyLeaderboard,
+                    onViewFullLeaderboard = {
+                        // Navigate back to the main quiz screen
+                        navController.navigate(Screen.Quiz.route) {
+                            popUpTo(Screen.Quiz.route) { inclusive = true }
+                        }
+                    }
+                )
             }
 
             // Content Screen (with bottom bar)
