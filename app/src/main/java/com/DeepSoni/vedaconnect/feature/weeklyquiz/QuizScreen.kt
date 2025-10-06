@@ -42,7 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.R
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
-import com.DeepSoni.vedaconnect.ui.theme.bhagwa
+import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
 
 
 @Composable
@@ -368,7 +368,7 @@ fun StateCard(icon: ImageVector, label: String, value: String, modifier: Modifie
                 Icon(
                     imageVector = icon,
                     contentDescription = "",
-                    tint = bhagwa,
+                    tint = Bhagwa,
                     modifier = Modifier.size(35.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))

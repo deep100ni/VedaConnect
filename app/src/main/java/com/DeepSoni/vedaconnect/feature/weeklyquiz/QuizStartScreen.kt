@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -36,13 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.Home // An outlined style icon
-import androidx.compose.material3.Icon
 import androidx.compose.ui.res.painterResource
 import com.DeepSoni.vedaconnect.R
-import com.DeepSoni.vedaconnect.ui.theme.bhagwa
 
 //val OrangePrimary = Color(0xFFF77F00)
 //val LightOrangeBg: Color = Color(0xFFFFEEE0)
