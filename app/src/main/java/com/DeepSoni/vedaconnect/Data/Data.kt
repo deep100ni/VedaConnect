@@ -1,6 +1,6 @@
 package com.DeepSoni.vedaconnect.Data
 
-// Data Classes
+// Data Class for mantra
 data class Mantra(
     val id: String,
     val name: String,
@@ -11,4 +11,21 @@ data class Mantra(
     val transliteration: String,
     val translation: String,
     val preview: String
+)
+
+
+// Data Models for quiz completion screen
+data class QuizResult(
+    val correctAnswers: Int,
+    val totalQuestions: Int,
+    val pointsEarned: Int,
+    val totalScore: Int
+)
+
+data class LeaderboardEntry(
+    val name: String,
+    val rank: Int,
+    val points: Int,
+    val isCurrentUser: Boolean = false,
+    val medal: Medal? = null
 )
