@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.WorkspacePremium
 import androidx.compose.material3.Button
@@ -29,28 +31,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 
 val OrangePrimary = Color(0xFFF77F00)
-val LightOrangeBg = Color(0xFFFFEEE0)
+val LightOrangeBg: Color = Color(0xFFFFEEE0)
 
 @Composable
-fun QuizScreen() {
+fun QuizScreen(navController: NavHostController) {
+
+
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-
     ) {
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(OrangePrimary, shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+                .background(
+                    OrangePrimary,
+                    shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+                )
                 .padding(16.dp)
                 .height(100.dp)
         ) {
@@ -69,42 +80,29 @@ fun QuizScreen() {
                 )
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
 
-        WeeklyChallengeCard(
+
+        Column(
+
             modifier = Modifier
+                .weight(1f)
                 .padding(horizontal = 16.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .verticalScroll(scrollState)
         ) {
-            StateCard(
-                icon = Icons.Outlined.WorkspacePremium,
-                label = "Points",
-                value = "850",
-                modifier = Modifier.weight(.5f)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            StateCard(
-                icon = Icons.Outlined.WorkspacePremium,
-                label = "Your Score",
-                value = "#4",
-                modifier = Modifier.weight(.5f)
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        PreviouseWeekSection(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-        )
+            WeeklyChallengeCard(
+
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            PreviouseWeekSection()
+            Spacer(modifier = Modifier.height(60.dp))
+        }
     }
 }
+
 
 @Composable
 fun PreviouseWeekSection(modifier: Modifier = Modifier) {
@@ -114,42 +112,223 @@ fun PreviouseWeekSection(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = "Previous Week",
-            fontSize = 20.sp,
+            fontSize = 17.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            )
-        Row (
+        )
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
-                .padding(vertical = 16.dp),
+
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ){  }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            LinearProgressIndicator(
-                progress = .8f,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(10.dp)
-
-                    .width(8.dp),
-                color = OrangePrimary,
-                trackColor = Color.LightGray
-            )
-            Spacer(modifier = Modifier.width(8.dp))
+        ) {
             Text(
-                text = "80/100",
+                text = "Week 1",
                 fontSize = 16.sp,
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = Icons.Outlined.WorkspacePremium,
-                contentDescription = "Icon",
-                tint = Color.Gray
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .8f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "80/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "",
+                    tint = Color.Gray
+                )
+            }
+
         }
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 2",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .6f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "80/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "Icon",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 3",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .7f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "80/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "Icon",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 4",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .5f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "50/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "Icon",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 5",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .9f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "90/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "Icon",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+
     }
 }
 
@@ -162,28 +341,45 @@ fun StateCard(icon: ImageVector, label: String, value: String, modifier: Modifie
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp),
+                .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
                 modifier = Modifier
-                    .height(40.dp)
+                    .heightIn(60.dp)
                     .fillMaxWidth()
                     .background(LightOrangeBg, shape = RoundedCornerShape(50.dp))
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = "",
-                        tint = Color(0xFFF57C00),
-                        modifier = Modifier.size(32.dp)
-                    )
-                Text(
-                    text = label,
-                    fontSize = 15.sp
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "",
+                    tint = Color(0xFFF57C00),
+                    modifier = Modifier.size(35.dp)
                 )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column(
+                    modifier = Modifier
+                        .padding(start = 0.dp),
+
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = value,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = label,
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+
             }
         }
     }
@@ -191,6 +387,8 @@ fun StateCard(icon: ImageVector, label: String, value: String, modifier: Modifie
 
 @Composable
 fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
+    val quizNavController = rememberNavController()
+
     Card(
         modifier = modifier
             .fillMaxWidth(),
@@ -221,7 +419,7 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.padding(horizontal = 70.dp),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            textAlign = TextAlign.Center
 
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -230,7 +428,7 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
             fontSize = 15.sp,
             color = Color.Gray,
             modifier = Modifier.padding(horizontal = 16.dp),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -248,7 +446,9 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /*Handle button click*/ },
+            onClick = {
+                "TODO"
+            },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary),
             modifier = Modifier
@@ -286,8 +486,10 @@ fun MainAppNavigation() {
             HomeScreen(navController = navController)
         }
         composable("weekly_quiz_screen") {
-            QuizScreen()
+            QuizScreen(
+                //navController = navController,
+                navController = navController
+            )
         }
     }
 }
-

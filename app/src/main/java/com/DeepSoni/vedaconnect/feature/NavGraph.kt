@@ -13,7 +13,7 @@ fun NavGraph(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = "weekly_quiz_screen" // आपकी प्रारंभिक स्क्रीन
+        startDestination = "home_screen"
     ) {
 
         composable("welcome_screen") {
@@ -27,9 +27,10 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable("weekly_quiz_screen") {
-            QuizScreen()
+            QuizScreen(navController = navController)
         }
 
     }
 }
 
+// test2
