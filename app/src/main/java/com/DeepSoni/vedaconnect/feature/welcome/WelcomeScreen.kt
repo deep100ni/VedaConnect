@@ -1,7 +1,5 @@
 package com.DeepSoni.vedaconnect.feature.welcome
 
-// This file is located at: app/src/main/java/com/DeepSoni/vedaconnect/ui/welcome/WelcomeScreen.kt
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,10 +16,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.DeepSoni.vedaconnect.R // Important: Import your project's R file
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.DeepSoni.vedaconnect.R
 
 @Composable
-fun WelcomeScreen(onNavigateToHome: () -> Unit) { // <-- MODIFIED: Added lambda parameter
+fun WelcomeScreen(navController: NavController) { // <-- MODIFIED: Parameter is now NavController
     var name by remember { mutableStateOf(TextFieldValue("")) }
 
     Surface(
@@ -79,8 +79,8 @@ fun WelcomeScreen(onNavigateToHome: () -> Unit) { // <-- MODIFIED: Added lambda 
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFE67E22),
                     unfocusedBorderColor = Color.LightGray,
-                    focusedTextColor = Color.Black, // Set text color when focused
-                    unfocusedTextColor = Color.Black // Set text color when not focused
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
                 )
             )
 
@@ -88,7 +88,15 @@ fun WelcomeScreen(onNavigateToHome: () -> Unit) { // <-- MODIFIED: Added lambda 
 
             // Begin Your Journey Button
             Button(
-                onClick = onNavigateToHome, // <-- MODIFIED: Call the passed lambda
+                // MODIFIED: This is the new navigation logic
+                onClick = {
+                    navController.navigate("home") {
+                        // This removes the WelcomeScreen from the back stack
+                        popUpTo("welcome") {
+                            inclusive = true
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -129,6 +137,6 @@ fun WelcomeScreen(onNavigateToHome: () -> Unit) { // <-- MODIFIED: Added lambda 
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
-    // The preview doesn't need to navigate, so we pass an empty lambda
-    WelcomeScreen(onNavigateToHome = {})
+    // MODIFIED: The preview now uses a dummy NavController
+    WelcomeScreen(navController = rememberNavController())
 }
