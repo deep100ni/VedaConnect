@@ -1,6 +1,7 @@
 package com.DeepSoni.vedaconnect.Repository
 
 import com.DeepSoni.vedaconnect.Data.Mantra
+import com.DeepSoni.vedaconnect.R
 
 object MantraRepository {
     val mantras = listOf(
@@ -13,7 +14,8 @@ object MantraRepository {
             sanskrit = "ॐ भूर् भुवः स्वः\nतत्सवितुर्वरेण्यम्\nभर्गो देवस्य धीमहि\nधियो यो नः प्रचोदयात्",
             transliteration = "Om Bhur Bhuvah Swah\nTat Savitur Varenyam\nBhargo Devasya Dhimahi\nDhiyo Yo Nah Prachodayat",
             translation = "We meditate on the glory of the Creator who has created the universe, who is worthy of worship, who is the embodiment of knowledge and light, who removes all sins and ignorance. May he enlighten our intellect.",
-            preview = "Om Bhur Bhuvah Swah..."
+            preview = "Om Bhur Bhuvah Swah...",
+            audioResId = R.raw.gayatri
         ),
         Mantra(
             id = "2",
