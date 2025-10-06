@@ -1,5 +1,6 @@
 package com.DeepSoni.vedaconnect.feature.weeklyquiz
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,8 +40,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.DeepSoni.vedaconnect.R
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
-
+import com.DeepSoni.vedaconnect.ui.theme.bhagwa
 
 
 @Composable
@@ -59,17 +62,22 @@ fun QuizScreen(navController: NavHostController) {
                 .fillMaxWidth()
                 .background(
                     OrangePrimary,
-                    shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+                    shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
                 )
                 .padding(16.dp)
-                .height(100.dp)
+                .height(200.dp)
         ) {
-            Column {
+            Column(
+                modifier = Modifier
+                    .padding(25.dp)
+                    .align(Alignment.BottomStart)
+            ) {
                 Text(
                     text = "Weekly Quiz",
                     color = Color.White,
                     fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
                 )
                 Text(
                     text = "Test your Vedic Knowledge",
@@ -185,7 +193,7 @@ fun PreviouseWeekSection(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "80/100",
+                    text = "50/100",
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
@@ -228,7 +236,7 @@ fun PreviouseWeekSection(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "80/100",
+                    text = "60/100",
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
@@ -271,7 +279,7 @@ fun PreviouseWeekSection(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "50/100",
+                    text = "45/100",
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
@@ -352,10 +360,15 @@ fun StateCard(icon: ImageVector, label: String, value: String, modifier: Modifie
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
+//                Image(
+//                    painter = painterResource(R.drawable.achievement),
+//                    contentDescription = " ",
+//                    modifier = Modifier.size(24.dp)
+//                )
                 Icon(
                     imageVector = icon,
                     contentDescription = "",
-                    tint = Color(0xFFF57C00),
+                    tint = bhagwa,
                     modifier = Modifier.size(35.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -400,14 +413,18 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavHostCon
                 .padding(vertical = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Icon")
+            Image(
+                painter = painterResource(R.drawable.achievement),
+                contentDescription = " ",
+                modifier = Modifier.size(70.dp)
+            )
         }
         Box(
             modifier = Modifier
                 .size(30.dp)
                 .background(LightOrangeBg, shape = RoundedCornerShape(50.dp))
                 .padding(8.dp),
-            contentAlignment = Alignment.BottomCenter
+            contentAlignment = Alignment.Center,
         ) {
             //Text(text = "Icon", fontSize = 24.sp, color = Color.Gray)
         }
@@ -417,8 +434,9 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavHostCon
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            modifier = Modifier.padding(horizontal = 70.dp),
+            modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
+
 
         )
         Spacer(modifier = Modifier.height(8.dp))

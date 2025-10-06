@@ -1,6 +1,7 @@
 package com.DeepSoni.vedaconnect.feature.weeklyquiz
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,8 +12,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -33,6 +36,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Home // An outlined style icon
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import com.DeepSoni.vedaconnect.R
+import com.DeepSoni.vedaconnect.ui.theme.bhagwa
 
 //val OrangePrimary = Color(0xFFF77F00)
 //val LightOrangeBg: Color = Color(0xFFFFEEE0)
@@ -48,7 +58,7 @@ fun QuizStartScreen(navController: NavHostController) {
                     shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
                 )
                 .padding(16.dp)
-                .height(200.dp)
+                .height(150.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -71,19 +81,22 @@ fun QuizStartScreen(navController: NavHostController) {
                             .padding(10.dp)
 
                         )
-                    Row {
-//                Icon(
-//                    painter = painterResource(id = R.img.png),
-//                    contentDescription = "App Logo",
-//                    modifier = Modifier.height(25.dp)
-//                )
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.alarmclock),
+                            contentDescription = " ",
+                            modifier = Modifier.size(24.dp)
+                        )
+
                         Text(
                             text = "2:25",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Normal,
                             color = Color.White,
-                            modifier = Modifier
-                                .padding(10.dp)
+
                         )
 
                     }
