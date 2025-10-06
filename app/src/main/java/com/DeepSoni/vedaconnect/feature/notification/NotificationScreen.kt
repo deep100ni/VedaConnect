@@ -5,46 +5,42 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.* // Ensure all Material 3 components are imported
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog // Import for Compose Dialog
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import java.util.*
 
 // Define your orange color
 val Orange500 = Color(0xFFFF9800)
-val Orange700 = Color(0xFFF57C00) // Darker orange for status bar if needed
+val Orange700 = Color(0xFFF57C00)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationScreen(navController: NavController) {
-    // Define a custom color scheme for this screen or globally
     val customColorScheme = lightColorScheme(
-        primary = Orange500, // This will be the accent color for TimePicker
+        primary = Orange500,
         onPrimary = Color.White,
-        // You can define other colors here as needed
         background = Color(0xFFF0F4F8),
         surface = Color.White,
         onSurface = Color.Black
     )
 
-    MaterialTheme(colorScheme = customColorScheme) { // Apply the custom theme
+    MaterialTheme(colorScheme = customColorScheme) {
         Scaffold(
-            containerColor = MaterialTheme.colorScheme.background // Use background from theme
+            containerColor = MaterialTheme.colorScheme.background
         ) { paddingValues ->
             Column(
                 modifier = Modifier
@@ -52,8 +48,8 @@ fun NotificationScreen(navController: NavController) {
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val fullHeaderOrangeGradient = Brush.verticalGradient( // Renamed for clarity
-                    colors = listOf(Orange700, Orange500, Orange500) // Using defined orange colors
+                val fullHeaderOrangeGradient = Brush.verticalGradient(
+                    colors = listOf(Orange700, Orange500, Orange500)
                 )
 
                 Box(
@@ -96,22 +92,19 @@ fun NotificationScreen(navController: NavController) {
                     var selectedMinute by remember { mutableStateOf(0) }
                     var isTimePickerShowing by remember { mutableStateOf(false) }
 
-                    // Format time for display
                     val formattedTime = remember(selectedHour, selectedMinute) {
                         val calendar = Calendar.getInstance().apply {
                             set(Calendar.HOUR_OF_DAY, selectedHour)
                             set(Calendar.MINUTE, selectedMinute)
                         }
-                        val amPm = if (calendar.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
                         val hour = calendar.get(Calendar.HOUR)
-                        val displayHour = if (hour == 0) 12 else hour // 0 AM/PM should be 12
+                        val displayHour = if (hour == 0) 12 else hour
                         "${"%02d".format(displayHour)}:${"%02d".format(selectedMinute)}"
                     }
                     val amPmText = remember(selectedHour) {
                         if (selectedHour < 12) "AM" else "PM"
                     }
 
-                    // Set Your Time Card
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
@@ -126,7 +119,7 @@ fun NotificationScreen(navController: NavController) {
                                 Icon(
                                     imageVector = Icons.Outlined.Schedule,
                                     contentDescription = "Set Time",
-                                    tint = MaterialTheme.colorScheme.primary, // Use primary color
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(28.dp)
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
@@ -149,8 +142,8 @@ fun NotificationScreen(navController: NavController) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(100.dp)
-                                    .background(Orange500.copy(alpha = 0.1f), RoundedCornerShape(20.dp)) // Orange tint and rounded corners for the display box
-                                    .clickable { isTimePickerShowing = true }, // Clickable to open time picker
+                                    .background(Orange500.copy(alpha = 0.1f), RoundedCornerShape(20.dp))
+                                    .clickable { isTimePickerShowing = true },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -219,7 +212,6 @@ fun NotificationScreen(navController: NavController) {
                     }
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // It's Dharma Time! Card
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
@@ -298,7 +290,7 @@ fun NotificationScreen(navController: NavController) {
                             }
                         }
                     }
-                    // Show the OrangeThemedTimePickerDialog when isTimePickerShowing is true
+
                     if (isTimePickerShowing) {
                         OrangeThemedTimePickerDialog(
                             initialHour = selectedHour,
@@ -319,7 +311,6 @@ fun NotificationScreen(navController: NavController) {
     }
 }
 
-// New Composable for the Material 3 TimePicker, allowing theme-based coloring
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrangeThemedTimePickerDialog(
@@ -331,13 +322,11 @@ fun OrangeThemedTimePickerDialog(
     val timePickerState = rememberTimePickerState(
         initialHour = initialHour,
         initialMinute = initialMinute,
-        is24Hour = false // Set to true for 24-hour format
+        is24Hour = false
     )
 
-    // The TimePicker itself will automatically pick up the primary color
-    // from the MaterialTheme it's composed within.
     Dialog(onDismissRequest = onDismiss) {
-        Card { // Card to give the dialog a Material Design look
+        Card {
             Column(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -364,7 +353,6 @@ fun OrangeThemedTimePickerDialog(
         }
     }
 }
-
 
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable

@@ -14,8 +14,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.DeepSoni.vedaconnect.feature.community.CommunityScreen
+import com.DeepSoni.vedaconnect.feature.content.ContentScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
+import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
 import com.DeepSoni.vedaconnect.feature.streaks.StreakScreen
+import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 
 // A simple data class to make the bottom bar code cleaner
@@ -28,7 +32,7 @@ fun AppNavigation() {
     // Determine if the bottom bar should be shown based on the current screen
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val shouldShowBottomBar = currentRoute in listOf("home", "streaks", "forum", "quiz", "awareness")
+    val shouldShowBottomBar = currentRoute in listOf("home", "streaks", "community", "quiz", "content")
 
     Scaffold(
         bottomBar = {
@@ -57,10 +61,25 @@ fun AppNavigation() {
                 StreakScreen(navController = navController)
             }
 
-            // TODO: Add composables for your other screens here
-            // composable("forum") { ForumScreen(navController = navController) }
-            // composable("quiz") { QuizScreen(navController = navController) }
-            // composable("awareness") { AwarenessScreen(navController = navController) }
+            // Quiz Screen (with bottom bar)
+            composable("quiz") {
+                QuizScreen(navController = navController)
+            }
+
+            // Content Screen (with bottom bar)
+            composable("content") {
+                ContentScreen(navController = navController)
+            }
+
+            // Community Screen (with bottom bar)
+            composable("community") {
+                CommunityScreen(navController = navController)
+            }
+
+            // Notification Screen (no bottom bar)
+            composable("notification") {
+                NotificationScreen(navController = navController)
+            }
         }
     }
 }
@@ -76,9 +95,9 @@ private fun AppBottomNavigationBar(navController: NavController) {
     val items = listOf(
         Screen("home", "Home", Icons.Outlined.Home),
         Screen("streaks", "Streaks", Icons.Outlined.Whatshot),
-        Screen("forum", "Forum", Icons.Outlined.Forum),
+        Screen("content", "Content", Icons.Outlined.AutoStories),
         Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium),
-        Screen("awareness", "Awareness", Icons.Outlined.Book)
+        Screen("community", "Community", Icons.Outlined.Article)
     )
 
     NavigationBar(
@@ -90,14 +109,10 @@ private fun AppBottomNavigationBar(navController: NavController) {
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
-                        // Pop up to the start destination of the graph to avoid building up a large
-                        // back stack as users select items
                         popUpTo(navController.graph.startDestinationId) {
                             saveState = true
                         }
-                        // Avoid multiple copies of the same destination when re-selecting the same item
                         launchSingleTop = true
-                        // Restore state when re-selecting a previously selected item
                         restoreState = true
                     }
                 },

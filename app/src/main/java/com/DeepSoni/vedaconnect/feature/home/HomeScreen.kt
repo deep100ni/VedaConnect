@@ -38,7 +38,7 @@ fun HomeScreen(navController: NavController) {
             .verticalScroll(rememberScrollState())
             .background(Color(0xFFFFF7F0)) // Set background here
     ) {
-        HomeHeader()
+        HomeHeader(navController = navController) // Pass NavController
         Spacer(modifier = Modifier.height(24.dp))
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             DailyDharmaDropCard()
@@ -52,7 +52,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun HomeHeader() {
+fun HomeHeader(navController: NavController) { // Accept NavController
     val headerOrangeGradient = Brush.verticalGradient(
         colors = listOf(Color(0xFFF57C00), Color(0xFFFB8C00), Color(0xFFFF9800))
     )
@@ -85,6 +85,7 @@ fun HomeHeader() {
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .size(28.dp)
+                .clickable { navController.navigate("notification") } // Navigate on click
         )
     }
 }
@@ -227,7 +228,8 @@ fun QuickActions(navController: NavController) {
             text = "Quick Actions",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
+            color = Color.Black
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -241,11 +243,11 @@ fun QuickActions(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.Article, text = "Articles", onClick = { /* TODO */ }, modifier = Modifier.weight(1f))
+            QuickActionItem(icon = Icons.Outlined.Article, text = "Community", onClick = { navController.navigate("community") }, modifier = Modifier.weight(1f))
             QuickActionItem(
                 icon = Icons.Outlined.Whatshot,
                 text = "My Streaks",
-                onClick = { navController.navigate("streaks") }, // Navigate to streaks
+                onClick = { navController.navigate("streaks") },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -278,7 +280,8 @@ fun QuickActionItem(icon: ImageVector, text: String, onClick: () -> Unit, modifi
                 text = text,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
         }
     }
