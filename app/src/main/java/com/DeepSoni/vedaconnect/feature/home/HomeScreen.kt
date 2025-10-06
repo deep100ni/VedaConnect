@@ -236,7 +236,8 @@ fun QuickActions(navController: NavController) {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             QuickActionItem(icon = Icons.Outlined.WorkspacePremium, text = "Weekly Quiz", onClick = { navController.navigate("quiz") }, modifier = Modifier.weight(1f))
-            QuickActionItem(icon = Icons.Outlined.Forum, text = "Forum", onClick = { navController.navigate("forum") }, modifier = Modifier.weight(1f))
+
+            QuickActionItem(icon = Icons.Outlined.AutoStories, text = "Content", onClick = { navController.navigate(route = "content") }, modifier = Modifier.weight(1f))
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(
