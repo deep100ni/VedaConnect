@@ -40,8 +40,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 
-val OrangePrimary = Color(0xFFF77F00)
-val LightOrangeBg: Color = Color(0xFFFFEEE0)
+
 
 @Composable
 fun QuizScreen(navController: NavHostController) {
@@ -92,7 +91,7 @@ fun QuizScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             WeeklyChallengeCard(
-
+                navController = navController,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -386,7 +385,7 @@ fun StateCard(icon: ImageVector, label: String, value: String, modifier: Modifie
 }
 
 @Composable
-fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
+fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavHostController) {
     val quizNavController = rememberNavController()
 
     Card(
@@ -447,7 +446,7 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                "TODO"
+                navController.navigate("quiz_start_screen")
             },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary),

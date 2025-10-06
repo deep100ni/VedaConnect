@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
+import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizStartScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 
 @Composable
@@ -13,7 +14,7 @@ fun NavGraph(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = "home_screen"
+        startDestination = "welcome_screen"
     ) {
 
         composable("welcome_screen") {
@@ -28,6 +29,9 @@ fun NavGraph(navController: NavHostController) {
 
         composable("weekly_quiz_screen") {
             QuizScreen(navController = navController)
+        }
+        composable("quiz_start_screen") {
+            QuizStartScreen(navController = navController)
         }
 
     }
