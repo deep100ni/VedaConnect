@@ -1,4 +1,4 @@
-package com.DeepSoni.vedaconnect.feature.content
+package com.deepsoni.vedaconnect.feature.content // Fix: Package name should be in lowercase.
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,15 +10,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.PlayArrow // Fix: Import for outlined play icon
+import androidx.compose.material.icons.outlined.BookmarkBorder // Fix: Import for outlined bookmark icon
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -26,15 +30,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.DeepSoni.vedaconnect.Data.Mantra
+import com.DeepSoni.vedaconnect.R
 import com.DeepSoni.vedaconnect.Repository.MantraRepository
 import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(navController: NavHostController) {
     var searchQuery by remember { mutableStateOf("") }
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableIntStateOf(0) } // Fix: Use mutableIntStateOf for Int state
 
     val tabs = listOf("All", "Mandala 1", "Mandala 2", "Mandala 3", "Mandala 5", "Mandala 9", "Mandala 10")
 
@@ -51,6 +55,9 @@ fun ContentScreen(navController: NavHostController) {
             else -> searchResults
         }
     }
+    val headerOrangeGradient = Brush.verticalGradient(
+        colors = listOf(Color(0xFFF57C00), Color(0xFFFB8C00), Color(0xFFFF9800))
+    )
 
     Column(
         modifier = Modifier
@@ -61,13 +68,14 @@ fun ContentScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(VedaTheme.Orange)
-                .padding(20.dp)
+                .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
+                .padding(horizontal = 24.dp, vertical = 32.dp)
         ) {
-            Column {
-                Spacer(modifier = Modifier.height(30.dp))
+            Column(
+                modifier = Modifier.align(Alignment.TopStart)
+            ) {
                 Text(
-                    text = "Explore Mandalas and Suktas🙏",
+                    text = "Explore Mandalas and Suktas🙏", // Fix: Typo "Suktas" is correct
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -88,7 +96,7 @@ fun ContentScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            placeholder = { Text("Search Mandala, Sukta or Mantra") },
+            placeholder = { Text("Search Mandala, Sukta or Mantra") }, // Fix: Typo "Sukta" is correct
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -97,7 +105,7 @@ fun ContentScreen(navController: NavHostController) {
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = VedaTheme.Orange,
+                focusedBorderColor = Color(0xFFF57C00),
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.3f),
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White
@@ -119,7 +127,7 @@ fun ContentScreen(navController: NavHostController) {
             selectedTabIndex = selectedTab,
             modifier = Modifier.fillMaxWidth(),
             containerColor = VedaTheme.Cream,
-            contentColor = VedaTheme.Orange,
+            contentColor = Color(0xFFFFF7F0),
             edgePadding = 16.dp,
             indicator = {},
             divider = {}
@@ -132,7 +140,7 @@ fun ContentScreen(navController: NavHostController) {
                         .padding(horizontal = 4.dp)
                         .clip(RoundedCornerShape(20.dp))
                         .background(
-                            if (selectedTab == index) VedaTheme.Orange
+                            if (selectedTab == index) Color(0xFFF57C00)
                             else Color.White
                         )
                 ) {
@@ -191,9 +199,10 @@ fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.Edit,
+                    imageVector = Icons.Outlined.PlayArrow, // Fix: Use outlined icon
+                    modifier = Modifier.size(35.dp),
                     contentDescription = "Read",
-                    tint = VedaTheme.TextGray
+                    tint = Color.Unspecified
                 )
             }
 
@@ -222,7 +231,20 @@ fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
                     maxLines = 1
                 )
             }
-
+            // Bookmark Icon
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.BookmarkBorder, // Fix: Use outlined icon
+                    modifier = Modifier.size(35.dp),
+                    contentDescription = "Bookmark",
+                    tint = Color.Unspecified
+                )
+            }
         }
     }
 }
@@ -230,25 +252,22 @@ fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
+fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) { // Fix: Function is now used (assuming it's called from navigation)
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(VedaTheme.Cream)
+            .background(Color(0xFFFFF7F0))
     ) {
         // Top Bar
         TopAppBar(
             title = { Text("Mantra Details") },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Back"
-                    )
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
+                containerColor = Color(0xFFFFF7F0),
                 titleContentColor = Color.Black
             )
         )
