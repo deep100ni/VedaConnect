@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 // Theme Colors
 object VedaTheme {
     val Orange = Color(0xFFFF9800)
-    val Cream = Color(0xFFFFF8E1)
+    val Cream = Color(0xFFFFF7F0)
     val DarkOrange = Color(0xFFF57C00)
     val TextGray = Color(0xFF666666)
 }
