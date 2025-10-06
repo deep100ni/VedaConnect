@@ -1,5 +1,6 @@
-package com.deepsoni.vedaconnect.feature.content // Fix: Package name should be in lowercase.
+package com.deepsoni.vedaconnect.feature.content
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,9 +12,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.PlayArrow // Fix: Import for outlined play icon
-import androidx.compose.material.icons.outlined.BookmarkBorder // Fix: Import for outlined bookmark icon
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,8 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -33,12 +32,45 @@ import com.DeepSoni.vedaconnect.Data.Mantra
 import com.DeepSoni.vedaconnect.R
 import com.DeepSoni.vedaconnect.Repository.MantraRepository
 import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
+import androidx.compose.material.icons.filled.Search
+
+
+// ✅ Audio player helper
+@Composable
+fun rememberMantraPlayer(audioResId: Int?): Pair<Boolean, () -> Unit> {
+    val context = LocalContext.current
+    var isPlaying by remember { mutableStateOf(false) }
+    var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
+
+    fun togglePlayPause() {
+        if (audioResId == null) return
+        if (isPlaying) {
+            mediaPlayer?.pause()
+            isPlaying = false
+        } else {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer.create(context, audioResId)
+            }
+            mediaPlayer?.start()
+            isPlaying = true
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
+    }
+
+    return Pair(isPlaying, ::togglePlayPause)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(navController: NavHostController) {
     var searchQuery by remember { mutableStateOf("") }
-    var selectedTab by remember { mutableIntStateOf(0) } // Fix: Use mutableIntStateOf for Int state
+    var selectedTab by remember { mutableIntStateOf(0) }
 
     val tabs = listOf("All", "Mandala 1", "Mandala 2", "Mandala 3", "Mandala 5", "Mandala 9", "Mandala 10")
 
@@ -55,6 +87,7 @@ fun ContentScreen(navController: NavHostController) {
             else -> searchResults
         }
     }
+
     val headerOrangeGradient = Brush.verticalGradient(
         colors = listOf(Color(0xFFF57C00), Color(0xFFFB8C00), Color(0xFFFF9800))
     )
@@ -64,18 +97,16 @@ fun ContentScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(VedaTheme.Cream)
     ) {
-        // Header
+        // 🟠 Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
                 .padding(horizontal = 24.dp, vertical = 32.dp)
         ) {
-            Column(
-                modifier = Modifier.align(Alignment.TopStart)
-            ) {
+            Column(modifier = Modifier.align(Alignment.TopStart)) {
                 Text(
-                    text = "Explore Mandalas and Suktas🙏", // Fix: Typo "Suktas" is correct
+                    text = "Explore Mandalas and Suktas 🙏",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -89,14 +120,14 @@ fun ContentScreen(navController: NavHostController) {
             }
         }
 
-        // Search Bar
+        // 🔍 Search Bar
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            placeholder = { Text("Search Mandala, Sukta or Mantra") }, // Fix: Typo "Sukta" is correct
+            placeholder = { Text("Search Mandala, Sukta or Mantra") },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -112,22 +143,15 @@ fun ContentScreen(navController: NavHostController) {
             ),
             shape = RoundedCornerShape(12.dp),
             singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    // Search will trigger automatically via searchQuery state
-                }
-            )
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = {})
         )
 
-        // Tabs
+        // 🔸 Tabs
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
             modifier = Modifier.fillMaxWidth(),
             containerColor = VedaTheme.Cream,
-            contentColor = Color(0xFFFFF7F0),
             edgePadding = 16.dp,
             indicator = {},
             divider = {}
@@ -156,7 +180,7 @@ fun ContentScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Mantra List
+        // 📜 Mantra List
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -168,15 +192,16 @@ fun ContentScreen(navController: NavHostController) {
                     navController.navigate("detail/${mantra.id}")
                 }
             }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
         }
     }
 }
 
+// 🪔 Mantra Card with Play Icon
 @Composable
 fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
+    val (isPlaying, togglePlayPause) = rememberMantraPlayer(mantra.audioResId)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -191,27 +216,26 @@ fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Read Icon
+            // ▶️ Play Button
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .clip(CircleShape),
+                    .clip(CircleShape)
+                    .clickable { togglePlayPause() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.PlayArrow, // Fix: Use outlined icon
-                    modifier = Modifier.size(35.dp),
-                    contentDescription = "Read",
-                    tint = Color.Unspecified
+                    imageVector = Icons.Outlined.PlayArrow,
+                    contentDescription = "Play Mantra",
+                    tint = if (isPlaying) VedaTheme.Orange else Color.Gray,
+                    modifier = Modifier.size(35.dp)
                 )
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Mantra Info
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
+            // 📖 Mantra Info
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = mantra.name,
                     fontSize = 16.sp,
@@ -231,7 +255,8 @@ fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
                     maxLines = 1
                 )
             }
-            // Bookmark Icon
+
+            // 🔖 Bookmark Placeholder
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -239,26 +264,28 @@ fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.BookmarkBorder, // Fix: Use outlined icon
-                    modifier = Modifier.size(35.dp),
+                    imageVector = Icons.Outlined.BookmarkBorder,
                     contentDescription = "Bookmark",
-                    tint = Color.Unspecified
+                    tint = Color.Gray,
+                    modifier = Modifier.size(28.dp)
                 )
             }
         }
     }
 }
 
-
+// 🧘‍♂️ Detail Screen with Play/Pause Button
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) { // Fix: Function is now used (assuming it's called from navigation)
+fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
+    val (isPlaying, togglePlayPause) = rememberMantraPlayer(mantra.audioResId)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFFFF7F0))
     ) {
-        // Top Bar
+        // 🔙 Top Bar
         TopAppBar(
             title = { Text("Mantra Details") },
             navigationIcon = {
@@ -278,17 +305,13 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) { // Fi
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
 
-            // Header Card
+            // 🪔 Header
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFE8E0D5)
-                    ),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE8E0D5)),
                     shape = RoundedCornerShape(20.dp)
                 ) {
                     Column(
@@ -311,38 +334,31 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) { // Fi
                             color = VedaTheme.TextGray,
                             textAlign = TextAlign.Center
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // ▶️ Play Button
+                        OutlinedButton(
+                            onClick = { togglePlayPause() },
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = VedaTheme.Orange),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text(if (isPlaying) "⏸ Pause" else "▶️ Play", fontSize = 16.sp)
+                        }
                     }
                 }
             }
 
-            // Sanskrit Section
-            item {
-                SectionCard(
-                    title = "Sanskrit",
-                    content = mantra.sanskrit,
-                    contentColor = Color.Black
-                )
-            }
+            // 🕉 Sanskrit
+            item { SectionCard("Sanskrit", mantra.sanskrit, Color.Black) }
 
-            // Transliteration Section
-            item {
-                SectionCard(
-                    title = "Transliteration",
-                    content = mantra.transliteration,
-                    contentColor = Color.Black.copy(alpha = 0.8f)
-                )
-            }
+            // 📜 Transliteration
+            item { SectionCard("Transliteration", mantra.transliteration, Color.Black.copy(alpha = 0.8f)) }
 
-            // Translation Section
-            item {
-                SectionCard(
-                    title = "Translation",
-                    content = mantra.translation,
-                    contentColor = VedaTheme.TextGray
-                )
-            }
+            // 🌼 Translation
+            item { SectionCard("Translation", mantra.translation, VedaTheme.TextGray) }
 
-            // Action Buttons (Save and Share placeholders)
+            // Action Buttons
             item {
                 Row(
                     modifier = Modifier
@@ -351,45 +367,34 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) { // Fi
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { /* Save functionality */ },
+                        onClick = { /* Save */ },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = VedaTheme.Orange
-                        ),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = VedaTheme.Orange),
                         shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text("🔖 Save", fontSize = 16.sp)
-                    }
+                    ) { Text("🔖 Save", fontSize = 16.sp) }
 
                     OutlinedButton(
-                        onClick = { /* Share functionality */ },
+                        onClick = { /* Share */ },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = VedaTheme.Orange
-                        ),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = VedaTheme.Orange),
                         shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text("🔗 Share", fontSize = 16.sp)
-                    }
+                    ) { Text("🔗 Share", fontSize = 16.sp) }
                 }
             }
 
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
         }
     }
 }
 
+// 📚 Section Card Reusable Component
 @Composable
 fun SectionCard(
     title: String,
     content: String,
     contentColor: Color = Color.Black
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = title,
             fontSize = 16.sp,
@@ -400,9 +405,7 @@ fun SectionCard(
 
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFFFF5E6)
-            ),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF5E6)),
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(

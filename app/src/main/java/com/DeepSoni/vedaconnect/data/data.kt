@@ -10,5 +10,6 @@ data class Mantra(
     val sanskrit: String,
     val transliteration: String,
     val translation: String,
-    val preview: String
+    val preview: String,
+    val audioResId: Int? = null
 )
