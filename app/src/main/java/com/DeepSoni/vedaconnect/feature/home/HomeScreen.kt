@@ -244,7 +244,7 @@ fun QuickActions(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.Article, text = "Community", onClick = { navController.navigate("community") }, modifier = Modifier.weight(1f))
+            QuickActionItem(icon = Icons.Outlined.Article, text = "Awareness", onClick = { navController.navigate("community") }, modifier = Modifier.weight(1f))
             QuickActionItem(
                 icon = Icons.Outlined.Whatshot,
                 text = "My Streaks",
