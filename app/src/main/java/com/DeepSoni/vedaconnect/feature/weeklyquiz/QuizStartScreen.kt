@@ -52,7 +52,7 @@ fun QuizStartScreen(navController: NavHostController) {
                     shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
                 )
                 .padding(16.dp)
-                .height(150.dp)
+                .height(210.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -77,7 +77,7 @@ fun QuizStartScreen(navController: NavHostController) {
                         )
                     Row(
                         modifier = Modifier
-                            .padding(10.dp)
+                            .padding(20.dp)
                     ) {
                         Image(
                             painter = painterResource(R.drawable.alarmclock),
@@ -104,30 +104,29 @@ fun QuizStartScreen(navController: NavHostController) {
                 ) {
                     Text(
                         text = "Questions 5 of 10",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
                         color = Color.White,
                         modifier = Modifier
                             .padding(10.dp)
 
                     )
                     Text(
-                        text = "30%",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Normal,
+                        text = "50%",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
                         color = Color.White,
                         modifier = Modifier
                             .padding(10.dp)
                     )
                 }
                 LinearProgressIndicator(
-                    progress = .9f,
+                    progress = .5f,
                     modifier = Modifier
-                        .weight(1f)
-                        .height(15.dp)
-
-                        .width(10.dp),
-                    color = OrangePrimary,
+                        .weight(.5f)
+                        .height(20.dp)
+                        .fillMaxWidth(),
+                    color = LightOrangeBg,
                     trackColor = Color.LightGray
                 )
             }
@@ -161,8 +160,8 @@ fun QuizQuestionWithOptions() {
         Text(
             text = "Philosophy",
             color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(16.dp)
                 .background(Color(0xFFF77F00), shape = RoundedCornerShape(20.dp))
@@ -237,5 +236,24 @@ fun QuizQuestionWithOptions() {
             .alpha(buttonAlpha)
     ) {
         Text(text = "Submit Answer >", color = Color.White, fontSize = 18.sp)
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Text(
+            text = "Select an Option",
+            color = Color(0xFFF77F00),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(16.dp)
+
+            //textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+
+            )
     }
 }
