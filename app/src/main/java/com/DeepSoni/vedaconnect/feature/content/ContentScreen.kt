@@ -1,4 +1,4 @@
-package com.deepsoni.vedaconnect.feature.content
+package com.DeepSoni.vedaconnect.feature.content
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.background

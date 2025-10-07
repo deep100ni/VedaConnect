@@ -20,14 +20,15 @@ import com.DeepSoni.vedaconnect.Data.Medal
 import com.DeepSoni.vedaconnect.Data.QuizResult
 import com.DeepSoni.vedaconnect.Repository.MantraRepository
 import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
-import com.DeepSoni.vedaconnect.feature.community.CommunityScreen
+import com.DeepSoni.vedaconnect.feature.awareness.AwarenessScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
 import com.DeepSoni.vedaconnect.feature.streaks.StreakScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
-import com.deepsoni.vedaconnect.feature.content.ContentScreen
-import com.deepsoni.vedaconnect.feature.content.MantraDetailScreen
+import com.DeepSoni.vedaconnect.feature.content.ContentScreen
+import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
+
 
 /**
  * A sealed class to define the navigation routes in a type-safe way.
@@ -39,7 +40,7 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object Streaks : Screen("streaks", "Streaks", Icons.Outlined.Whatshot)
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
-    object Community : Screen("community", "Community", Icons.Outlined.Article)
+    object Community : Screen("community", "Awareness", Icons.Outlined.Article)
 
     object QuizComplete : Screen("quizComplete")
     object Notification : Screen("notification")
@@ -138,7 +139,7 @@ fun AppNavigation() {
 
             // Community Screen (with bottom bar)
             composable(Screen.Community.route) {
-                CommunityScreen(navController = navController)
+                AwarenessScreen(navController = navController)
             }
 
             // Notification Screen (no bottom bar)
