@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -87,8 +88,8 @@ fun QuizStartScreen(navController: NavHostController) {
 
                         Text(
                             text = "2:25",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Normal,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
                             color = Color.White,
 
                         )
@@ -256,4 +257,7 @@ fun QuizQuestionWithOptions() {
 
             )
     }
+
+    Spacer(modifier = Modifier.height(110.dp))
+    BottomNavigationBar()
 }

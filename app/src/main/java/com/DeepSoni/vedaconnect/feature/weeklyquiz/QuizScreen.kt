@@ -18,6 +18,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.Forum
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Whatshot
 import androidx.compose.material.icons.outlined.WorkspacePremium
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -25,6 +29,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -106,7 +113,9 @@ fun QuizScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
             PreviouseWeekSection()
             Spacer(modifier = Modifier.height(60.dp))
+
         }
+        BottomNavigationBar()
     }
 }
 
@@ -335,6 +344,220 @@ fun PreviouseWeekSection(modifier: Modifier = Modifier) {
             }
 
         }
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 6",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .8f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "80/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 7",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .6f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "50/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "Icon",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 8",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .7f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "60/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "Icon",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 5",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .5f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "45/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "Icon",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Week 10",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LinearProgressIndicator(
+                    progress = .9f,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(10.dp)
+
+                        .width(8.dp),
+                    color = OrangePrimary,
+                    trackColor = Color.LightGray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "90/100",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.WorkspacePremium,
+                    contentDescription = "Icon",
+                    tint = Color.Gray
+                )
+            }
+
+        }
+
 
     }
 }
@@ -508,5 +731,69 @@ fun MainAppNavigation() {
                 navController = navController
             )
         }
+    }
+}
+
+@Composable
+fun BottomNavigationBar() {
+    NavigationBar(
+        containerColor = Color.White,
+        contentColor = Color(0xFFF57C00)
+    ) {
+        NavigationBarItem(
+            selected = true,
+            onClick = { /* TODO */ },
+            icon = { Icon(Icons.Outlined.Home, contentDescription = "Home") },
+            label = { Text("Home") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color(0xFFF57C00),
+                selectedTextColor = Color(0xFFF57C00),
+                indicatorColor = Color(0xFFFFE0B2)
+            )
+
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { /* TODO */ },
+            icon = { Icon(Icons.Outlined.Whatshot, contentDescription = "Streaks", modifier = Modifier.size(24.dp)) },
+            label = { Text("Streaks") },
+            colors = NavigationBarItemDefaults.colors(
+                unselectedIconColor = Color.Gray,
+                unselectedTextColor = Color.Gray
+            )
+
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { /* TODO */ },
+            icon = { Icon(Icons.Outlined.Forum, contentDescription = "Forum") },
+            label = { Text("Forum") },
+            colors = NavigationBarItemDefaults.colors(
+                unselectedIconColor = Color.Gray,
+                unselectedTextColor = Color.Gray
+            )
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { /* TODO */ },
+            icon = { Icon(Icons.Outlined.WorkspacePremium, contentDescription = "Quiz") },
+            label = { Text("Quiz") },
+            colors = NavigationBarItemDefaults.colors(
+                unselectedIconColor = Color.Gray,
+                unselectedTextColor = Color.Gray
+            )
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { /* TODO */ },
+            icon = { Icon(Icons.Outlined.Book, contentDescription = "Awareness") },
+            label = { Text("Awareness") },
+            colors = NavigationBarItemDefaults.colors(
+                unselectedIconColor = Color.Gray,
+                unselectedTextColor = Color.Gray
+            )
+        )
+
+
     }
 }
