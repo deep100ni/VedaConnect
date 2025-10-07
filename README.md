@@ -1,3 +1,5 @@
+# Under Construction
+
 # 🌿 VedaConnect – Rigveda Learning & Engagement App
 
 ### *Version 1.0 | October 2025*
