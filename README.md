@@ -113,12 +113,12 @@ VedaConnect-main/
 Explore VedaConnect’s beautiful and intuitive interface ✨
 
 <p align="center">
-  <img src="assests/screenshots/greeting.jpg" alt="Greeting Screen" width="30%">
-  <img src="assests/screenshots/home.jpg" alt="Home Screen" width="30%">
-  <img src="assests/screenshots/streak.jpg" alt="Streak Screen" width="30%">
-    <img src="assests/screenshots/content.jpg" alt="Content Screen" width="30%">
-  <img src="assests/screenshots/community.jpg" alt="Community Screen" width="30%">
-  <img src="assests/screenshots/quiz.jpg" alt="Quiz Screen" width="30%">
+  <img src="app/src/main/java/com/DeepSoni/vedaconnect/assets/screenshots/Welcome.png" alt="Welcome Screen" width="30%">
+  <img src="app/src/main/java/com/DeepSoni/vedaconnect/assets/screenshots/Home.png" alt="Home Screen" width="30%">
+  <img src="app/src/main/java/com/DeepSoni/vedaconnect/assets/screenshots/Streaks.png" alt="Streak Screen" width="30%">
+  <img src="app/src/main/java/com/DeepSoni/vedaconnect/assets/screenshots/Content.png" alt="Content Screen" width="30%">
+  <img src="app/src/main/java/com/DeepSoni/vedaconnect/assets/screenshots/Awareness.png" alt="Awareness Screen" width="30%">
+  <img src="app/src/main/java/com/DeepSoni/vedaconnect/assets/screenshots/Quiz.png" alt="Quiz Screen" width="30%">
   
 </p>
 
