@@ -29,23 +29,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.DeepSoni.vedaconnect.Data.LeaderboardEntry
 import com.DeepSoni.vedaconnect.Data.Medal
 import com.DeepSoni.vedaconnect.Data.QuizResult
-
-
-// Color Definitions
-private val PrimaryGreen = Color(0xFF00C853)
-private val OrangeButton = Color(0xFFFF9800)
-private val GrayText = Color(0xFF757575)
-private val BorderGold = Color(0xFFD4AF37)
+import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
+import com.DeepSoni.vedaconnect.ui.theme.BorderGold
+import com.DeepSoni.vedaconnect.ui.theme.GrayText
+import com.DeepSoni.vedaconnect.ui.theme.PrimaryGreen
 
 @Composable
 fun QuizCompleteScreen(
     quizResult: QuizResult,
     leaderboardEntries: List<LeaderboardEntry>,
     onViewFullLeaderboard: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     LazyColumn(
         modifier = modifier
@@ -345,7 +344,7 @@ private fun ViewFullLeaderboardButton(onClick: () -> Unit) {
             .height(56.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = OrangeButton
+            containerColor = Bhagwa
         )
     ) {
         Text(
@@ -355,29 +354,4 @@ private fun ViewFullLeaderboardButton(onClick: () -> Unit) {
             color = Color.White
         )
     }
-}
-
-// Preview with dummy data
-@Composable
-fun PreviewQuizCompleteScreen() {
-    val dummyQuizResult = QuizResult(
-        correctAnswers = 7,
-        totalQuestions = 10,
-        pointsEarned = 70,
-        totalScore = 850
-    )
-
-    val dummyLeaderboard = listOf(
-        LeaderboardEntry("Priya K.", 1, 950, medal = Medal.GOLD),
-        LeaderboardEntry("Rahul M.", 2, 920, medal = Medal.SILVER),
-        LeaderboardEntry("Ananya S.", 3, 890, medal = Medal.BRONZE),
-        LeaderboardEntry("You", 4, 850, isCurrentUser = true),
-        LeaderboardEntry("Dr. Sharma", 5, 820)
-    )
-
-    QuizCompleteScreen(
-        quizResult = dummyQuizResult,
-        leaderboardEntries = dummyLeaderboard,
-        onViewFullLeaderboard = { /* Handle click */ }  // navigate to the Quiz Screen
-    )
 }
