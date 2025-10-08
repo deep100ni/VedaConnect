@@ -14,25 +14,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.DeepSoni.vedaconnect.Screen
+import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
+import com.DeepSoni.vedaconnect.ui.theme.LightOrangeBg
 
-// Color definitions used within this screen
-val OrangePrimary = Color(0xFFF77F00)
-val LightOrangeBg: Color = Color(0xFFFFEEE0)
 
 /**
  * The main entry point for the Quiz feature screen.
  * It displays the header, the current weekly challenge, and a list of previous quizzes.
  */
 @Composable
-fun QuizScreen(navController: NavHostController) {
+fun QuizScreen(navController: NavController) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -45,7 +42,7 @@ fun QuizScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    OrangePrimary,
+                    Bhagwa,
                     shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
                 )
                 .padding(16.dp)
@@ -118,7 +115,11 @@ fun PreviousWeekSection(modifier: Modifier = Modifier, navController: NavControl
             "Week 2" to 0.6f,
             "Week 3" to 0.7f,
             "Week 4" to 0.5f,
-            "Week 5" to 0.9f
+            "Week 5" to 0.9f,
+            "Week 6" to 0.8f,
+            "Week 7" to 0.6f,
+            "Week 8" to 0.7f,
+            "Week 9" to 0.5f
         )
 
         previousWeeks.forEach { (week, progress) ->
@@ -149,7 +150,7 @@ fun PreviousWeekSection(modifier: Modifier = Modifier, navController: NavControl
                         modifier = Modifier
                             .weight(1f)
                             .height(10.dp),
-                        color = OrangePrimary,
+                        color = Bhagwa,
                         trackColor = Color.White
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -174,52 +175,13 @@ fun PreviousWeekSection(modifier: Modifier = Modifier, navController: NavControl
 /**
  * A generic card for displaying statistics. (Not used in the final layout but kept for completeness).
  */
-@Composable
-fun StateCard(icon: ImageVector, label: String, value: String, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = LightOrangeBg)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = Color(0xFFF57C00),
-                modifier = Modifier.size(35.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = value,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = label,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-            }
-        }
-    }
-}
 
 /**
  * A card that presents the current weekly challenge and a button to start it.
  * The "Start Quiz" button's navigation has been removed as requested.
  */
 @Composable
-fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavHostController) {
+fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavController) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -235,7 +197,7 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavHostCon
                 imageVector = Icons.Outlined.WorkspacePremium,
                 contentDescription = "Weekly Challenge Icon",
                 modifier = Modifier.size(60.dp),
-                tint = OrangePrimary
+                tint = Bhagwa
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -271,12 +233,10 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavHostCon
             // The button to start the current week's quiz
             Button(
                 onClick = {
-                    // TODO: Implement navigation to the actual quiz-taking screen.
-                    // For now, this button does nothing as per the request.
-                    // Example: navController.navigate("quiz_questions_route")
+                    navController.navigate(Screen.QuizStart.route)
                 },
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary),
+                colors = ButtonDefaults.buttonColors(containerColor = Bhagwa),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)

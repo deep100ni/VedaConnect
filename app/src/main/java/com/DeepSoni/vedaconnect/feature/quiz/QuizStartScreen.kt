@@ -1,4 +1,4 @@
-package com.DeepSoni.vedaconnect.feature.weeklyquiz
+package com.DeepSoni.vedaconnect.feature.quiz
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -9,13 +9,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -32,68 +34,71 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import com.DeepSoni.vedaconnect.R
+import com.DeepSoni.vedaconnect.Screen
+import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
+import com.DeepSoni.vedaconnect.ui.theme.GreyBorder
+import com.DeepSoni.vedaconnect.ui.theme.LightOrangeBg
 
-//val OrangePrimary = Color(0xFFF77F00)
-//val LightOrangeBg: Color = Color(0xFFFFEEE0)
 
 @Composable
-fun QuizStartScreen(navController: NavHostController) {
-    Column {
+fun QuizStartScreen(navController: NavController) {
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .verticalScroll(scrollState)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    OrangePrimary,
+                    Bhagwa,
                     shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
                 )
                 .padding(16.dp)
-                .height(210.dp)
+                .fillMaxHeight(.2f)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(25.dp)
+                    .padding(10.dp)
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Text(
                         text = "Weekly Quiz",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         modifier = Modifier
-                            .padding(10.dp)
-
-                        )
+                    )
                     Row(
                         modifier = Modifier
-                            .padding(20.dp)
+                            .padding(top = 20.dp, start = 20.dp, bottom = 20.dp)
                     ) {
                         Image(
                             painter = painterResource(R.drawable.alarmclock),
                             contentDescription = " ",
                             modifier = Modifier.size(24.dp)
                         )
-
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "2:25",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
-
                         )
-
                     }
                 }
                 Spacer(modifier = Modifier.height(30.dp))
@@ -124,25 +129,20 @@ fun QuizStartScreen(navController: NavHostController) {
                 LinearProgressIndicator(
                     progress = .5f,
                     modifier = Modifier
-                        .weight(.5f)
-                        .height(20.dp)
+                        .height(5.dp)
                         .fillMaxWidth(),
                     color = LightOrangeBg,
                     trackColor = Color.LightGray
                 )
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        QuizQuestionWithOptions()
+        Spacer(modifier = Modifier.height(8.dp))
+        QuizQuestionWithOptions(navController = navController)
     }
 }
 
-val OrangePrimary = Color(0xFFF77F00)
-val LightOrangeBg = Color(0xFFFFEEE0)
-val GreyBorder = Color(0xFFE0E0E0)
-
 @Composable
-fun QuizQuestionWithOptions() {
+fun QuizQuestionWithOptions(navController: NavController) {
 
     var selectedOption by remember { mutableStateOf<String?>(null) }
     val buttonAlpha by animateFloatAsState(
@@ -157,6 +157,7 @@ fun QuizQuestionWithOptions() {
             .fillMaxWidth()
             .padding(25.dp)
             .background(Color(0xFFFFEEE0), shape = RoundedCornerShape(20.dp))
+
     ) {
         Text(
             text = "Philosophy",
@@ -165,10 +166,10 @@ fun QuizQuestionWithOptions() {
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(16.dp)
-                .background(Color(0xFFF77F00), shape = RoundedCornerShape(20.dp))
+                .background(Bhagwa, shape = RoundedCornerShape(20.dp))
                 .height(30.dp)
                 .width(150.dp),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            textAlign = TextAlign.Center,
 
             )
         Spacer(modifier = Modifier.height(16.dp))
@@ -179,7 +180,7 @@ fun QuizQuestionWithOptions() {
             color = Color.Black,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         optionsList.forEach { optionText ->
             Row(
                 modifier = Modifier
@@ -203,12 +204,12 @@ fun QuizQuestionWithOptions() {
                     selected = (selectedOption == optionText),
                     onClick = { selectedOption = optionText },
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = OrangePrimary,
+                        selectedColor = Bhagwa,
                         unselectedColor = GreyBorder
                     )
                 )
 
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = optionText,
                     fontSize = 18.sp,
@@ -219,17 +220,18 @@ fun QuizQuestionWithOptions() {
                         .padding(vertical = 5.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
     Spacer(modifier = Modifier.height(16.dp))
     Button(
         onClick = {
-            selectedOption
+            navController.navigate(Screen.QuizComplete.route)
+            //selectedOption
         },
         //enabled = selectedOption != null,
         shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary),
+        colors = ButtonDefaults.buttonColors(containerColor = Bhagwa),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp)
@@ -238,26 +240,20 @@ fun QuizQuestionWithOptions() {
     ) {
         Text(text = "Submit Answer >", color = Color.White, fontSize = 18.sp)
     }
-    Spacer(modifier = Modifier.height(16.dp))
-    Column (
+    Spacer(modifier = Modifier.height(8.dp))
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Text(
             text = "Select an Option",
-            color = Color(0xFFF77F00),
+            color = Bhagwa,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(16.dp)
-
-            //textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-
-            )
+        )
     }
-
-    Spacer(modifier = Modifier.height(110.dp))
-    BottomNavigationBar()
 }
