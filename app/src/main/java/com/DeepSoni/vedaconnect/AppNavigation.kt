@@ -28,6 +28,7 @@ import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
 import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
+import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
 
 
 /**
@@ -39,10 +40,13 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object Home : Screen("home", "Home", Icons.Outlined.Home)
     object Streaks : Screen("streaks", "Streaks", Icons.Outlined.Whatshot)
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
+
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
+    object QuizStart : Screen("quizStart", "QuizStart")
+    object QuizComplete : Screen("quizComplete", "QuizComplete")
+
     object Community : Screen("community", "Awareness", Icons.Outlined.Article)
 
-    object QuizComplete : Screen("quizComplete")
     object Notification : Screen("notification")
     object MantraDetail : Screen("detail/{mantraId}") {
         fun createRoute(mantraId: String) = "detail/$mantraId"
@@ -103,6 +107,9 @@ fun AppNavigation() {
             composable(Screen.Quiz.route) {
                 QuizScreen(navController = navController)
             }
+            composable(Screen.QuizStart.route) {
+                QuizStartScreen(navController = navController)
+            }
 
             composable(Screen.QuizComplete.route) {
                 // Dummy data for demonstration
@@ -128,7 +135,8 @@ fun AppNavigation() {
                         navController.navigate(Screen.Quiz.route) {
                             popUpTo(Screen.Quiz.route) { inclusive = true }
                         }
-                    }
+                    },
+                    navController = navController
                 )
             }
 
@@ -151,7 +159,7 @@ fun AppNavigation() {
                 val mantraId = backStackEntry.arguments?.getString("mantraId")
                 val mantra = MantraRepository.mantras.find { it.id == mantraId }
                 mantra?.let {
-                    MantraDetailScreen(navController, it)
+                    MantraDetailScreen(navController = navController, mantra = it)
                 }
             }
 
