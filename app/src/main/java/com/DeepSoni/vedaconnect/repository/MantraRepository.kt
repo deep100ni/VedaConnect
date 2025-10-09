@@ -26,7 +26,8 @@ object MantraRepository {
             sanskrit = "सहस्रशीर्षा पुरुषः\nसहस्राक्षः सहस्रपात्\nस भूमिं विश्वतो वृत्वा\nअत्यतिष्ठद्दशाङ्गुलम्",
             transliteration = "Sahasrashirsha Purushah\nSahasrakshah Sahasrapat\nSa Bhumim Vishvato Vritva\nAtyatishtad Dashangulam",
             translation = "The Cosmic Being has a thousand heads, a thousand eyes, and a thousand feet. Having pervaded the universe on all sides, he extends beyond it by ten fingers' breadth.",
-            preview = "Sahasrashīrṣā puruṣaḥ..."
+            preview = "Sahasrashīrṣā puruṣaḥ...",
+            audioResId = R.raw.purushasukta
         ),
         Mantra(
             id = "3",
@@ -37,7 +38,8 @@ object MantraRepository {
             sanskrit = "अग्निमीळे पुरोहितं\nयज्ञस्य देवमृत्विजम्\nहोतारं रत्नधातमम्",
             transliteration = "Agnim Ile Purohitam\nYajnasya Devam Ritvijam\nHotaram Ratna-dhatamam",
             translation = "I praise Agni, the chosen Priest, God, minister of sacrifice, the invoker, lavishest of wealth and treasures.",
-            preview = "Agnim īḷe purohitam..."
+            preview = "Agnim īḷe purohitam...",
+            audioResId = R.raw.agnisukta
         ),
         Mantra(
             id = "4",
@@ -48,7 +50,8 @@ object MantraRepository {
             sanskrit = "नासदासीन्नो सदासीत्तदानीं\nनासीद्रजो नो व्योमा परो यत्\nकिमावरीवः कुह कस्य शर्मन्\nअम्भः किमासीद्गहनं गभीरम्",
             transliteration = "Nasad Asin No Sad Asit Tadanim\nNasid Rajo No Vyoma Paro Yat\nKim Avarivaḥ Kuha Kasya Sharman\nAmbhaḥ Kim Asid Gahanam Gabhiram",
             translation = "Then even nothingness was not, nor existence. There was no air then, nor the heavens beyond it. What covered it? Where was it? In whose keeping? Was there then cosmic water, in depths unfathomed?",
-            preview = "Nāsad āsīn no sad āsīt..."
+            preview = "Nāsad āsīn no sad āsīt...",
+            audioResId = R.raw.nasadiyasukta
         ),
         Mantra(
             id = "5",
@@ -59,7 +62,8 @@ object MantraRepository {
             sanskrit = "रात्री व्यख्यदायती\nपुरूरुपा उप स्थिता\nअमर्त्या मर्त्यं विश्वमिन्वति",
             transliteration = "Ratri Vyakhyad Ayati\nPururupa Upa Sthita\nAmartya Martyam Vishvam Invati",
             translation = "Night has approached with her manifold forms, the immortal goddess pervades the entire mortal world with her presence.",
-            preview = "Rātrī vyakhyad āyatī..."
+            preview = "Rātrī vyakhyad āyatī...",
+            audioResId = R.raw.ratrisukta
         ),
         Mantra(
             id = "6",
