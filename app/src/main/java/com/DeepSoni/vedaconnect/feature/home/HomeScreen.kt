@@ -1,5 +1,6 @@
 package com.DeepSoni.vedaconnect.feature.home
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,15 +11,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,6 +36,37 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.R
+
+// ✅ Audio player helper
+@Composable
+fun rememberMantraPlayer(audioResId: Int?): Pair<Boolean, () -> Unit> {
+    val context = LocalContext.current
+    var isPlaying by remember { mutableStateOf(false) }
+    var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
+
+    fun togglePlayPause() {
+        if (audioResId == null) return
+        if (isPlaying) {
+            mediaPlayer?.pause()
+            isPlaying = false
+        } else {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer.create(context, audioResId)
+            }
+            mediaPlayer?.start()
+            isPlaying = true
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
+    }
+
+    return Pair(isPlaying, ::togglePlayPause)
+}
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -92,6 +131,8 @@ fun HomeHeader(navController: NavController) { // Accept NavController
 
 @Composable
 fun DailyDharmaDropCard() {
+    val (isPlaying, togglePlayPause) = rememberMantraPlayer(audioResId = R.raw.gayatri)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -131,14 +172,14 @@ fun DailyDharmaDropCard() {
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Rigveda 1.89.1",
+                        text = "Gayatri Mantra",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.Gray
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "\"May we see a hundred autumns, may we live a hundred autumns...\"",
+                        text = "\"Aum Bhur Bhuvah Swah, Tat Savitur Varenyam...\"",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Black.copy(alpha = 0.7f)
                     )
@@ -146,7 +187,7 @@ fun DailyDharmaDropCard() {
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { /* TODO: Implement audio playback */ },
+                onClick = { togglePlayPause() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -154,12 +195,15 @@ fun DailyDharmaDropCard() {
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF57C00))
             ) {
                 Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Play Audio",
+                    imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = if (isPlaying) "Pause Audio" else "Play Audio",
                     tint = Color.White
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Play Audio (1:30)", color = Color.White)
+                Text(
+                    text = if (isPlaying) "Pause Audio" else "Play Gayatri Mantra",
+                    color = Color.White
+                )
             }
         }
     }
