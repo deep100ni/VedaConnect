@@ -33,6 +33,7 @@ import com.DeepSoni.vedaconnect.R
 import com.DeepSoni.vedaconnect.Repository.MantraRepository
 import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
 import androidx.compose.material.icons.filled.Search
+import com.DeepSoni.vedaconnect.feature.audio.rememberMantraPlayer
 
 
 // ✅ Audio player helper
@@ -200,7 +201,7 @@ fun ContentScreen(navController: NavHostController) {
 // 🪔 Mantra Card with Play Icon
 @Composable
 fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
-    val (isPlaying, togglePlayPause) = rememberMantraPlayer(mantra.audioResId)
+    val (isPlaying, togglePlayPause) = rememberMantraPlayer(mantra.audioUrl)
 
     Card(
         modifier = Modifier
@@ -278,7 +279,7 @@ fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
-    val (isPlaying, togglePlayPause) = rememberMantraPlayer(mantra.audioResId)
+    val (isPlaying, togglePlayPause) = rememberMantraPlayer(mantra.audioUrl)
 
     Column(
         modifier = Modifier

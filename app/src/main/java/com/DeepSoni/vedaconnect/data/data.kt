@@ -11,7 +11,7 @@ data class Mantra(
     val transliteration: String,
     val translation: String,
     val preview: String,
-    val audioResId: Int? = null
+    val audioUrl : String
 )
 
 data class QuizResult(
