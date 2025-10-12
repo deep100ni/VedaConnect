@@ -14,6 +14,16 @@ data class Mantra(
     val audioUrl : String
 )
 
+data class Mandala(
+    val id: String,
+    val name: String,
+    val mandalaNumber: Int,
+    val sanskrit: String,
+    val transliteration: String,
+    val translation: String,
+    val preview: String
+)
+
 data class QuizResult(
     val correctAnswers: Int,
     val totalQuestions: Int,

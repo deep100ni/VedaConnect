@@ -12,7 +12,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.StarOutline
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,42 +28,56 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.DeepSoni.vedaconnect.Data.Mantra
+import com.DeepSoni.vedaconnect.Data.Mandala // Import the new Mandala data class
 import com.DeepSoni.vedaconnect.R
+import com.DeepSoni.vedaconnect.Repository.MandalaRepository
 import com.DeepSoni.vedaconnect.Repository.MantraRepository
-import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
-import androidx.compose.material.icons.filled.Search
 import com.DeepSoni.vedaconnect.feature.audio.rememberMantraPlayer
-
+import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
 
 // ✅ Audio player helper
 @Composable
-fun rememberMantraPlayer(audioResId: Int?): Pair<Boolean, () -> Unit> {
+fun rememberMantraPlayer(audioUrl: String?): Pair<Boolean, () -> Unit> {
     val context = LocalContext.current
     var isPlaying by remember { mutableStateOf(false) }
     var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
 
     fun togglePlayPause() {
-        if (audioResId == null) return
+        if (audioUrl == null) return
         if (isPlaying) {
             mediaPlayer?.pause()
             isPlaying = false
         } else {
             if (mediaPlayer == null) {
-                mediaPlayer = MediaPlayer.create(context, audioResId)
+                mediaPlayer = MediaPlayer()
+                mediaPlayer?.apply {
+                    setDataSource(audioUrl)
+                    prepareAsync()
+                    setOnPreparedListener { player ->
+                        player.start()
+                        isPlaying = true
+                    }
+                    setOnCompletionListener {
+                        isPlaying = false
+                    }
+                }
+            } else {
+                mediaPlayer?.start()
+                isPlaying = true
             }
-            mediaPlayer?.start()
-            isPlaying = true
         }
     }
 
-    DisposableEffect(Unit) {
+    DisposableEffect(audioUrl) {
         onDispose {
             mediaPlayer?.release()
             mediaPlayer = null
+            isPlaying = false
         }
     }
 
@@ -71,22 +88,17 @@ fun rememberMantraPlayer(audioResId: Int?): Pair<Boolean, () -> Unit> {
 @Composable
 fun ContentScreen(navController: NavHostController) {
     var searchQuery by remember { mutableStateOf("") }
-    var selectedTab by remember { mutableIntStateOf(0) }
+    var selectedTab by remember { mutableIntStateOf(0) } // 0 for Mandalas, 1 for Mantra
 
-    val tabs = listOf("All", "Mandala 1", "Mandala 2", "Mandala 3", "Mandala 5", "Mandala 9", "Mandala 10")
+    val tabs = listOf("Mandalas", "Mantra")
 
-    val filteredMantras = remember(searchQuery, selectedTab) {
-        val searchResults = MantraRepository.searchMantras(searchQuery)
-        when (selectedTab) {
-            0 -> searchResults
-            1 -> searchResults.filter { it.mandalaNumber == 1 }
-            2 -> searchResults.filter { it.mandalaNumber == 2 }
-            3 -> searchResults.filter { it.mandalaNumber == 3 }
-            4 -> searchResults.filter { it.mandalaNumber == 5 }
-            5 -> searchResults.filter { it.mandalaNumber == 9 }
-            6 -> searchResults.filter { it.mandalaNumber == 10 }
-            else -> searchResults
-        }
+    // Filtered lists based on search query and selected tab
+    val filteredMandalas = remember(searchQuery) {
+        MandalaRepository.searchMandalas(searchQuery)
+    }
+
+    val filteredMantras = remember(searchQuery) {
+        MantraRepository.searchMantras(searchQuery)
     }
 
     val headerOrangeGradient = Brush.verticalGradient(
@@ -102,7 +114,7 @@ fun ContentScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
+                .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 22.dp))
                 .padding(horizontal = 24.dp, vertical = 32.dp)
         ) {
             Column(modifier = Modifier.align(Alignment.TopStart)) {
@@ -181,16 +193,29 @@ fun ContentScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 📜 Mantra List
+        // 📜 Content List (Mandalas or Mantras)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(filteredMantras) { mantra ->
-                MantraCard(mantra = mantra) {
-                    navController.navigate("detail/${mantra.id}")
+            when (selectedTab) {
+                0 -> { // Mandalas Tab
+                    items(filteredMandalas) { mandala ->
+                        MandalaCard(mandala = mandala) {
+                            // Navigate to a Mandala detail screen if you create one
+                            // For now, it just shows the card
+                            // navController.navigate("mandala_detail/${mandala.id}")
+                        }
+                    }
+                }
+                1 -> { // Mantra Tab
+                    items(filteredMantras) { mantra ->
+                        MantraCard(mantra = mantra) {
+                            navController.navigate("detail/${mantra.id}")
+                        }
+                    }
                 }
             }
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -198,82 +223,184 @@ fun ContentScreen(navController: NavHostController) {
     }
 }
 
-// 🪔 Mantra Card with Play Icon
+// 🪔 Mantra Card with Play Icon (UNCHANGED)
 @Composable
 fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
-    val (isPlaying, togglePlayPause) = rememberMantraPlayer(mantra.audioUrl)
+    // Only initialize player if audioUrl is not null
+    val (isPlaying, togglePlayPause) = if (mantra.audioUrl != null) {
+        rememberMantraPlayer(mantra.audioUrl)
+    } else {
+        Pair(false) {} // Return a default pair if no audio
+    }
+
+    // Rigveda inspired gradient colors
+    val rigvedaCardGradient = Brush.horizontalGradient(
+        colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFFD2B48C)) // SaddleBrown, Sienna, Tan
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }, // The whole card is clickable for 'View'
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent), // Set to transparent to show gradient
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(rigvedaCardGradient, shape = RoundedCornerShape(16.dp))
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                // 📖 Mantra Info
+                Text(
+                    text = mantra.name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = if (mantra.mandalaNumber != 0) "Mandala ${mantra.mandalaNumber}" else "",
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+                if (mantra.suktaNumber != 0) { // Only show sukta and mantra number if they exist
+                    Text(
+                        text = "Sukta ${mantra.suktaNumber} · Mantra ${mantra.mantraNumber}",
+                        fontSize = 14.sp,
+                        color = Color.White.copy(alpha = 0.8f)
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = mantra.preview,
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.6f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Action Buttons Row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // ▶️ Play/Pause Button - ONLY show if audioUrl is NOT null
+                    if (mantra.audioUrl != null) {
+                        Button(
+                            onClick = { togglePlayPause() },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A) // IndianRed, LightSalmon
+                            ),
+                            shape = CircleShape,
+                            contentPadding = PaddingValues(10.dp),
+                            modifier = Modifier.size(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Outlined.PlayArrow,
+                                contentDescription = if (isPlaying) "Pause Mantra" else "Play Mantra",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+
+                    // 👁️ View Button (always present)
+                    Button(
+                        onClick = { onClick() }, // Triggers the card's original onClick for details
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDAA520)), // Goldenrod
+                        shape = CircleShape,
+                        contentPadding = PaddingValues(10.dp),
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Visibility,
+                            contentDescription = "View Details",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    // ⭐ Star (Favorite) Button (always present)
+                    Button(
+                        onClick = { /* Handle favorite action */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB0C4DE)), // LightSteelBlue
+                        shape = CircleShape,
+                        contentPadding = PaddingValues(10.dp),
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.StarOutline,
+                            contentDescription = "Favorite Mantra",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 🏞️ NEW Mandala Card (No Buttons)
+@Composable
+fun MandalaCard(mandala: Mandala, onClick: () -> Unit) {
+    // Rigveda inspired gradient colors
+    val rigvedaCardGradient = Brush.horizontalGradient(
+        colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFFD2B48C)) // SaddleBrown, Sienna, Tan
+    )
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .background(rigvedaCardGradient, shape = RoundedCornerShape(16.dp))
         ) {
-            // ▶️ Play Button
-            Box(
+            Column(
                 modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .clickable { togglePlayPause() },
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.PlayArrow,
-                    contentDescription = "Play Mantra",
-                    tint = if (isPlaying) VedaTheme.Orange else Color.Gray,
-                    modifier = Modifier.size(35.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // 📖 Mantra Info
-            Column(modifier = Modifier.weight(1f)) {
+                // 📖 Mandala Info
                 Text(
-                    text = mantra.name,
-                    fontSize = 16.sp,
+                    text = mandala.name,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.White
                 )
                 Text(
-                    text = "Mandala ${mantra.mandalaNumber} · Sukta ${mantra.suktaNumber}",
+                    text = "Mandala ${mandala.mandalaNumber}",
                     fontSize = 14.sp,
-                    color = VedaTheme.TextGray
+                    color = Color.White.copy(alpha = 0.8f)
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = mantra.preview,
+                    text = mandala.preview,
                     fontSize = 12.sp,
-                    color = VedaTheme.TextGray.copy(alpha = 0.7f),
-                    maxLines = 1
+                    color = Color.White.copy(alpha = 0.6f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
-            }
-
-            // 🔖 Bookmark Placeholder
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.BookmarkBorder,
-                    contentDescription = "Bookmark",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(28.dp)
-                )
+                // No Spacer or Row for buttons here, as requested.
             }
         }
     }
 }
+
 
 // 🧘‍♂️ Detail Screen with Play/Pause Button
 @OptIn(ExperimentalMaterial3Api::class)
