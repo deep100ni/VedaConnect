@@ -27,6 +27,8 @@ import com.DeepSoni.vedaconnect.feature.streaks.StreakScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
+// ✅ FIX: Added the missing import for MandalaOneSuktasScreen
+import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
 import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
 
@@ -40,6 +42,7 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object Home : Screen("home", "Home", Icons.Outlined.Home)
     object Streaks : Screen("streaks", "Streaks", Icons.Outlined.Whatshot)
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
+    object MandalaOneSuktas : Screen("mandalaOneSuktas")
 
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
     object QuizStart : Screen("quizStart", "QuizStart")
@@ -143,6 +146,11 @@ fun AppNavigation() {
             // Content Screen (with bottom bar)
             composable(Screen.Content.route) {
                 ContentScreen(navController = navController)
+            }
+
+            // Mandala One Suktas Screen (no bottom bar)
+            composable(Screen.MandalaOneSuktas.route) {
+                MandalaOneSuktasScreen(navController = navController)
             }
 
             // Community Screen (with bottom bar)
