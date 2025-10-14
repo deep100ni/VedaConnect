@@ -1,4 +1,4 @@
-package com.DeepSoni.vedaconnect.Data
+package com.DeepSoni.vedaconnect.data
 
 // Data Classes
 data class Mantra(

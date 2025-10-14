@@ -32,13 +32,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.DeepSoni.vedaconnect.Data.Mantra
-import com.DeepSoni.vedaconnect.Data.Mandala // Import the new Mandala data class
-import com.DeepSoni.vedaconnect.R
-import com.DeepSoni.vedaconnect.Repository.MandalaRepository
-import com.DeepSoni.vedaconnect.Repository.MantraRepository
+import com.DeepSoni.vedaconnect.data.Mantra
+import com.DeepSoni.vedaconnect.data.Mandala // Import the new Mandala data class
+import com.DeepSoni.vedaconnect.repository.MandalaRepository
+import com.DeepSoni.vedaconnect.repository.MantraRepository
 import com.DeepSoni.vedaconnect.Screen
-import com.DeepSoni.vedaconnect.feature.audio.rememberMantraPlayer
+import com.DeepSoni.vedaconnect.audio.rememberMantraPlayer
 import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
 
 // ✅ Audio player helper

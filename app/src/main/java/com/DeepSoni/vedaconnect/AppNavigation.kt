@@ -2,6 +2,7 @@ package com.DeepSoni.vedaconnect
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,16 +16,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.DeepSoni.vedaconnect.Data.LeaderboardEntry
-import com.DeepSoni.vedaconnect.Data.Medal
-import com.DeepSoni.vedaconnect.Data.QuizResult
-import com.DeepSoni.vedaconnect.Repository.MantraRepository
-import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
-import com.DeepSoni.vedaconnect.feature.awareness.AwarenessScreen
+import com.DeepSoni.vedaconnect.data.LeaderboardEntry
+import com.DeepSoni.vedaconnect.data.Medal
+import com.DeepSoni.vedaconnect.data.QuizResult
+import com.DeepSoni.vedaconnect.repository.MantraRepository
+import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
+import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
-import com.DeepSoni.vedaconnect.feature.streaks.StreakScreen
-import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
+import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
+import com.DeepSoni.vedaconnect.feature.quiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
 // ✅ FIX: Added the missing import for MandalaOneSuktasScreen
@@ -48,12 +49,12 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object QuizStart : Screen("quizStart", "QuizStart")
     object QuizComplete : Screen("quizComplete", "QuizComplete")
 
-    object Community : Screen("community", "Awareness", Icons.Outlined.Article)
+    object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
 
     object Notification : Screen("notification")
-    object MantraDetail : Screen("detail/{mantraId}") {
-        fun createRoute(mantraId: String) = "detail/$mantraId"
-    }
+    //object MantraDetail : Screen("detail/{mantraId}") {
+      //  fun createRoute(mantraId: String) = "detail/$mantraId"
+    //}
 }
 
 @Composable

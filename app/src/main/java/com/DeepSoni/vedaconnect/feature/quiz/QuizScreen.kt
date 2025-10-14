@@ -1,4 +1,4 @@
-package com.DeepSoni.vedaconnect.feature.weeklyquiz
+package com.DeepSoni.vedaconnect.feature.quiz
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

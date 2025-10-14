@@ -25,10 +25,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.DeepSoni.vedaconnect.Data.Mantra
-import com.DeepSoni.vedaconnect.Data.Sukta
-import com.DeepSoni.vedaconnect.Repository.MandalaOneSuktasRepository
-import com.DeepSoni.vedaconnect.feature.audio.rememberMantraPlayer
+import com.DeepSoni.vedaconnect.data.Sukta
+import com.DeepSoni.vedaconnect.repository.MandalaOneSuktasRepository
+import com.DeepSoni.vedaconnect.audio.rememberMantraPlayer
 import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

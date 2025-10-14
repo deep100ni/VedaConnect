@@ -1,6 +1,6 @@
-package com.DeepSoni.vedaconnect.Repository
+package com.DeepSoni.vedaconnect.repository
 
-import com.DeepSoni.vedaconnect.Data.Sukta
+import com.DeepSoni.vedaconnect.data.Sukta
 
 private const val BASE_AUDIO_URL = "https://raw.githubusercontent.com/c0mpli/rigveda3d/main/public/data/audio"
 
@@ -30,13 +30,4 @@ object MandalaOneSuktasRepository {
             audioUrl = "$BASE_AUDIO_URL/3/62.mp3"
         )
     )
-
-    fun searchSuktas(query: String): List<Sukta> {
-        return suktas.filter {
-            it.name.contains(query, ignoreCase = true) ||
-                    it.sanskrit.contains(query, ignoreCase = true) ||
-                    it.transliteration.contains(query, ignoreCase = true) ||
-                    it.translation.contains(query, ignoreCase = true)
-        }
-    }
 }

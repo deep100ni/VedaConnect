@@ -1,4 +1,4 @@
-package com.DeepSoni.vedaconnect.feature.streaks
+package com.DeepSoni.vedaconnect.feature.streak
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
