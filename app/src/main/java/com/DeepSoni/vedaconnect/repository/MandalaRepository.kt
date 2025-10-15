@@ -1,6 +1,6 @@
-package com.DeepSoni.vedaconnect.Repository
+package com.DeepSoni.vedaconnect.repository
 
-import com.DeepSoni.vedaconnect.Data.Mandala
+import com.DeepSoni.vedaconnect.data.Mandala
 
 object MandalaRepository {
 
@@ -106,9 +106,5 @@ object MandalaRepository {
                     it.preview.contains(query, ignoreCase = true) ||
                     it.mandalaNumber.toString() == query
         }
-    }
-
-    fun getMandalaById(id: String): Mandala? {
-        return mandalas.find { it.id == id }
     }
 }

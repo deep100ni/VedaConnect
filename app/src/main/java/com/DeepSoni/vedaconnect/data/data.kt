@@ -1,4 +1,4 @@
-package com.DeepSoni.vedaconnect.Data
+package com.DeepSoni.vedaconnect.data
 
 // Data Classes
 data class Mantra(
@@ -24,6 +24,18 @@ data class Mandala(
     val preview: String
 )
 
+data class Sukta(
+    val id: String,
+    val name: String,
+    val mandalaNumber: Int,
+    val suktaNumber: Int,
+    val sanskrit: String,
+    val transliteration: String,
+    val translation: String,
+    val preview: String,
+    val audioUrl : String? = null
+)
+
 data class QuizResult(
     val correctAnswers: Int,
     val totalQuestions: Int,
@@ -38,3 +50,7 @@ data class LeaderboardEntry(
     val isCurrentUser: Boolean = false,
     val medal: Medal? = null
 )
+
+enum class Medal {
+    GOLD, SILVER, BRONZE
+}

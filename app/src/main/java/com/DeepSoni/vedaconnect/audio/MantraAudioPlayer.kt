@@ -1,4 +1,4 @@
-package com.DeepSoni.vedaconnect.feature.audio
+package com.DeepSoni.vedaconnect.audio
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer

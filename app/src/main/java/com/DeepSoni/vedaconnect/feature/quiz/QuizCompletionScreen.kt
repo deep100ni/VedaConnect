@@ -1,5 +1,6 @@
-package com.DeepSoni.vedaconnect.feature
+package com.DeepSoni.vedaconnect.feature.quiz
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,9 +31,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.DeepSoni.vedaconnect.Data.LeaderboardEntry
-import com.DeepSoni.vedaconnect.Data.Medal
-import com.DeepSoni.vedaconnect.Data.QuizResult
+import com.DeepSoni.vedaconnect.data.LeaderboardEntry
+import com.DeepSoni.vedaconnect.data.Medal
+import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
 import com.DeepSoni.vedaconnect.ui.theme.BorderGold
 import com.DeepSoni.vedaconnect.ui.theme.GrayText
@@ -225,7 +226,7 @@ private fun LeaderboardItem(entry: LeaderboardEntry) {
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         border = if (entry.isCurrentUser) {
-            androidx.compose.foundation.BorderStroke(2.dp, borderColor)
+            BorderStroke(2.dp, borderColor)
         } else null
     ) {
         Row(
