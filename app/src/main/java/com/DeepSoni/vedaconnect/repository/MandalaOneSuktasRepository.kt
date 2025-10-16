@@ -29,9 +29,10 @@ object MandalaOneSuktasRepository {
         if (isInitialized) return
 
         // Read the JSON file from the assets folder
-        val jsonString = context.assets.open("suktas/complete_rigveda_all_mandalas.json").bufferedReader().use {
+        val jsonString = context.assets.open("assets/suktas/complete_rigveda_all_mandalas.json").bufferedReader().use {
             it.readText()
         }
+
 
         // Parse the raw JSON into our intermediate data classes
         val parsedData = jsonParser.decodeFromString<Map<String, Map<String, List<Rik>>>>(jsonString)
