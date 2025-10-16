@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -41,6 +42,9 @@ android {
         // Android KTX
         implementation(libs.androidx.core.ktx)
         implementation(libs.androidx.lifecycle.runtime.ktx)
+
+        // Kotlinx Serialization
+        implementation(libs.kotlinx.serialization.json)
 
         // Compose BOM (Bill of Materials) for consistent versions
         implementation(platform(libs.androidx.compose.bom))
