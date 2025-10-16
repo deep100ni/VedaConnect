@@ -1,6 +1,5 @@
 package com.DeepSoni.vedaconnect.feature.suktas
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +15,9 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -24,16 +26,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.DeepSoni.vedaconnect.data.Sukta
-import com.DeepSoni.vedaconnect.repository.MandalaOneSuktasRepository
 import com.DeepSoni.vedaconnect.audio.rememberMantraPlayer
 import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MandalaOneSuktasScreen(navController: NavHostController) {
-    val suktas = MandalaOneSuktasRepository.suktas
+fun MandalaOneSuktasScreen(
+    navController: NavHostController,
+    mandalaId: Int,
+    // 1. Get an instance of our new ViewModel.
+    viewModel: MandalaOneSuktasViewModel = viewModel()
+) {
+    LaunchedEffect(key1 = mandalaId) {
+        viewModel.loadSukasForMandala(mandalaId)
+    }
+    // 2. Collect the data and loading state from the ViewModel.
+    //    Compose will automatically redraw when these values change.
+    val suktas by viewModel.suktas.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
@@ -41,7 +54,7 @@ fun MandalaOneSuktasScreen(navController: NavHostController) {
             .background(VedaTheme.Cream)
     ) {
         TopAppBar(
-            title = { Text("Mandala 1 Suktas") },
+            title = { Text("Mandala $mandalaId Suktas") },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
@@ -57,31 +70,40 @@ fun MandalaOneSuktasScreen(navController: NavHostController) {
             )
         )
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        // 3. Show a loading indicator while data is loading, or the list when it's ready.
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            items(suktas) { sukta ->
-                SuktaCard(sukta = sukta) {
-                    // Navigate to Sukta detail screen if you create one
+            if (isLoading) {
+                CircularProgressIndicator(color = Color(0xFFF57C00))
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(suktas) { sukta ->
+                        SuktaCard(sukta = sukta) {
+                            // Navigate to Sukta detail screen if you create one
+                        }
+                    }
                 }
             }
         }
     }
 }
-// 🪔 Mantra Card with Play Icon (UNCHANGED)
+
+// No changes are needed for SuktaCard
 @Composable
 fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
-    // Only initialize player if audioUrl is not null
     val (isPlaying, togglePlayPause) = if (sukta.audioUrl != null) {
         rememberMantraPlayer(sukta.audioUrl)
     } else {
-        Pair(false) {} // Return a default pair if no audio
+        Pair(false, { /* Do nothing */ })
     }
 
-    // Rigveda inspired gradient colors
     val rigvedaCardGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFFD2B48C)) // SaddleBrown, Sienna, Tan
     )
@@ -89,8 +111,8 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }, // The whole card is clickable for 'View'
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent), // Set to transparent to show gradient
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -104,7 +126,6 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                // 📖 Mantra Info
                 Text(
                     text = sukta.name,
                     fontSize = 18.sp,
@@ -116,9 +137,9 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                     fontSize = 14.sp,
                     color = Color.White.copy(alpha = 0.8f)
                 )
-                if (sukta.suktaNumber != 0) { // Only show sukta and mantra number if they exist
+                if (sukta.suktaNumber != 0) {
                     Text(
-                       text = "Sukta ${sukta.suktaNumber}",
+                        text = "Sukta ${sukta.suktaNumber}",
                         fontSize = 14.sp,
                         color = Color.White.copy(alpha = 0.8f)
                     )
@@ -134,18 +155,16 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Action Buttons Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // ▶️ Play/Pause Button - ONLY show if audioUrl is NOT null
                     if (sukta.audioUrl != null) {
                         Button(
                             onClick = { togglePlayPause() },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A) // IndianRed, LightSalmon
+                                containerColor = if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A)
                             ),
                             shape = CircleShape,
                             contentPadding = PaddingValues(10.dp),
@@ -160,10 +179,9 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                         }
                     }
 
-                    // 👁️ View Button (always present)
                     Button(
-                        onClick = { onClick() }, // Triggers the card's original onClick for details
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDAA520)), // Goldenrod
+                        onClick = { onClick() },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDAA520)),
                         shape = CircleShape,
                         contentPadding = PaddingValues(10.dp),
                         modifier = Modifier.size(48.dp)
@@ -176,10 +194,9 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                         )
                     }
 
-                    // ⭐ Star (Favorite) Button (always present)
                     Button(
                         onClick = { /* Handle favorite action */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB0C4DE)), // LightSteelBlue
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB0C4DE)),
                         shape = CircleShape,
                         contentPadding = PaddingValues(10.dp),
                         modifier = Modifier.size(48.dp)

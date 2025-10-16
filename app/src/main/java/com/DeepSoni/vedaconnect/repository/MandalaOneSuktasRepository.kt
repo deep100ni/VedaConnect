@@ -1,18 +1,45 @@
 package com.DeepSoni.vedaconnect.repository
 
-// Add this line
-import com.DeepSoni.vedaconnect.data.Sukta
 import android.content.Context
-import kotlinx.serialization.Serializable
+import com.DeepSoni.vedaconnect.data.Sukta
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
+// Kelas data perantara untuk penguraian JSON
+@kotlinx.serialization.Serializable
+private data class Rik(
+    val rik_number: Int,
+    val samhita: Samhita,
+    val padapatha: Padapatha,
+    val translation: String
+)
 
-// Repository object to hold and manage the Sukta data
+@kotlinx.serialization.Serializable
+private data class Samhita(
+    val devanagari: Devanagari
+)
+
+@kotlinx.serialization.Serializable
+private data class Padapatha(
+    val transliteration: Transliteration
+)
+
+@kotlinx.serialization.Serializable
+private data class Devanagari(
+    val text: String
+)
+
+@kotlinx.serialization.Serializable
+private data class Transliteration(
+    val text: String
+)
+
+// Objek repositori untuk menampung dan mengelola data Sukta
 object MandalaOneSuktasRepository {
 
     private var isInitialized = false
     var suktas: List<Sukta> = emptyList()
-        private set // Prevents modification from outside
+        private set // Mencegah modifikasi dari luar
 
     private val jsonParser = Json {
         ignoreUnknownKeys = true
@@ -20,24 +47,24 @@ object MandalaOneSuktasRepository {
     }
 
     /**
-     * Initializes the repository by loading and parsing Sukta data from the assets JSON.
-     * This should be called only once, preferably from your Application class or a ViewModel.
+     * Menginisialisasi repositori dengan memuat dan mengurai data Sukta dari aset JSON.
+     * Ini harus dipanggil hanya sekali, sebaiknya dari kelas Aplikasi Anda atau ViewModel.
      *
-     * @param context The application context needed to access assets.
+     * @param context Konteks aplikasi yang diperlukan untuk mengakses aset.
      */
     fun initialize(context: Context) {
         if (isInitialized) return
 
-        // Read the JSON file from the assets folder
-        val jsonString = context.assets.open("assets/suktas/complete_rigveda_all_mandalas.json").bufferedReader().use {
+        // Baca file JSON dari folder aset
+        // PERBAIKAN KUNCI: Jalur aset yang salah diperbaiki. Seharusnya hanya nama file.
+        val jsonString = context.assets.open("complete_rigveda_all_mandalas.json").bufferedReader().use {
             it.readText()
         }
 
-
-        // Parse the raw JSON into our intermediate data classes
+        // Urai JSON mentah ke dalam kelas data perantara kami
         val parsedData = jsonParser.decodeFromString<Map<String, Map<String, List<Rik>>>>(jsonString)
 
-        // Map the parsed data into the final List<Sukta>
+        // Petakan data yang diurai ke dalam List<Sukta> akhir
         suktas = parsedData.flatMap { (mandalaKey, suktasMap) ->
             val mandalaNumber = mandalaKey.filter { it.isDigit() }.toIntOrNull() ?: 0
 
@@ -56,43 +83,12 @@ object MandalaOneSuktasRepository {
                     sanskrit = fullSanskrit,
                     transliteration = fullTransliteration,
                     translation = fullTranslation,
-                    preview = riks.firstOrNull()?.translation ?: "No preview available."
+                    preview = riks.firstOrNull()?.translation ?: "Tidak ada pratinjau yang tersedia.",
+                    // PERBAIKAN: Setel audioUrl ke null secara default karena tidak ada di JSON Anda
+                    audioUrl = null
                 )
             }
         }
         isInitialized = true
     }
 }
-
-
-// region Intermediate Data Classes for JSON Parsing
-// These classes perfectly match the structure of your JSON file.
-
-@Serializable
-private data class Rik(
-    val rik_number: Int,
-    val samhita: Samhita,
-    val padapatha: Padapatha,
-    val translation: String
-)
-
-@Serializable
-private data class Samhita(
-    val devanagari: Devanagari
-)
-
-@Serializable
-private data class Padapatha(
-    val transliteration: Transliteration
-)
-
-@Serializable
-private data class Devanagari(
-    val text: String
-)
-
-@Serializable
-private data class Transliteration(
-    val text: String
-)
-// endregion

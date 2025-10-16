@@ -19,24 +19,22 @@ import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.data.LeaderboardEntry
 import com.DeepSoni.vedaconnect.data.Medal
 import com.DeepSoni.vedaconnect.data.QuizResult
-import com.DeepSoni.vedaconnect.repository.MantraRepository
-import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
+import com.DeepSoni.vedaconnect.feature.content.ContentScreen
+import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
-import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
+import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizScreen
-import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
-import com.DeepSoni.vedaconnect.feature.content.ContentScreen
-// ✅ FIX: Added the missing import for MandalaOneSuktasScreen
-import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
-import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
-
+import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
+import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
+import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
+import com.DeepSoni.vedaconnect.repository.MantraRepository
 
 /**
- * A sealed class to define the navigation routes in a type-safe way.
- * This prevents typos and centralizes screen information.
+ * Kelas bersegel untuk mendefinisikan rute navigasi dengan cara yang aman dari tipe.
+ * Ini mencegah kesalahan ketik dan memusatkan informasi layar.
  */
 sealed class Screen(val route: String, val label: String? = null, val icon: ImageVector? = null) {
     object Welcome : Screen("welcome")
@@ -44,24 +42,21 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object Streaks : Screen("streaks", "Streaks", Icons.Outlined.Whatshot)
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
     object MandalaOneSuktas : Screen("mandalaOneSuktas")
-
+    object Suktas : Screen("suktas/{mandalaId}") {
+        fun createRoute(mandalaId: Int) = "suktas/$mandalaId"
+    }
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
     object QuizStart : Screen("quizStart", "QuizStart")
     object QuizComplete : Screen("quizComplete", "QuizComplete")
-
     object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
-
     object Notification : Screen("notification")
-    //object MantraDetail : Screen("detail/{mantraId}") {
-      //  fun createRoute(mantraId: String) = "detail/$mantraId"
-    //}
 }
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    // List of screens that will be displayed in the bottom navigation bar.
+    // Daftar layar yang akan ditampilkan di bilah navigasi bawah.
     val bottomBarItems = listOf(
         Screen.Home,
         Screen.Streaks,
@@ -73,7 +68,7 @@ fun AppNavigation() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Determine if the bottom bar should be shown based on the current screen's route.
+    // Tentukan apakah bilah bawah harus ditampilkan berdasarkan rute layar saat ini.
     val shouldShowBottomBar = bottomBarItems.any { it.route == currentRoute }
 
     Scaffold(
@@ -89,25 +84,25 @@ fun AppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Welcome.route, // Start on the Welcome screen
+            startDestination = Screen.Welcome.route, // Mulai dari layar Selamat Datang
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Welcome Screen (no bottom bar)
+            // Layar Selamat Datang (tanpa bilah bawah)
             composable(Screen.Welcome.route) {
                 WelcomeScreen(navController = navController)
             }
 
-            // Home Screen (with bottom bar)
+            // Layar Beranda (dengan bilah bawah)
             composable(Screen.Home.route) {
                 HomeScreen(navController = navController)
             }
 
-            // Streak Screen (with bottom bar)
+            // Layar Streak (dengan bilah bawah)
             composable(Screen.Streaks.route) {
                 StreakScreen(navController = navController)
             }
 
-            // Quiz Screen (with bottom bar)
+            // Layar Kuis (dengan bilah bawah)
             composable(Screen.Quiz.route) {
                 QuizScreen(navController = navController)
             }
@@ -116,7 +111,7 @@ fun AppNavigation() {
             }
 
             composable(Screen.QuizComplete.route) {
-                // Dummy data for demonstration
+                // Data dummy untuk demonstrasi
                 val dummyQuizResult = QuizResult(
                     correctAnswers = 7,
                     totalQuestions = 10,
@@ -135,7 +130,7 @@ fun AppNavigation() {
                     quizResult = dummyQuizResult,
                     leaderboardEntries = dummyLeaderboard,
                     onViewFullLeaderboard = {
-                        // Navigate back to the main quiz screen
+                        // Arahkan kembali ke layar kuis utama
                         navController.navigate(Screen.Quiz.route) {
                             popUpTo(Screen.Quiz.route) { inclusive = true }
                         }
@@ -144,22 +139,28 @@ fun AppNavigation() {
                 )
             }
 
-            // Content Screen (with bottom bar)
+            // Layar Konten (dengan bilah bawah)
             composable(Screen.Content.route) {
                 ContentScreen(navController = navController)
             }
 
-            // Mandala One Suktas Screen (no bottom bar)
-            composable(Screen.MandalaOneSuktas.route) {
-                MandalaOneSuktasScreen(navController = navController)
+            // Layar Mandala One Suktas (tanpa bilah bawah)
+            composable(Screen.Suktas.route) { backStackEntry ->
+                // Extract the mandalaId from the route. Default to 1 if it's missing.
+                val mandalaId = backStackEntry.arguments?.getString("mandalaId")?.toIntOrNull() ?: 1
+                MandalaOneSuktasScreen(
+                    navController = navController,
+                    mandalaId = mandalaId // Pass the ID to the screen
+                )
             }
 
-            // Community Screen (with bottom bar)
+
+            // Layar Komunitas (dengan bilah bawah)
             composable(Screen.Community.route) {
                 AwarenessScreen(navController = navController)
             }
 
-            // Notification Screen (no bottom bar)
+            // Layar Notifikasi (tanpa bilah bawah)
             composable(Screen.Notification.route) {
                 NotificationScreen(navController = navController)
             }
@@ -171,14 +172,13 @@ fun AppNavigation() {
                     MantraDetailScreen(navController = navController, mantra = it)
                 }
             }
-
         }
     }
 }
 
 /**
- * This is the single, shared Bottom Navigation Bar for the entire app.
- * It is stateless and receives all its data as parameters.
+ * Ini adalah satu-satunya Bilah Navigasi Bawah bersama untuk seluruh aplikasi.
+ * Ini tanpa status dan menerima semua datanya sebagai parameter.
  */
 @Composable
 private fun AppBottomNavigationBar(
@@ -188,11 +188,11 @@ private fun AppBottomNavigationBar(
 ) {
     NavigationBar(
         containerColor = Color.White,
-        contentColor = Color(0xFFF57C00) // Orange color for selected items
+        contentColor = Color(0xFFF57C00) // Warna oranye untuk item yang dipilih
     ) {
         items.forEach { screen ->
             require(screen.icon != null && screen.label != null) {
-                "Screens in the bottom navigation bar must have an icon and a label."
+                "Layar di bilah navigasi bawah harus memiliki ikon dan label."
             }
 
             NavigationBarItem(
@@ -202,9 +202,9 @@ private fun AppBottomNavigationBar(
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
-                        // Avoid multiple copies of the same destination when re-selecting the same item
+                        // Hindari beberapa salinan tujuan yang sama saat memilih kembali item yang sama
                         launchSingleTop = true
-                        // Restore state when re-selecting a previously selected item
+                        // Pulihkan status saat memilih kembali item yang dipilih sebelumnya
                         restoreState = true
                     }
                 },
@@ -213,7 +213,7 @@ private fun AppBottomNavigationBar(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFFF57C00),
                     selectedTextColor = Color(0xFFF57C00),
-                    indicatorColor = Color(0xFFFFE0B2), // Light orange for the selection indicator
+                    indicatorColor = Color(0xFFFFE0B2), // Oranye muda untuk indikator pilihan
                     unselectedIconColor = Color.Gray,
                     unselectedTextColor = Color.Gray
                 )
