@@ -2,6 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin.get()
+
+
+
+
+
 }
 
 android {
@@ -38,6 +44,9 @@ android {
         compose = true
     }
     dependencies {
+
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+
         // Android KTX
         implementation(libs.androidx.core.ktx)
         implementation(libs.androidx.lifecycle.runtime.ktx)

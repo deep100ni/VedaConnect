@@ -1,33 +1,53 @@
+// In D:/Code/Flutter/VedaConnect/app/src/main/java/com/DeepSoni/vedaconnect/repository/MandalaOneSuktasRepository.kt
+
 package com.DeepSoni.vedaconnect.repository
 
+import android.content.Context
 import com.DeepSoni.vedaconnect.data.Sukta
-
-private const val BASE_AUDIO_URL = "https://raw.githubusercontent.com/c0mpli/rigveda3d/main/public/data/audio"
-
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
+import java.io.IOException
 
 object MandalaOneSuktasRepository {
-    val suktas: List<Sukta> = listOf(
-        Sukta(
-            id = "sukta1",
-            name = "Agni Sukta",
-            mandalaNumber = 1,
-            suktaNumber = 1,
-            sanskrit = "अग्निमीळे पुरोहितं यज्ञस्य देवमृत्विजम्। होतारं रत्नधातमम्॥",
-            transliteration = "agnimīḷe purohitaṃ yajñasya devamṛtvijam| hotāraṃ ratnadhātamam||",
-            translation = "I praise Agni, the chosen Priest, God, minister of sacrifice, the hotar, lavishest of wealth.",
-            preview = "The first hymn of the Rigveda, dedicated to Agni, the fire god.",
-            audioUrl = "$BASE_AUDIO_URL/3/62.mp3"
-        ),
-        Sukta(
-            id = "sukta2",
-            name = "Vayu Sukta",
-            mandalaNumber = 1,
-            suktaNumber = 2,
-            sanskrit = "वायवा याहि दर्शतेमे सोमा अरंकृताः। तेषां पाहि श्रुधी हवम्॥",
-            transliteration = "vāyavā yāhi darśateme somā araṃkṛtāḥ| teṣāṃ pāhi śrudhī havam||",
-            translation = "BEAUTIFUL Vāyu, come, for thee these Soma drops have been prepared. Drink of them, hearken to our call.",
-            preview = "A hymn to Vayu, the god of wind.",
-            audioUrl = "$BASE_AUDIO_URL/3/62.mp3"
-        )
-    )
+
+    // This list will hold ALL suktas from the JSON file after initialization.
+    private var allSuktas: List<Sukta> = emptyList()
+
+    /**
+     * The publicly exposed list of suktas.
+     * It now filters the full list to only return suktas for Mandala 1.
+     * Your UI code will continue to use this property without any changes.
+     */
+    val suktas: List<Sukta>
+        get() = allSuktas.filter { it.mandalaNumber == 1 }
+
+    /**
+     * Initializes the repository by loading data from the JSON asset.
+     * This method should be called only once when the app starts.
+     */
+    fun initialize(context: Context) {
+        // Prevent re-initialization
+        if (allSuktas.isNotEmpty()) {
+            return
+        }
+
+        try {
+            // 1. Open the JSON file from the assets folder
+            val jsonString = context.assets.open("complete_rigveda_all_mandalas.json")
+                .bufferedReader()
+                .use { it.readText() }
+
+            // 2. Create a JSON parser instance (lenient to avoid crashing on extra fields)
+            val jsonParser = Json { ignoreUnknownKeys = true }
+
+            // 3. Decode the JSON string into a list of Sukta objects
+            allSuktas = jsonParser.decodeFromString(jsonString)
+
+        } catch (ioException: IOException) {
+            // Log the error or handle it as needed
+            ioException.printStackTrace()
+            // In case of an error, we'll have an empty list
+            allSuktas = emptyList()
+        }
+    }
 }
