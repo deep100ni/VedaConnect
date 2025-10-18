@@ -52,7 +52,7 @@ import com.DeepSoni.vedaconnect.Screen
 import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
 import com.DeepSoni.vedaconnect.ui.theme.GreyBorder
 import com.DeepSoni.vedaconnect.ui.theme.LightOrangeBg
-import com.DeepSoni.vedaconnect.ui.theme.PrimaryGreen
+import com.DeepSoni.vedaconnect.ui.theme.LightBlue
 import com.DeepSoni.vedaconnect.ui.theme.Red
 
 
@@ -250,7 +250,7 @@ fun QuizStartScreen(navController: NavController) {
         //}
     }
     val buttonText = when {
-        currentQuestionIndex == totalQuestions - 2 ->
+        currentQuestionIndex == totalQuestions - 1 ->
             if (currentLanguage == "en") "Go to Leaderboard" else "लीडरबोर्ड पर जाएं"
 
         answerStatus == null ->
@@ -395,14 +395,14 @@ fun QuizStartScreen(navController: NavController) {
                             imageVector = Icons.Filled.CheckCircle,
                             contentDescription = "Correct",
                             modifier = Modifier.size(14.dp),
-                            tint = PrimaryGreen
+                            tint = LightBlue
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = if (currentLanguage == "en") "Correct: $correctCount" else "सही: $correctCount",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
-                            color = PrimaryGreen
+                            color = LightBlue
                         )
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -514,8 +514,8 @@ fun QuizStartScreen(navController: NavController) {
             Text(
                 text = feedbackText,
                 color = when (answerStatus) {
-                    true -> Color(0xFF4CAF50) // Green
-                    false -> Color(0xFFF44336) // Red
+                    true -> LightBlue
+                    false -> Red
                     else -> Bhagwa
                 },
                 fontSize = 18.sp,
@@ -583,8 +583,8 @@ fun QuizQuestionWithOptions(
             val isChecked = answerStatus != null
             val boxColor = when {
                 !isChecked -> Color.White
-                verificationKey == correctAnswerKey -> Color.Green
-                isSelected && verificationKey != correctAnswerKey -> Color.Red
+                verificationKey == correctAnswerKey -> LightBlue
+                isSelected && verificationKey != correctAnswerKey -> Red
                 else -> Color.White
             }
             val isClickable = answerStatus == null
@@ -611,13 +611,9 @@ fun QuizQuestionWithOptions(
                     onClick = { if (isClickable) onOptionSelected(verificationKey) },
                     enabled = isClickable,
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = if (answerStatus == true && isSelected) Color.Green else if (answerStatus == false && isSelected) Color(
-                            0xFFF44336
-                        ) else Bhagwa,
+                        selectedColor = if (answerStatus == true && isSelected) Color.Green else if (answerStatus == false && isSelected) Red else Bhagwa,
                         unselectedColor = GreyBorder,
-                        disabledSelectedColor = if (verificationKey == correctAnswerKey) Color(
-                            0xFF4CAF50
-                        ) else Color.Gray,
+                        disabledSelectedColor = if (verificationKey == correctAnswerKey) LightBlue else Color.Gray,
                         disabledUnselectedColor = GreyBorder
                     )
                 )

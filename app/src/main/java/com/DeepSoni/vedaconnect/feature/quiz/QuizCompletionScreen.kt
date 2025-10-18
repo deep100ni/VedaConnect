@@ -36,7 +36,7 @@ import com.DeepSoni.vedaconnect.Data.QuizResult
 import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
 import com.DeepSoni.vedaconnect.ui.theme.BorderGold
 import com.DeepSoni.vedaconnect.ui.theme.GrayText
-import com.DeepSoni.vedaconnect.ui.theme.PrimaryGreen
+import com.DeepSoni.vedaconnect.ui.theme.LightBlue
 
 @Composable
 fun QuizCompleteScreen(
@@ -100,7 +100,7 @@ private fun QuizCompleteHeader() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = PrimaryGreen)
+        colors = CardDefaults.cardColors(containerColor = Bhagwa)
     ) {
         Column(
             modifier = Modifier.padding(20.dp)
@@ -126,7 +126,7 @@ private fun ScoreCard(quizResult: QuizResult) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = PrimaryGreen)
+        colors = CardDefaults.cardColors(containerColor = LightBlue)
     ) {
         Column(
             modifier = Modifier
