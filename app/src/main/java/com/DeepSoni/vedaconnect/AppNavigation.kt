@@ -128,6 +128,10 @@ fun AppNavigation() {
                 )
 
                 QuizCompleteScreen(
+                    correctAnswers = dummyQuizResult.correctAnswers,
+                    totalQuestions = dummyQuizResult.totalQuestions,
+                    pointsEarned = dummyQuizResult.pointsEarned,
+                    totalScore = dummyQuizResult.totalScore,
                     quizResult = dummyQuizResult,
                     leaderboardEntries = dummyLeaderboard,
                     onViewFullLeaderboard = {

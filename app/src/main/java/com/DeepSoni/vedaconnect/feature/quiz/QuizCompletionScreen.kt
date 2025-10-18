@@ -41,11 +41,21 @@ import com.DeepSoni.vedaconnect.ui.theme.PrimaryGreen
 @Composable
 fun QuizCompleteScreen(
     quizResult: QuizResult,
+    correctAnswers:Int,
+    totalQuestions:Int,
+    totalScore:Int,
+    pointsEarned: Int,
     leaderboardEntries: List<LeaderboardEntry>,
     onViewFullLeaderboard: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    val quizResult = QuizResult(
+        correctAnswers = correctAnswers,
+        totalQuestions = totalQuestions,
+        pointsEarned = correctAnswers * 10,
+        totalScore =  correctAnswers * 10
+    )
     LazyColumn(
         modifier = modifier
             .fillMaxSize()

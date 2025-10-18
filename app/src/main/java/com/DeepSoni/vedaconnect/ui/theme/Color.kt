@@ -15,3 +15,5 @@ val GreyBorder = Color(0xFFE0E0E0)
 val PrimaryGreen = Color(0xFF00C853)
 val GrayText = Color(0xFF757575)
 val BorderGold = Color(0xFFD4AF37)
+
+val Red = Color(0xFFE32B07)
