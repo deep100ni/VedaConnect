@@ -1,53 +1,103 @@
-// In D:/Code/Flutter/VedaConnect/app/src/main/java/com/DeepSoni/vedaconnect/repository/MandalaOneSuktasRepository.kt
-
 package com.DeepSoni.vedaconnect.repository
 
 import android.content.Context
+import android.util.Log
 import com.DeepSoni.vedaconnect.data.Sukta
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.decodeFromString
-import java.io.IOException
+
 
 object MandalaOneSuktasRepository {
 
-    // This list will hold ALL suktas from the JSON file after initialization.
     private var allSuktas: List<Sukta> = emptyList()
 
-    /**
-     * The publicly exposed list of suktas.
-     * It now filters the full list to only return suktas for Mandala 1.
-     * Your UI code will continue to use this property without any changes.
-     */
     val suktas: List<Sukta>
         get() = allSuktas.filter { it.mandalaNumber == 1 }
 
-    /**
-     * Initializes the repository by loading data from the JSON asset.
-     * This method should be called only once when the app starts.
-     */
     fun initialize(context: Context) {
-        // Prevent re-initialization
         if (allSuktas.isNotEmpty()) {
             return
         }
 
         try {
-            // 1. Open the JSON file from the assets folder
             val jsonString = context.assets.open("complete_rigveda_all_mandalas.json")
                 .bufferedReader()
                 .use { it.readText() }
 
-            // 2. Create a JSON parser instance (lenient to avoid crashing on extra fields)
             val jsonParser = Json { ignoreUnknownKeys = true }
 
-            // 3. Decode the JSON string into a list of Sukta objects
-            allSuktas = jsonParser.decodeFromString(jsonString)
+            val rigvedaData = jsonParser.decodeFromString<Map<String, Map<String, List<Rik>>>>(jsonString)
 
-        } catch (ioException: IOException) {
-            // Log the error or handle it as needed
-            ioException.printStackTrace()
-            // In case of an error, we'll have an empty list
+            val parsedSukas = rigvedaData.flatMap { (mandalaKey, suktasMap) ->
+                val mandalaNumber = mandalaKey.split(" ").last().toIntOrNull()
+                if (mandalaNumber == null) {
+                    Log.w("Repository", "Could not parse number from mandala key: '$mandalaKey'. Skipping.")
+                    return@flatMap emptyList()
+                }
+
+                suktasMap.mapNotNull { (suktaKey, riks) ->
+                    val suktaNumber = suktaKey.split(" ").last().toIntOrNull()
+                    if (suktaNumber == null) {
+                        Log.w("Repository", "Could not parse number from sukta key: '$suktaKey'. Skipping.")
+                        return@mapNotNull null
+                    }
+
+                    if (riks.isEmpty()) {
+                        return@mapNotNull null
+                    }
+
+                    val sanskritText = riks.joinToString(separator = "\n") { it.samhita.devanagari.text }
+                    val transliterationText = riks.joinToString(separator = "\n") { it.padapatha.transliteration.text }
+                    val translationText = riks.joinToString(separator = "\n") { it.translation }
+
+                    val previewText = riks.first().translation
+
+                    Sukta(
+                        id = "mandala_${mandalaNumber}_sukta_$suktaNumber",
+                        name = "Mandala $mandalaNumber, Sukta $suktaNumber",
+                        mandalaNumber = mandalaNumber,
+                        suktaNumber = suktaNumber,
+                        sanskrit = sanskritText,
+                        transliteration = transliterationText,
+                        translation = translationText,
+                        preview = previewText,
+                        audioUrl = null
+                    )
+                }
+            }
+            allSuktas = parsedSukas
+
+        } catch (e: Exception) {
+            Log.e("Repository", "Fatal error initializing MandalaOneSuktasRepository", e)
             allSuktas = emptyList()
         }
     }
 }
+
+
+@Serializable
+private data class Rik(
+    val samhita: Samhita,
+    val padapatha: Padapatha,
+    val translation: String
+)
+
+@Serializable
+private data class Samhita(
+    val devanagari: Devanagari
+)
+
+@Serializable
+private data class Devanagari(
+    val text: String
+)
+
+@Serializable
+private data class Padapatha(
+    val transliteration: Transliteration
+)
+
+@Serializable
+private data class Transliteration(
+    val text: String
+)
