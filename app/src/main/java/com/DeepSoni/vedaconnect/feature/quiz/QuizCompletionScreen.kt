@@ -1,6 +1,5 @@
-package com.DeepSoni.vedaconnect.feature.quiz
+package com.DeepSoni.vedaconnect.feature
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,22 +30,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.DeepSoni.vedaconnect.data.LeaderboardEntry
 import com.DeepSoni.vedaconnect.data.Medal
+import com.DeepSoni.vedaconnect.data.LeaderboardEntry
 import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
 import com.DeepSoni.vedaconnect.ui.theme.BorderGold
 import com.DeepSoni.vedaconnect.ui.theme.GrayText
-import com.DeepSoni.vedaconnect.ui.theme.PrimaryGreen
+import com.DeepSoni.vedaconnect.ui.theme.LightBlue
 
 @Composable
 fun QuizCompleteScreen(
     quizResult: QuizResult,
+    correctAnswers:Int,
+    totalQuestions:Int,
+    totalScore:Int,
+    pointsEarned: Int,
     leaderboardEntries: List<LeaderboardEntry>,
     onViewFullLeaderboard: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    val quizResult = QuizResult(
+        correctAnswers = correctAnswers,
+        totalQuestions = totalQuestions,
+        pointsEarned = correctAnswers * 10,
+        totalScore =  correctAnswers * 10
+    )
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -91,7 +100,7 @@ private fun QuizCompleteHeader() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = PrimaryGreen)
+        colors = CardDefaults.cardColors(containerColor = Bhagwa)
     ) {
         Column(
             modifier = Modifier.padding(20.dp)
@@ -117,7 +126,7 @@ private fun ScoreCard(quizResult: QuizResult) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = PrimaryGreen)
+        colors = CardDefaults.cardColors(containerColor = LightBlue)
     ) {
         Column(
             modifier = Modifier
@@ -226,7 +235,7 @@ private fun LeaderboardItem(entry: LeaderboardEntry) {
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         border = if (entry.isCurrentUser) {
-            BorderStroke(2.dp, borderColor)
+            androidx.compose.foundation.BorderStroke(2.dp, borderColor)
         } else null
     ) {
         Row(

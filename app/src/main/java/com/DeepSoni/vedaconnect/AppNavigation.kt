@@ -19,19 +19,19 @@ import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.data.LeaderboardEntry
 import com.DeepSoni.vedaconnect.data.Medal
 import com.DeepSoni.vedaconnect.data.QuizResult
+import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.repository.MantraRepository
-import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
 import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
-import com.DeepSoni.vedaconnect.feature.quiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
 // ✅ FIX: Added the missing import for MandalaOneSuktasScreen
 import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
 import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
+import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
 
 
 /**
@@ -132,6 +132,10 @@ fun AppNavigation() {
                 )
 
                 QuizCompleteScreen(
+                    correctAnswers = dummyQuizResult.correctAnswers,
+                    totalQuestions = dummyQuizResult.totalQuestions,
+                    pointsEarned = dummyQuizResult.pointsEarned,
+                    totalScore = dummyQuizResult.totalScore,
                     quizResult = dummyQuizResult,
                     leaderboardEntries = dummyLeaderboard,
                     onViewFullLeaderboard = {
