@@ -2,8 +2,17 @@ package com.DeepSoni.vedaconnect
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.Article
+import androidx.compose.material.icons.outlined.AutoStories
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Whatshot
+import androidx.compose.material.icons.outlined.WorkspacePremium
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -11,24 +20,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.DeepSoni.vedaconnect.Data.LeaderboardEntry
-import com.DeepSoni.vedaconnect.Data.Medal
-import com.DeepSoni.vedaconnect.Data.QuizResult
+import androidx.navigation.navArgument
 import com.DeepSoni.vedaconnect.Repository.MantraRepository
 import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.awareness.AwarenessScreen
+import com.DeepSoni.vedaconnect.feature.content.ContentScreen
+import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
+import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
 import com.DeepSoni.vedaconnect.feature.streaks.StreakScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
-import com.DeepSoni.vedaconnect.feature.content.ContentScreen
-import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
-import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
 
 
 /**
@@ -43,7 +51,11 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
 
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
     object QuizStart : Screen("quizStart", "QuizStart")
-    object QuizComplete : Screen("quizComplete", "QuizComplete")
+    object QuizComplete : Screen("quizComplete", "QuizComplete") {
+        fun createRoute(score: Int, totalQuestions: Int, totalPoints: Int): String {
+            return "quizComplete/$score/$totalQuestions/$totalPoints"
+        }
+    }
 
     object Community : Screen("community", "Awareness", Icons.Outlined.Article)
 
@@ -111,36 +123,33 @@ fun AppNavigation() {
                 QuizStartScreen(navController = navController)
             }
 
-            composable(Screen.QuizComplete.route) {
-                // Dummy data for demonstration
-                val dummyQuizResult = QuizResult(
-                    correctAnswers = 7,
-                    totalQuestions = 10,
-                    pointsEarned = 70,
-                    totalScore = 850
-                )
-                val dummyLeaderboard = listOf(
-                    LeaderboardEntry("Priya K.", 1, 950, medal = Medal.GOLD),
-                    LeaderboardEntry("Rahul M.", 2, 920, medal = Medal.SILVER),
-                    LeaderboardEntry("Ananya S.", 3, 890, medal = Medal.BRONZE),
-                    LeaderboardEntry("You", 4, 850, isCurrentUser = true),
-                    LeaderboardEntry("Dr. Sharma", 5, 820)
-                )
+            composable(
+                "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints}",
+                arguments = listOf(
+                    navArgument("correctAnswers") { type = NavType.IntType },
+                    navArgument("totalQuestions") { type = NavType.IntType
+                        defaultValue = 0},
+                    navArgument("totalPoints") { type = NavType.IntType },
+
+                    )
+            ) { backStackEntry ->
+                val correctAnswers = backStackEntry.arguments?.getInt("correctAnswers") ?: 0
+                val totalPoints = backStackEntry.arguments?.getInt("totalPoints") ?: 0
+                val totalQuestions = backStackEntry.arguments?.getInt("totalQuestions") ?: 1
 
                 QuizCompleteScreen(
-                    correctAnswers = dummyQuizResult.correctAnswers,
-                    totalQuestions = dummyQuizResult.totalQuestions,
-                    pointsEarned = dummyQuizResult.pointsEarned,
-                    totalScore = dummyQuizResult.totalScore,
-                    quizResult = dummyQuizResult,
-                    leaderboardEntries = dummyLeaderboard,
+                    correctAnswers = correctAnswers,
+                    totalQuestions = totalQuestions,
+                    pointsEarned = totalPoints,
+                    totalPoints = totalPoints,
+                    navController = navController,
+                    leaderboardEntries = emptyList(),
                     onViewFullLeaderboard = {
                         // Navigate back to the main quiz screen
                         navController.navigate(Screen.Quiz.route) {
                             popUpTo(Screen.Quiz.route) { inclusive = true }
                         }
-                    },
-                    navController = navController
+                    }
                 )
             }
 

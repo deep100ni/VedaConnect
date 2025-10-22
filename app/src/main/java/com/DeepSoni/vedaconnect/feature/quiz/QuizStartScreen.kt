@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -198,6 +199,8 @@ val masterQuizData = listOf(
 
 @Composable
 fun QuizStartScreen(navController: NavController) {
+    val context = LocalContext.current
+    val scoreManager = remember { ScoreManager(context) }
     val selectedQuestions = remember { masterQuizData.shuffled().take(10) }
     val totalQuestions = selectedQuestions.size
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
@@ -217,6 +220,23 @@ fun QuizStartScreen(navController: NavController) {
     }
     val animatedProgress by animateFloatAsState(targetValue = progress, label = "progressAnimation")
     val scrollState = rememberScrollState()
+
+    var isQuizFinished by remember { mutableStateOf(false) }
+    LaunchedEffect(isQuizFinished) {
+        if (isQuizFinished) {
+            scoreManager.saveScore(totalPoints)
+
+            navController.navigate(
+                Screen.QuizComplete.createRoute(
+                    score,
+                    totalQuestions,
+                    totalPoints
+                )
+            ) {
+                popUpTo(Screen.QuizStart.route) { inclusive = true }
+            }
+        }
+    }
 
     val CORRECT_ANSWER_POINTS = 10
 
@@ -242,10 +262,7 @@ fun QuizStartScreen(navController: NavController) {
         } else {
             selectedAnswerKey = null
             answerStatus = null
-            navController.navigate("${Screen.QuizComplete.route}/$score/$totalPoints") {
-                // Prevent going back to the quiz screen from the results screen
-                popUpTo(Screen.QuizStart.route) { inclusive = true }
-            }
+            isQuizFinished = true
         }
         //}
     }
@@ -355,11 +372,6 @@ fun QuizStartScreen(navController: NavController) {
                 )
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-
-
         Spacer(modifier = Modifier.height(8.dp))
 
         if (currentQuestion != null) {
@@ -473,10 +485,12 @@ fun QuizStartScreen(navController: NavController) {
                 when (buttonText) {
                     "Submit Answer", "उत्तर सबमिट करें" -> submitAnswer()
                     "Next Question", "अगला प्रश्न" -> nextQuestion()
-                    "Finish Quiz", "क्विज समाप्त करें" -> nextQuestion()
-                    "Go to Leaderboard", "लीडरबोर्ड पर जाएं" -> navController.navigate(
-                        Screen.QuizComplete.route
-                    )
+                    "Go to Leaderboard", "लीडरबोर्ड पर जाएं" -> {
+                        submitAnswer()
+                        nextQuestion()
+//                        navController.navigate(
+//                            Screen.QuizComplete.route)
+                    }
                 }
             },
             enabled = selectedAnswerKey != null || answerStatus != null || currentQuestionIndex == totalQuestions,

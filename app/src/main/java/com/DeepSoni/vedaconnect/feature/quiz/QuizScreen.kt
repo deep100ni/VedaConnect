@@ -147,7 +147,7 @@ fun PreviousWeekSection(modifier: Modifier = Modifier, navController: NavControl
                     .clickable {
                         // Navigate to the completion screen when a previous quiz is clicked.
                         // In a real app, you would pass a specific quiz ID here.
-                        navController.navigate(Screen.QuizComplete.route)
+                        navController.navigate(Screen.Quiz.route)
                     }
                     .background(LightOrangeBg) // The shape is now handled by the clip modifier
                     .padding(16.dp),
