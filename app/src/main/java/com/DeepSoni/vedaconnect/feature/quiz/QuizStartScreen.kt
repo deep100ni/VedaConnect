@@ -200,7 +200,7 @@ val masterQuizData = listOf(
 @Composable
 fun QuizStartScreen(navController: NavController) {
     val context = LocalContext.current
-    val scoreManager = remember { ScoreManager(context) }
+    val scoreManager = remember { ScoreManager(context)}
     val selectedQuestions = remember { masterQuizData.shuffled().take(10) }
     val totalQuestions = selectedQuestions.size
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
