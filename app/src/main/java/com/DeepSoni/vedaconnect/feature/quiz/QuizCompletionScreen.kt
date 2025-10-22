@@ -22,17 +22,22 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.DeepSoni.vedaconnect.data.Medal
 import com.DeepSoni.vedaconnect.data.LeaderboardEntry
-import com.DeepSoni.vedaconnect.data.QuizResult
+import com.DeepSoni.vedaconnect.data.Medal
+import com.DeepSoni.vedaconnect.feature.quiz.ScoreManager
+import com.DeepSoni.vedaconnect.feature.quiz.masterQuizData
 import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
 import com.DeepSoni.vedaconnect.ui.theme.BorderGold
 import com.DeepSoni.vedaconnect.ui.theme.GrayText
@@ -40,24 +45,41 @@ import com.DeepSoni.vedaconnect.ui.theme.LightBlue
 
 @Composable
 fun QuizCompleteScreen(
-    quizResult: QuizResult,
-    correctAnswers:Int,
-    totalQuestions:Int,
-    totalScore:Int,
+    correctAnswers: Int,
+    totalQuestions: Int,
+    totalPoints: Int,
     pointsEarned: Int,
-    leaderboardEntries: List<LeaderboardEntry>,
     onViewFullLeaderboard: () -> Unit,
-    modifier: Modifier = Modifier,
+    leaderboardEntries: List<LeaderboardEntry>,
     navController: NavController
 ) {
-    val quizResult = QuizResult(
-        correctAnswers = correctAnswers,
-        totalQuestions = totalQuestions,
-        pointsEarned = correctAnswers * 10,
-        totalScore =  correctAnswers * 10
-    )
+    val context = LocalContext.current
+    val scoreManager = remember { ScoreManager(context) }
+
+    val highScores by scoreManager.highScoresFlow.collectAsState(initial = emptyList())
+
+    val totalQuestions = masterQuizData.size
+
+    val currentUserResult = remember(pointsEarned, highScores.size) {
+        highScores.firstOrNull { it.points == pointsEarned }
+    }
+    val leaderboardEntries = highScores.mapIndexed { index, result ->
+        LeaderboardEntry(
+            rank = index + 1,
+            name = if (index == 0) "You" else "Player ${result.timestamp % 1000}",
+            points = result.points,
+            isCurrentUser = result == currentUserResult,
+            medal = when (index) {
+                0 -> Medal.GOLD
+                1 -> Medal.SILVER
+                2 -> Medal.BRONZE
+                else -> null
+            }
+        )
+    }
+
     LazyColumn(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
             .padding(16.dp),
@@ -70,7 +92,12 @@ fun QuizCompleteScreen(
 
         // Score Card
         item {
-            ScoreCard(quizResult)
+            ScoreCard(
+                correctAnswers = correctAnswers,
+                totalQuestions = totalQuestions,
+                pointsEarned = pointsEarned,
+                totalScore = highScores.firstOrNull()?.points ?: 0
+            )
         }
 
         // Leaderboard Section
@@ -85,7 +112,7 @@ fun QuizCompleteScreen(
 
         // View Full Leaderboard Button
         item {
-            ViewFullLeaderboardButton(onClick = onViewFullLeaderboard)
+            ViewFullLeaderboardButton(onClick = {navController.popBackStack()}) //onViewFullLeaderboard)
         }
 
         // Bottom spacing
@@ -122,7 +149,12 @@ private fun QuizCompleteHeader() {
 }
 
 @Composable
-private fun ScoreCard(quizResult: QuizResult) {
+private fun ScoreCard(
+    correctAnswers: Int,
+    totalQuestions: Int,
+    totalScore: Int,
+    pointsEarned: Int
+){
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -144,7 +176,7 @@ private fun ScoreCard(quizResult: QuizResult) {
 
             // Score
             Text(
-                text = "${quizResult.correctAnswers}/${quizResult.totalQuestions}",
+                text = "$correctAnswers/$totalQuestions",
                 fontSize = 56.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -165,7 +197,7 @@ private fun ScoreCard(quizResult: QuizResult) {
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "+${quizResult.pointsEarned}",
+                        text = "+$pointsEarned",
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -179,7 +211,7 @@ private fun ScoreCard(quizResult: QuizResult) {
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "${quizResult.totalScore}",
+                        text = "$totalScore",
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
