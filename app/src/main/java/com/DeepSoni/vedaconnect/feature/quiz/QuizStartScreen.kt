@@ -221,7 +221,7 @@ fun QuizStartScreen(navController: NavController) {
     val animatedProgress by animateFloatAsState(targetValue = progress, label = "progressAnimation")
     val scrollState = rememberScrollState()
 
-    var isQuizFinished by remember { mutableStateOf(false) }
+    var isQuizFinished by remember { mutableStateOf(false)}
     LaunchedEffect(isQuizFinished) {
         if (isQuizFinished) {
             scoreManager.saveScore(totalPoints)
