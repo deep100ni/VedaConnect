@@ -16,18 +16,22 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.DeepSoni.vedaconnect.audio.rememberMantraPlayer
 import com.DeepSoni.vedaconnect.data.Sukta
 import com.DeepSoni.vedaconnect.repository.MandalaOneSuktasRepository
 import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
@@ -36,8 +40,15 @@ import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
 @Composable
 fun MandalaOneSuktasScreen(navController: NavHostController) {
     // Fetch the list of suktas from the repository.
-    // 'remember' ensures this is done only once during the initial composition.
-    val suktas = remember { MandalaOneSuktasRepository.suktas }
+    val context = LocalContext.current
+
+    // Remember a state for suktas so recomposition happens after loading
+    var suktas by remember { mutableStateOf<List<Sukta>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        MandalaOneSuktasRepository.initialize(context)
+        suktas = MandalaOneSuktasRepository.suktas
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -202,4 +213,8 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
             }
         }
     }
+}
+
+fun rememberMantraPlayer(audioUrl: String): Pair<Boolean, () -> Unit> {
+    return TODO("Provide the return value")
 }
