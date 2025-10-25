@@ -1,6 +1,5 @@
 package com.DeepSoni.vedaconnect.feature.suktas
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,33 +14,38 @@ import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.DeepSoni.vedaconnect.Screen
 import com.DeepSoni.vedaconnect.audio.rememberMantraPlayer
 import com.DeepSoni.vedaconnect.data.Sukta
 import com.DeepSoni.vedaconnect.repository.MandalaOneSuktasRepository
-import com.DeepSoni.vedaconnect.ui.theme.VedaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MandalaOneSuktasScreen(navController: NavHostController) {
-    // Fetch the list of suktas from the repository.
-    // 'remember' ensures this is done only once during the initial composition.
-    val suktas = remember { MandalaOneSuktasRepository.suktas }
+    val context = LocalContext.current
+    var suktas by remember { mutableStateOf<List<Sukta>>(emptyList()) }
+
+    // Load the suktas when the screen is first composed
+    LaunchedEffect(Unit) {
+        MandalaOneSuktasRepository.initialize(context)
+        suktas = MandalaOneSuktasRepository.suktas
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = VedaTheme.Cream
+        color = Color(0xFFFFF7F0) // A consistent background color
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopAppBar(
@@ -61,14 +65,14 @@ fun MandalaOneSuktasScreen(navController: NavHostController) {
                 )
             )
 
-            // If the suktas list is empty, you can show a message.
             if (suktas.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
+                    // You might want a CircularProgressIndicator here while loading
                     Text(
-                        text = "No Suktas found.",
+                        text = "Loading Suktas...",
                         fontSize = 18.sp,
                         color = Color.Gray
                     )
@@ -80,10 +84,13 @@ fun MandalaOneSuktasScreen(navController: NavHostController) {
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(suktas) { sukta ->
-                        SuktaCard(sukta = sukta) {
-                            // TODO: Navigate to Sukta detail screen
-                            // navController.navigate("sukta_detail/${sukta.id}")
-                        }
+                        SuktaCard(
+                            sukta = sukta,
+                            onClick = {
+                                // Navigate to the detail screen using the type-safe route
+                                navController.navigate(Screen.SuktaDetail.createRoute(sukta.id))
+                            }
+                        )
                     }
                 }
             }
@@ -93,12 +100,10 @@ fun MandalaOneSuktasScreen(navController: NavHostController) {
 
 @Composable
 fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
-    // Conditionally initialize the audio player only if an audio URL exists.
     val (isPlaying, togglePlayPause) = if (sukta.audioUrl != null) {
         rememberMantraPlayer(sukta.audioUrl)
     } else {
-        // Provide default values if there's no audio to avoid runtime errors.
-        remember { Pair(false, {}) }
+        remember { false to {} }
     }
 
     val rigvedaCardGradient = Brush.horizontalGradient(
@@ -110,19 +115,17 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        // Box with background gradient
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(rigvedaCardGradient)
-                .clickable { onClick() } // Make the whole area clickable for navigation
+                .background(rigvedaCardGradient, shape = RoundedCornerShape(16.dp))
+                .clickable(onClick = onClick) // The whole card is clickable
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                // --- Sukta Info ---
                 Text(
                     text = sukta.name,
                     fontSize = 20.sp,
@@ -146,36 +149,28 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // --- Action Buttons ---
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Show Play/Pause button only if there is an audio URL
                     if (sukta.audioUrl != null) {
+                        Spacer(modifier = Modifier.height(16.dp))
                         IconButton(
                             onClick = { togglePlayPause() },
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
+                            modifier = Modifier.size(48.dp).clip(CircleShape)
                                 .background(if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A))
                         ) {
                             Icon(
                                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Outlined.PlayArrow,
-                                contentDescription = if (isPlaying) "Pause Mantra" else "Play Mantra",
+                                contentDescription = if (isPlaying) "Pause" else "Play",
                                 tint = Color.White
                             )
                         }
                     }
-
-                    // View Button
                     IconButton(
-                        onClick = { onClick() },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFDAA520))
+                        onClick = onClick, // View button also navigates
+                        modifier = Modifier.size(48.dp).clip(CircleShape).background(Color(0xFFDAA520))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Visibility,
@@ -183,18 +178,13 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                             tint = Color.White
                         )
                     }
-
-                    // Favorite Button
                     IconButton(
                         onClick = { /* TODO: Handle favorite action */ },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFB0C4DE))
+                        modifier = Modifier.size(48.dp).clip(CircleShape).background(Color(0xFFB0C4DE))
                     ) {
                         Icon(
                             imageVector = Icons.Default.StarOutline,
-                            contentDescription = "Favorite Mantra",
+                            contentDescription = "Favorite",
                             tint = Color.White
                         )
                     }

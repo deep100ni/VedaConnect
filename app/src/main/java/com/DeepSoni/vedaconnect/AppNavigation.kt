@@ -12,14 +12,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.DeepSoni.vedaconnect.data.LeaderboardEntry
 import com.DeepSoni.vedaconnect.data.Medal
 import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.repository.MantraRepository
+import com.DeepSoni.vedaconnect.repository.MandalaOneSuktasRepository
 import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
@@ -28,16 +31,12 @@ import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
-// ✅ FIX: Added the missing import for MandalaOneSuktasScreen
 import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
 import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
+import com.DeepSoni.vedaconnect.feature.suktas.SuktaDetailScreen
 
 
-/**
- * A sealed class to define the navigation routes in a type-safe way.
- * This prevents typos and centralizes screen information.
- */
 sealed class Screen(val route: String, val label: String? = null, val icon: ImageVector? = null) {
     object Welcome : Screen("welcome")
     object Home : Screen("home", "Home", Icons.Outlined.Home)
@@ -50,18 +49,21 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object QuizComplete : Screen("quizComplete", "QuizComplete")
 
     object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
-
     object Notification : Screen("notification")
-    //object MantraDetail : Screen("detail/{mantraId}") {
-      //  fun createRoute(mantraId: String) = "detail/$mantraId"
-    //}
+
+    object MantraDetail : Screen("detail/{mantraId}") {
+        fun createRoute(mantraId: String) = "detail/$mantraId"
+    }
+
+    object SuktaDetail : Screen("sukta_detail/{suktaId}") {
+        fun createRoute(suktaId: String) = "sukta_detail/$suktaId"
+    }
 }
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    // List of screens that will be displayed in the bottom navigation bar.
     val bottomBarItems = listOf(
         Screen.Home,
         Screen.Streaks,
@@ -73,7 +75,6 @@ fun AppNavigation() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Determine if the bottom bar should be shown based on the current screen's route.
     val shouldShowBottomBar = bottomBarItems.any { it.route == currentRoute }
 
     Scaffold(
@@ -92,79 +93,34 @@ fun AppNavigation() {
             startDestination = Screen.Welcome.route, // Start on the Welcome screen
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Welcome Screen (no bottom bar)
-            composable(Screen.Welcome.route) {
-                WelcomeScreen(navController = navController)
-            }
-
-            // Home Screen (with bottom bar)
-            composable(Screen.Home.route) {
-                HomeScreen(navController = navController)
-            }
-
-            // Streak Screen (with bottom bar)
-            composable(Screen.Streaks.route) {
-                StreakScreen(navController = navController)
-            }
-
-            // Quiz Screen (with bottom bar)
-            composable(Screen.Quiz.route) {
-                QuizScreen(navController = navController)
-            }
-            composable(Screen.QuizStart.route) {
-                QuizStartScreen(navController = navController)
-            }
-
+            // ... (Other composables like Welcome, Home, Streaks, etc., remain the same)
+            composable(Screen.Welcome.route) { WelcomeScreen(navController = navController) }
+            composable(Screen.Home.route) { HomeScreen(navController = navController) }
+            composable(Screen.Streaks.route) { StreakScreen(navController = navController) }
+            composable(Screen.Quiz.route) { QuizScreen(navController = navController) }
+            composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController) }
             composable(Screen.QuizComplete.route) {
-                // Dummy data for demonstration
-                val dummyQuizResult = QuizResult(
-                    correctAnswers = 7,
-                    totalQuestions = 10,
-                    pointsEarned = 70,
-                    totalScore = 850
-                )
+                val dummyQuizResult = QuizResult(7, 10, 70, 850)
                 val dummyLeaderboard = listOf(
                     LeaderboardEntry("Priya K.", 1, 950, medal = Medal.GOLD),
-                    LeaderboardEntry("Rahul M.", 2, 920, medal = Medal.SILVER),
-                    LeaderboardEntry("Ananya S.", 3, 890, medal = Medal.BRONZE),
-                    LeaderboardEntry("You", 4, 850, isCurrentUser = true),
-                    LeaderboardEntry("Dr. Sharma", 5, 820)
+                    LeaderboardEntry("You", 4, 850, isCurrentUser = true)
                 )
-
                 QuizCompleteScreen(
                     quizResult = dummyQuizResult,
                     leaderboardEntries = dummyLeaderboard,
-                    onViewFullLeaderboard = {
-                        // Navigate back to the main quiz screen
-                        navController.navigate(Screen.Quiz.route) {
-                            popUpTo(Screen.Quiz.route) { inclusive = true }
-                        }
-                    },
+                    onViewFullLeaderboard = { navController.navigate(Screen.Quiz.route) { popUpTo(Screen.Quiz.route) { inclusive = true } } },
                     navController = navController
                 )
             }
+            composable(Screen.Content.route) { ContentScreen(navController = navController) }
+            composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
+            composable(Screen.Community.route) { AwarenessScreen(navController = navController) }
+            composable(Screen.Notification.route) { NotificationScreen(navController = navController) }
 
-            // Content Screen (with bottom bar)
-            composable(Screen.Content.route) {
-                ContentScreen(navController = navController)
-            }
 
-            // Mandala One Suktas Screen (no bottom bar)
-            composable(Screen.MandalaOneSuktas.route) {
-                MandalaOneSuktasScreen(navController = navController)
-            }
+            // --- Detail Screens ---
 
-            // Community Screen (with bottom bar)
-            composable(Screen.Community.route) {
-                AwarenessScreen(navController = navController)
-            }
-
-            // Notification Screen (no bottom bar)
-            composable(Screen.Notification.route) {
-                NotificationScreen(navController = navController)
-            }
-
-            composable("detail/{mantraId}") { backStackEntry ->
+            composable(Screen.MantraDetail.route) { backStackEntry ->
                 val mantraId = backStackEntry.arguments?.getString("mantraId")
                 val mantra = MantraRepository.mantras.find { it.id == mantraId }
                 mantra?.let {
@@ -172,14 +128,29 @@ fun AppNavigation() {
                 }
             }
 
+            // <<< NEW: Composable for the Sukta Detail Screen
+            composable(
+                route = Screen.SuktaDetail.route,
+                arguments = listOf(navArgument("suktaId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                // Retrieve the suktaId from the navigation arguments
+                val suktaId = backStackEntry.arguments?.getString("suktaId")
+
+                // Find the sukta using the helper function in your repository
+                val sukta = suktaId?.let { MandalaOneSuktasRepository.getSuktaById(it) }
+
+                // If the sukta is found, display the detail screen
+                if (sukta != null) {
+                    SuktaDetailScreen(navController = navController, sukta = sukta)
+                } else {
+                    // Optional: You can show a loading indicator or an error message here
+                    // if the sukta could not be found.
+                }
+            }
         }
     }
 }
 
-/**
- * This is the single, shared Bottom Navigation Bar for the entire app.
- * It is stateless and receives all its data as parameters.
- */
 @Composable
 private fun AppBottomNavigationBar(
     navController: NavController,
@@ -188,7 +159,7 @@ private fun AppBottomNavigationBar(
 ) {
     NavigationBar(
         containerColor = Color.White,
-        contentColor = Color(0xFFF57C00) // Orange color for selected items
+        contentColor = Color(0xFFF57C00)
     ) {
         items.forEach { screen ->
             require(screen.icon != null && screen.label != null) {
@@ -199,12 +170,8 @@ private fun AppBottomNavigationBar(
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        // Avoid multiple copies of the same destination when re-selecting the same item
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                         launchSingleTop = true
-                        // Restore state when re-selecting a previously selected item
                         restoreState = true
                     }
                 },
@@ -213,7 +180,7 @@ private fun AppBottomNavigationBar(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFFF57C00),
                     selectedTextColor = Color(0xFFF57C00),
-                    indicatorColor = Color(0xFFFFE0B2), // Light orange for the selection indicator
+                    indicatorColor = Color(0xFFFFE0B2),
                     unselectedIconColor = Color.Gray,
                     unselectedTextColor = Color.Gray
                 )
