@@ -1,13 +1,20 @@
 package com.DeepSoni.vedaconnect
 
-import androidx.compose.foundation.layout.padding
+// ✅ FIX: Added the missing import for MandalaOneSuktasScreen
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.AutoStories
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Whatshot
+import androidx.compose.material.icons.outlined.WorkspacePremium
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
@@ -18,22 +25,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.DeepSoni.vedaconnect.data.LeaderboardEntry
-import com.DeepSoni.vedaconnect.data.Medal
-import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
-import com.DeepSoni.vedaconnect.repository.MantraRepository
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
+import com.DeepSoni.vedaconnect.feature.content.ContentScreen
+import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
-import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
-import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
-import com.DeepSoni.vedaconnect.feature.content.ContentScreen
-// ✅ FIX: Added the missing import for MandalaOneSuktasScreen
-import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
-import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
+import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
+import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
+import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
+import com.DeepSoni.vedaconnect.repository.MantraRepository
 
 
 /**
@@ -59,7 +62,7 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
 
     object Notification : Screen("notification")
     //object MantraDetail : Screen("detail/{mantraId}") {
-      //  fun createRoute(mantraId: String) = "detail/$mantraId"
+    //  fun createRoute(mantraId: String) = "detail/$mantraId"
     //}
 }
 
@@ -96,7 +99,6 @@ fun AppNavigation() {
         NavHost(
             navController = navController,
             startDestination = Screen.Welcome.route, // Start on the Welcome screen
-            modifier = Modifier.padding(innerPadding)
         ) {
             // Welcome Screen (no bottom bar)
             composable(Screen.Welcome.route) {
@@ -125,8 +127,10 @@ fun AppNavigation() {
                 "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints}",
                 arguments = listOf(
                     navArgument("correctAnswers") { type = NavType.IntType },
-                    navArgument("totalQuestions") { type = NavType.IntType
-                        defaultValue = 0},
+                    navArgument("totalQuestions") {
+                        type = NavType.IntType
+                        defaultValue = 0
+                    },
                     navArgument("totalPoints") { type = NavType.IntType },
 
                     )
