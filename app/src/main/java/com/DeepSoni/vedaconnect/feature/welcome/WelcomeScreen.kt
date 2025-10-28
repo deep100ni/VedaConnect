@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.R
+import com.DeepSoni.vedaconnect.ui.theme.LightOrangeBg
 
 @Composable
 fun WelcomeScreen(navController: NavController) { // <-- MODIFIED: Parameter is now NavController
@@ -26,7 +27,7 @@ fun WelcomeScreen(navController: NavController) { // <-- MODIFIED: Parameter is 
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(0xFFFFF7F0)
+        color = LightOrangeBg
     ) {
         Column(
             modifier = Modifier

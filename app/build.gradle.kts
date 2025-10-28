@@ -38,6 +38,8 @@ android {
         compose = true
     }
     dependencies {
+        implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+
         // Android KTX
         implementation(libs.androidx.core.ktx)
         implementation(libs.androidx.lifecycle.runtime.ktx)
