@@ -23,51 +23,57 @@ import com.DeepSoni.vedaconnect.data.Medal
 import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.repository.MantraRepository
+// <<< CHANGED: Use the new generalized repository
+import com.DeepSoni.vedaconnect.repository.RigvedaRepository
+import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
 import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
-// ✅ FIX: Added the missing import for MandalaOneSuktasScreen
-import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
+// <<< ADDED: Import the new generic SuktasScreen and MandalaListScreen
+import com.DeepSoni.vedaconnect.feature.mandalas.MandalaListScreen
+import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
 import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
-import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
+import com.DeepSoni.vedaconnect.feature.suktas.SuktaDetailScreen
 
 
-/**
- * A sealed class to define the navigation routes in a type-safe way.
- * This prevents typos and centralizes screen information.
- */
 sealed class Screen(val route: String, val label: String? = null, val icon: ImageVector? = null) {
     object Welcome : Screen("welcome")
     object Home : Screen("home", "Home", Icons.Outlined.Home)
     object Streaks : Screen("streaks", "Streaks", Icons.Outlined.Whatshot)
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
-    object MandalaOneSuktas : Screen("mandalaOneSuktas")
-
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
     object QuizStart : Screen("quizStart", "QuizStart")
-    object QuizComplete : Screen("quizComplete", "QuizComplete") {
-        fun createRoute(score: Int, totalQuestions: Int, totalPoints: Int): String {
-            return "quizComplete/$score/$totalQuestions/$totalPoints"
-        }
+    object QuizComplete : Screen("quizComplete", "QuizComplete")
+    object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
+    object Notification : Screen("notification")
+
+    // <<< REMOVED: The old, hardcoded MandalaOneSuktas route
+    // object MandalaOneSuktas : Screen("mandalaOneSuktas")
+
+    // <<< ADDED: New routes for the dynamic Mandala/Sukta flow
+    object MandalaList : Screen("mandala_list")
+    object Suktas : Screen("suktas/{mandalaNumber}") {
+        fun createRoute(mandalaNumber: Int) = "suktas/$mandalaNumber"
     }
 
-    object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
+    // --- Detail Screens ---
+    object MantraDetail : Screen("detail/{mantraId}") {
+        fun createRoute(mantraId: String) = "detail/$mantraId"
+    }
 
-    object Notification : Screen("notification")
-    //object MantraDetail : Screen("detail/{mantraId}") {
-      //  fun createRoute(mantraId: String) = "detail/$mantraId"
-    //}
+    object SuktaDetail : Screen("sukta_detail/{suktaId}") {
+        fun createRoute(suktaId: String) = "sukta_detail/$suktaId"
+    }
 }
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    // List of screens that will be displayed in the bottom navigation bar.
     val bottomBarItems = listOf(
         Screen.Home,
         Screen.Streaks,
@@ -79,7 +85,6 @@ fun AppNavigation() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Determine if the bottom bar should be shown based on the current screen's route.
     val shouldShowBottomBar = bottomBarItems.any { it.route == currentRoute }
 
     Scaffold(
@@ -95,84 +100,54 @@ fun AppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Welcome.route, // Start on the Welcome screen
+            startDestination = Screen.Welcome.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Welcome Screen (no bottom bar)
-            composable(Screen.Welcome.route) {
-                WelcomeScreen(navController = navController)
+            // ... (Other composables like Welcome, Home, etc., remain the same)
+            composable(Screen.Welcome.route) { WelcomeScreen(navController = navController) }
+            composable(Screen.Home.route) { HomeScreen(navController = navController) }
+            composable(Screen.Streaks.route) { StreakScreen(navController = navController) }
+            composable(Screen.Content.route) { ContentScreen(navController = navController) }
+            composable(Screen.Quiz.route) { QuizScreen(navController = navController) }
+            composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController) }
+            composable(Screen.QuizComplete.route) {
+                val dummyQuizResult = QuizResult(7, 10, 70, 850)
+                val dummyLeaderboard = listOf(
+                    LeaderboardEntry("Priya K.", 1, 950, medal = Medal.GOLD),
+                    LeaderboardEntry("You", 4, 850, isCurrentUser = true)
+                )
+                QuizCompleteScreen(
+                    quizResult = dummyQuizResult,
+                    leaderboardEntries = dummyLeaderboard,
+                    onViewFullLeaderboard = { navController.navigate(Screen.Quiz.route) { popUpTo(Screen.Quiz.route) { inclusive = true } } },
+                    navController = navController
+                )
             }
+            composable(Screen.Community.route) { AwarenessScreen(navController = navController) }
+            composable(Screen.Notification.route) { NotificationScreen(navController = navController) }
 
-            // Home Screen (with bottom bar)
-            composable(Screen.Home.route) {
-                HomeScreen(navController = navController)
-            }
+            // <<< REMOVED: The composable for the old MandalaOneSuktasScreen
+            // composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
 
-            // Streak Screen (with bottom bar)
-            composable(Screen.Streaks.route) {
-                StreakScreen(navController = navController)
-            }
-
-            // Quiz Screen (with bottom bar)
-            composable(Screen.Quiz.route) {
-                QuizScreen(navController = navController)
-            }
-            composable(Screen.QuizStart.route) {
-                QuizStartScreen(navController = navController)
+            // <<< ADDED: New composables for the dynamic Mandala/Sukta flow
+            composable(Screen.MandalaList.route) {
+                MandalaListScreen(navController = navController)
             }
 
             composable(
-                "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints}",
-                arguments = listOf(
-                    navArgument("correctAnswers") { type = NavType.IntType },
-                    navArgument("totalQuestions") { type = NavType.IntType
-                        defaultValue = 0},
-                    navArgument("totalPoints") { type = NavType.IntType },
-
-                    )
+                route = Screen.Suktas.route,
+                arguments = listOf(navArgument("mandalaNumber") { type = NavType.IntType })
             ) { backStackEntry ->
-                val correctAnswers = backStackEntry.arguments?.getInt("correctAnswers") ?: 0
-                val totalPoints = backStackEntry.arguments?.getInt("totalPoints") ?: 0
-                val totalQuestions = backStackEntry.arguments?.getInt("totalQuestions") ?: 1
-
-                QuizCompleteScreen(
-                    correctAnswers = correctAnswers,
-                    totalQuestions = totalQuestions,
-                    pointsEarned = totalPoints,
-                    totalPoints = totalPoints,
-                    navController = navController,
-                    leaderboardEntries = emptyList(),
-                    onViewFullLeaderboard = {
-                        // Navigate back to the main quiz screen
-                        navController.navigate(Screen.Quiz.route) {
-                            popUpTo(Screen.Quiz.route) { inclusive = true }
-                        }
-                    }
-                )
+                val mandalaNumber = backStackEntry.arguments?.getInt("mandalaNumber")
+                // Ensure the argument is not null before proceeding
+                requireNotNull(mandalaNumber) { "Mandala number is required as an argument." }
+                SuktasScreen(navController = navController, mandalaNumber = mandalaNumber)
             }
 
 
-            // Content Screen (with bottom bar)
-            composable(Screen.Content.route) {
-                ContentScreen(navController = navController)
-            }
+            // --- Detail Screens ---
 
-            // Mandala One Suktas Screen (no bottom bar)
-            composable(Screen.MandalaOneSuktas.route) {
-                MandalaOneSuktasScreen(navController = navController)
-            }
-
-            // Community Screen (with bottom bar)
-            composable(Screen.Community.route) {
-                AwarenessScreen(navController = navController)
-            }
-
-            // Notification Screen (no bottom bar)
-            composable(Screen.Notification.route) {
-                NotificationScreen(navController = navController)
-            }
-
-            composable("detail/{mantraId}") { backStackEntry ->
+            composable(Screen.MantraDetail.route) { backStackEntry ->
                 val mantraId = backStackEntry.arguments?.getString("mantraId")
                 val mantra = MantraRepository.mantras.find { it.id == mantraId }
                 mantra?.let {
@@ -180,14 +155,25 @@ fun AppNavigation() {
                 }
             }
 
+            composable(
+                route = Screen.SuktaDetail.route,
+                arguments = listOf(navArgument("suktaId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val suktaId = backStackEntry.arguments?.getString("suktaId")
+
+                // <<< CHANGED: Use the new RigvedaRepository to find the Sukta
+                val sukta = suktaId?.let { RigvedaRepository.getSuktaById(it) }
+
+                if (sukta != null) {
+                    SuktaDetailScreen(navController = navController, sukta = sukta)
+                } else {
+                    // Handle case where sukta is not found
+                }
+            }
         }
     }
 }
 
-/**
- * This is the single, shared Bottom Navigation Bar for the entire app.
- * It is stateless and receives all its data as parameters.
- */
 @Composable
 private fun AppBottomNavigationBar(
     navController: NavController,
@@ -196,7 +182,7 @@ private fun AppBottomNavigationBar(
 ) {
     NavigationBar(
         containerColor = Color.White,
-        contentColor = Color(0xFFF57C00) // Orange color for selected items
+        contentColor = Color(0xFFF57C00)
     ) {
         items.forEach { screen ->
             require(screen.icon != null && screen.label != null) {
@@ -207,12 +193,8 @@ private fun AppBottomNavigationBar(
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        // Avoid multiple copies of the same destination when re-selecting the same item
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                         launchSingleTop = true
-                        // Restore state when re-selecting a previously selected item
                         restoreState = true
                     }
                 },
@@ -221,7 +203,7 @@ private fun AppBottomNavigationBar(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFFF57C00),
                     selectedTextColor = Color(0xFFF57C00),
-                    indicatorColor = Color(0xFFFFE0B2), // Light orange for the selection indicator
+                    indicatorColor = Color(0xFFFFE0B2),
                     unselectedIconColor = Color.Gray,
                     unselectedTextColor = Color.Gray
                 )

@@ -1,5 +1,7 @@
 package com.DeepSoni.vedaconnect.data
 
+import kotlinx.serialization.Serializable
+
 // Data Classes
 data class Mantra(
     val id: String,
@@ -23,7 +25,7 @@ data class Mandala(
     val translation: String,
     val preview: String
 )
-
+@Serializable
 data class Sukta(
     val id: String,
     val name: String,
