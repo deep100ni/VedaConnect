@@ -6,19 +6,17 @@ import com.DeepSoni.vedaconnect.data.Sukta
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+object RigvedaRepository {
 
-object MandalaOneSuktasRepository {
-
-    // IMPORTANT: This URL points to the raw audio files, not the GitHub webpage.
-    private const val AUDIO_BASE_URL = "https://raw.githubusercontent.com/c0mpli/rigveda3d/main/public/data/audio/1"
+    private const val AUDIO_BASE_URL = "https://raw.githubusercontent.com/c0mpli/rigveda3d/main/public/data/audio"
 
     private var allSuktas: List<Sukta> = emptyList()
 
-    val suktas: List<Sukta>
-        get() = allSuktas.filter { it.mandalaNumber == 1 }
+    fun getSuktasForMandala(mandalaNumber: Int): List<Sukta> {
+        return allSuktas.filter { it.mandalaNumber == mandalaNumber }
+    }
 
     fun getSuktaById(id: String): Sukta? {
-        // Ensure the repository is initialized before searching
         if (allSuktas.isEmpty()) {
             Log.w("Repository", "Attempted to get Sukta by ID before initialization.")
             return null
@@ -64,7 +62,6 @@ object MandalaOneSuktasRepository {
                     val sanskritText = riks.joinToString(separator = "\n") { it.samhita.devanagari.text }
                     val transliterationText = riks.joinToString(separator = "\n") { it.padapatha.transliteration.text }
                     val translationText = riks.joinToString(separator = "\n") { it.translation }
-
                     val previewText = riks.first().translation
 
                     Sukta(
@@ -76,20 +73,18 @@ object MandalaOneSuktasRepository {
                         transliteration = transliterationText,
                         translation = translationText,
                         preview = previewText,
-                        // If the sukta is in Mandala 1, construct its audio URL with the .mp3 extension
-                        audioUrl = if (mandalaNumber == 1) "$AUDIO_BASE_URL/$suktaNumber.mp3" else null
+                        audioUrl = "$AUDIO_BASE_URL/$mandalaNumber/$suktaNumber.mp3"
                     )
                 }
             }
             allSuktas = parsedSukas
 
         } catch (e: Exception) {
-            Log.e("Repository", "Fatal error initializing MandalaOneSuktasRepository", e)
+            Log.e("Repository", "Fatal error initializing RigvedaRepository", e)
             allSuktas = emptyList()
         }
     }
 }
-
 
 @Serializable
 private data class Rik(

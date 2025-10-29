@@ -22,7 +22,8 @@ import com.DeepSoni.vedaconnect.data.LeaderboardEntry
 import com.DeepSoni.vedaconnect.data.Medal
 import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.repository.MantraRepository
-import com.DeepSoni.vedaconnect.repository.MandalaOneSuktasRepository
+// <<< CHANGED: Use the new generalized repository
+import com.DeepSoni.vedaconnect.repository.RigvedaRepository
 import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
@@ -31,7 +32,9 @@ import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
-import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
+// <<< ADDED: Import the new generic SuktasScreen and MandalaListScreen
+import com.DeepSoni.vedaconnect.feature.mandalas.MandalaListScreen
+import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
 import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktaDetailScreen
@@ -42,15 +45,22 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object Home : Screen("home", "Home", Icons.Outlined.Home)
     object Streaks : Screen("streaks", "Streaks", Icons.Outlined.Whatshot)
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
-    object MandalaOneSuktas : Screen("mandalaOneSuktas")
-
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
     object QuizStart : Screen("quizStart", "QuizStart")
     object QuizComplete : Screen("quizComplete", "QuizComplete")
-
     object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
     object Notification : Screen("notification")
 
+    // <<< REMOVED: The old, hardcoded MandalaOneSuktas route
+    // object MandalaOneSuktas : Screen("mandalaOneSuktas")
+
+    // <<< ADDED: New routes for the dynamic Mandala/Sukta flow
+    object MandalaList : Screen("mandala_list")
+    object Suktas : Screen("suktas/{mandalaNumber}") {
+        fun createRoute(mandalaNumber: Int) = "suktas/$mandalaNumber"
+    }
+
+    // --- Detail Screens ---
     object MantraDetail : Screen("detail/{mantraId}") {
         fun createRoute(mantraId: String) = "detail/$mantraId"
     }
@@ -90,13 +100,14 @@ fun AppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Welcome.route, // Start on the Welcome screen
+            startDestination = Screen.Welcome.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // ... (Other composables like Welcome, Home, Streaks, etc., remain the same)
+            // ... (Other composables like Welcome, Home, etc., remain the same)
             composable(Screen.Welcome.route) { WelcomeScreen(navController = navController) }
             composable(Screen.Home.route) { HomeScreen(navController = navController) }
             composable(Screen.Streaks.route) { StreakScreen(navController = navController) }
+            composable(Screen.Content.route) { ContentScreen(navController = navController) }
             composable(Screen.Quiz.route) { QuizScreen(navController = navController) }
             composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController) }
             composable(Screen.QuizComplete.route) {
@@ -112,10 +123,26 @@ fun AppNavigation() {
                     navController = navController
                 )
             }
-            composable(Screen.Content.route) { ContentScreen(navController = navController) }
-            composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
             composable(Screen.Community.route) { AwarenessScreen(navController = navController) }
             composable(Screen.Notification.route) { NotificationScreen(navController = navController) }
+
+            // <<< REMOVED: The composable for the old MandalaOneSuktasScreen
+            // composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
+
+            // <<< ADDED: New composables for the dynamic Mandala/Sukta flow
+            composable(Screen.MandalaList.route) {
+                MandalaListScreen(navController = navController)
+            }
+
+            composable(
+                route = Screen.Suktas.route,
+                arguments = listOf(navArgument("mandalaNumber") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val mandalaNumber = backStackEntry.arguments?.getInt("mandalaNumber")
+                // Ensure the argument is not null before proceeding
+                requireNotNull(mandalaNumber) { "Mandala number is required as an argument." }
+                SuktasScreen(navController = navController, mandalaNumber = mandalaNumber)
+            }
 
 
             // --- Detail Screens ---
@@ -128,23 +155,19 @@ fun AppNavigation() {
                 }
             }
 
-            // <<< NEW: Composable for the Sukta Detail Screen
             composable(
                 route = Screen.SuktaDetail.route,
                 arguments = listOf(navArgument("suktaId") { type = NavType.StringType })
             ) { backStackEntry ->
-                // Retrieve the suktaId from the navigation arguments
                 val suktaId = backStackEntry.arguments?.getString("suktaId")
 
-                // Find the sukta using the helper function in your repository
-                val sukta = suktaId?.let { MandalaOneSuktasRepository.getSuktaById(it) }
+                // <<< CHANGED: Use the new RigvedaRepository to find the Sukta
+                val sukta = suktaId?.let { RigvedaRepository.getSuktaById(it) }
 
-                // If the sukta is found, display the detail screen
                 if (sukta != null) {
                     SuktaDetailScreen(navController = navController, sukta = sukta)
                 } else {
-                    // Optional: You can show a loading indicator or an error message here
-                    // if the sukta could not be found.
+                    // Handle case where sukta is not found
                 }
             }
         }

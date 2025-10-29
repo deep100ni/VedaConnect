@@ -29,27 +29,28 @@ import androidx.navigation.NavHostController
 import com.DeepSoni.vedaconnect.Screen
 import com.DeepSoni.vedaconnect.audio.rememberMantraPlayer
 import com.DeepSoni.vedaconnect.data.Sukta
-import com.DeepSoni.vedaconnect.repository.MandalaOneSuktasRepository
+import com.DeepSoni.vedaconnect.repository.RigvedaRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MandalaOneSuktasScreen(navController: NavHostController) {
+fun SuktasScreen(navController: NavHostController, mandalaNumber: Int) {
     val context = LocalContext.current
     var suktas by remember { mutableStateOf<List<Sukta>>(emptyList()) }
 
-    // Load the suktas when the screen is first composed
-    LaunchedEffect(Unit) {
-        MandalaOneSuktasRepository.initialize(context)
-        suktas = MandalaOneSuktasRepository.suktas
+    // Load the suktas for the specific mandala number
+    LaunchedEffect(mandalaNumber) {
+        RigvedaRepository.initialize(context) // Ensure it's initialized
+        suktas = RigvedaRepository.getSuktasForMandala(mandalaNumber)
     }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(0xFFFFF7F0) // A consistent background color
+        color = Color(0xFFFFF7F0)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopAppBar(
-                title = { Text("Mandala 1 Suktas") },
+                // The title is now dynamic
+                title = { Text("Mandala $mandalaNumber Suktas") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -70,7 +71,6 @@ fun MandalaOneSuktasScreen(navController: NavHostController) {
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    // You might want a CircularProgressIndicator here while loading
                     Text(
                         text = "Loading Suktas...",
                         fontSize = 18.sp,
@@ -87,7 +87,6 @@ fun MandalaOneSuktasScreen(navController: NavHostController) {
                         SuktaCard(
                             sukta = sukta,
                             onClick = {
-                                // Navigate to the detail screen using the type-safe route
                                 navController.navigate(Screen.SuktaDetail.createRoute(sukta.id))
                             }
                         )
@@ -98,6 +97,7 @@ fun MandalaOneSuktasScreen(navController: NavHostController) {
     }
 }
 
+// SuktaCard remains unchanged as it was already generic.
 @Composable
 fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
     val (isPlaying, togglePlayPause) = if (sukta.audioUrl != null) {
@@ -119,7 +119,7 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(rigvedaCardGradient, shape = RoundedCornerShape(16.dp))
-                .clickable(onClick = onClick) // The whole card is clickable
+                .clickable(onClick = onClick)
         ) {
             Column(
                 modifier = Modifier
@@ -169,7 +169,7 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                         }
                     }
                     IconButton(
-                        onClick = onClick, // View button also navigates
+                        onClick = onClick,
                         modifier = Modifier.size(48.dp).clip(CircleShape).background(Color(0xFFDAA520))
                     ) {
                         Icon(

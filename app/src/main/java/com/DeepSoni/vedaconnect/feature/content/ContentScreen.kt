@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.DeepSoni.vedaconnect.data.Mantra
-import com.DeepSoni.vedaconnect.data.Mandala // Import the new Mandala data class
+import com.DeepSoni.vedaconnect.data.Mandala
 import com.DeepSoni.vedaconnect.repository.MandalaRepository
 import com.DeepSoni.vedaconnect.repository.MantraRepository
 import com.DeepSoni.vedaconnect.Screen
@@ -204,14 +204,16 @@ fun ContentScreen(navController: NavHostController) {
                 0 -> { // Mandalas Tab
                     items(filteredMandalas) { mandala ->
                         MandalaCard(mandala = mandala) {
-                            navController.navigate(Screen.MandalaOneSuktas.route)
+                            // <<< --- THIS IS THE CORRECTED LINE --- >>>
+                            navController.navigate(Screen.Suktas.createRoute(mandala.mandalaNumber))
                         }
                     }
                 }
                 1 -> { // Mantra Tab
                     items(filteredMantras) { mantra ->
                         MantraCard(mantra = mantra) {
-                            navController.navigate("detail/${mantra.id}")
+                            // This navigation remains correct
+                            navController.navigate(Screen.MantraDetail.createRoute(mantra.id))
                         }
                     }
                 }
@@ -221,138 +223,17 @@ fun ContentScreen(navController: NavHostController) {
     }
 }
 
-// 🪔 Mantra Card with Play Icon (UNCHANGED)
+// 🪔 Mantra Card (UNCHANGED)
 @Composable
 fun MantraCard(mantra: Mantra, onClick: () -> Unit) {
-    // Only initialize player if audioUrl is not null
     val (isPlaying, togglePlayPause) = if (mantra.audioUrl != null) {
         rememberMantraPlayer(mantra.audioUrl)
     } else {
-        Pair(false) {} // Return a default pair if no audio
+        Pair(false) {}
     }
 
-    // Rigveda inspired gradient colors
     val rigvedaCardGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFFD2B48C)) // SaddleBrown, Sienna, Tan
-    )
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }, // The whole card is clickable for 'View'
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent), // Set to transparent to show gradient
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(rigvedaCardGradient, shape = RoundedCornerShape(16.dp))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                // 📖 Mantra Info
-                Text(
-                    text = mantra.name,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-                Text(
-                    text = if (mantra.mandalaNumber != 0) "Mandala ${mantra.mandalaNumber}" else "",
-                    fontSize = 14.sp,
-                    color = Color.White.copy(alpha = 0.8f)
-                )
-                if (mantra.suktaNumber != 0) { // Only show sukta and mantra number if they exist
-                    Text(
-                        text = "Sukta ${mantra.suktaNumber} · Mantra ${mantra.mantraNumber}",
-                        fontSize = 14.sp,
-                        color = Color.White.copy(alpha = 0.8f)
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = mantra.preview,
-                    fontSize = 12.sp,
-                    color = Color.White.copy(alpha = 0.6f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Action Buttons Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // ▶️ Play/Pause Button - ONLY show if audioUrl is NOT null
-                    if (mantra.audioUrl != null) {
-                        Button(
-                            onClick = { togglePlayPause() },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A) // IndianRed, LightSalmon
-                            ),
-                            shape = CircleShape,
-                            contentPadding = PaddingValues(10.dp),
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Outlined.PlayArrow,
-                                contentDescription = if (isPlaying) "Pause Mantra" else "Play Mantra",
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-
-                    // 👁️ View Button (always present)
-                    Button(
-                        onClick = { onClick() }, // Triggers the card's original onClick for details
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDAA520)), // Goldenrod
-                        shape = CircleShape,
-                        contentPadding = PaddingValues(10.dp),
-                        modifier = Modifier.size(48.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Visibility,
-                            contentDescription = "View Details",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-
-                    // ⭐ Star (Favorite) Button (always present)
-                    Button(
-                        onClick = { /* Handle favorite action */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB0C4DE)), // LightSteelBlue
-                        shape = CircleShape,
-                        contentPadding = PaddingValues(10.dp),
-                        modifier = Modifier.size(48.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.StarOutline,
-                            contentDescription = "Favorite Mantra",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-// 🏞️ NEW Mandala Card (No Buttons)
-@Composable
-fun MandalaCard(mandala: Mandala, onClick: () -> Unit) {
-    // Rigveda inspired gradient colors
-    val rigvedaCardGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFFD2B48C)) // SaddleBrown, Sienna, Tan
+        colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFFD2B48C))
     )
 
     Card(
@@ -373,7 +254,119 @@ fun MandalaCard(mandala: Mandala, onClick: () -> Unit) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                // 📖 Mandala Info
+                Text(
+                    text = mantra.name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = if (mantra.mandalaNumber != 0) "Mandala ${mantra.mandalaNumber}" else "",
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+                if (mantra.suktaNumber != 0) {
+                    Text(
+                        text = "Sukta ${mantra.suktaNumber} · Mantra ${mantra.mantraNumber}",
+                        fontSize = 14.sp,
+                        color = Color.White.copy(alpha = 0.8f)
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = mantra.preview,
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.6f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (mantra.audioUrl != null) {
+                        Button(
+                            onClick = { togglePlayPause() },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A)
+                            ),
+                            shape = CircleShape,
+                            contentPadding = PaddingValues(10.dp),
+                            modifier = Modifier.size(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Outlined.PlayArrow,
+                                contentDescription = if (isPlaying) "Pause Mantra" else "Play Mantra",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+
+                    Button(
+                        onClick = { onClick() },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDAA520)),
+                        shape = CircleShape,
+                        contentPadding = PaddingValues(10.dp),
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Visibility,
+                            contentDescription = "View Details",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    Button(
+                        onClick = { /* Handle favorite action */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB0C4DE)),
+                        shape = CircleShape,
+                        contentPadding = PaddingValues(10.dp),
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.StarOutline,
+                            contentDescription = "Favorite Mantra",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 🏞️ Mandala Card (UNCHANGED)
+@Composable
+fun MandalaCard(mandala: Mandala, onClick: () -> Unit) {
+    val rigvedaCardGradient = Brush.horizontalGradient(
+        colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFFD2B48C))
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(rigvedaCardGradient, shape = RoundedCornerShape(16.dp))
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
                 Text(
                     text = mandala.name,
                     fontSize = 18.sp,
@@ -393,14 +386,13 @@ fun MandalaCard(mandala: Mandala, onClick: () -> Unit) {
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                // No Spacer or Row for buttons here, as requested.
             }
         }
     }
 }
 
 
-// 🧘‍♂️ Detail Screen with Play/Pause Button
+// 🧘‍♂️ Detail Screen (UNCHANGED)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
@@ -411,7 +403,6 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
             .fillMaxSize()
             .background(Color(0xFFFFF7F0))
     ) {
-        // 🔙 Top Bar
         TopAppBar(
             title = { Text("Mantra Details") },
             navigationIcon = {
@@ -433,7 +424,6 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
         ) {
             item { Spacer(modifier = Modifier.height(8.dp)) }
 
-            // 🪔 Header
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -463,7 +453,6 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // ▶️ Play Button
                         OutlinedButton(
                             onClick = { togglePlayPause() },
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = VedaTheme.Orange),
@@ -475,16 +464,10 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
                 }
             }
 
-            // 🕉 Sanskrit
             item { SectionCard("Sanskrit", mantra.sanskrit, Color.Black) }
-
-            // 📜 Transliteration
             item { SectionCard("Transliteration", mantra.transliteration, Color.Black.copy(alpha = 0.8f)) }
-
-            // 🌼 Translation
             item { SectionCard("Translation", mantra.translation, VedaTheme.TextGray) }
 
-            // Action Buttons
             item {
                 Row(
                     modifier = Modifier
@@ -513,7 +496,7 @@ fun MantraDetailScreen(navController: NavHostController, mantra: Mantra) {
     }
 }
 
-// 📚 Section Card Reusable Component
+// 📚 Section Card (UNCHANGED)
 @Composable
 fun SectionCard(
     title: String,
