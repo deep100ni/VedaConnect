@@ -32,8 +32,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.WorkspacePremium
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,13 +65,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.R
+import com.DeepSoni.vedaconnect.ui.theme.headerOrangeGradient
 
 // Assuming VedaTheme and its Orange color are defined elsewhere in your project.
 // For demonstration, I'll include a placeholder definition here.
 // In a real project, this would likely be in a 'ui.theme' package.
-object VedaTheme {
-    val Orange = Color(0xFFF57C00) // Define your primary orange color
-}
+
 
 // -----------------------------------------------------------
 // Data classes for Awareness Screen Articles
@@ -188,30 +185,35 @@ fun AwarenessScreen(navController: NavController) {
             TopAppBar(
                 title = {
                     Column(
-                        modifier = Modifier.padding(bottom = 16.dp),
-                        horizontalAlignment = Alignment.Start
+                        modifier = Modifier.padding(top = 5.dp),
+
                     ) {
                         Text(
                             text = "Samvaad",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
+                            fontSize = 22.sp,
                             color = Color.White
                         )
                         Text(
                             text = "Awareness & enlightenment",
                             style = MaterialTheme.typography.bodySmall,
+                            fontSize = 14.sp,
                             color = Color.White
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = VedaTheme.Orange),
-                expandedHeight = 150.dp,
+                colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 modifier = Modifier.clip(
                     androidx.compose.foundation.shape.RoundedCornerShape(
-                        bottomStart = 16.dp,
-                        bottomEnd = 16.dp
+                        bottomStart = 24.dp,
+                        bottomEnd = 24.dp
                     )
                 )
+                    .height(120.dp)
+                    .background(headerOrangeGradient)
+
+
             )
         },
         containerColor = Color(0xFFFFF7F0) // Background color matching the image
@@ -219,14 +221,13 @@ fun AwarenessScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
         ) {
-            // Category Filter Chips
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(top = paddingValues.calculateTopPadding()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -242,8 +243,13 @@ fun AwarenessScreen(navController: NavController) {
 
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = paddingValues.calculateBottomPadding() + 90.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 val recentArticles =
                     sampleArticles.filter { !it.isFeatured && (selectedCategory == "All" || it.category == selectedCategory) }
@@ -339,8 +345,7 @@ fun RecentArticleCard(article: Article, onClick: () -> Unit) {
                     painter = painterResource(article.imageUrl ?: R.drawable.achievement),
                     contentDescription = "Article Image",
                     modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { openUrlInBrowser(context, article.articalUrl) },
+                        .fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
 
@@ -383,8 +388,7 @@ fun RecentArticleCard(article: Article, onClick: () -> Unit) {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    fontSize = 14.sp,
-                    modifier = Modifier.clickable { openUrlInBrowser(context, article.articalUrl) }
+                    fontSize = 14.sp
                 )
                 article.description?.let {
                     Text(
@@ -584,7 +588,8 @@ fun CommunityTopBar() {
                 )
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = VedaTheme.Orange)
+        //colors = TopAppBarDefaults.topAppBarColors(headerOrangeGradient),
+        modifier = Modifier.background( headerOrangeGradient )
     )
 }
 
@@ -767,7 +772,7 @@ fun AwarenessScreenPreview() {
     // A placeholder for your actual VedaTheme implementation.
     // Ensure you have a proper theme defined in your project.
     MaterialTheme(
-        colorScheme = MaterialTheme.colorScheme.copy(primary = VedaTheme.Orange)
+        colorScheme = MaterialTheme.colorScheme.copy(Color.Transparent)
     ) {
         Scaffold { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
@@ -782,7 +787,7 @@ fun AwarenessScreenPreview() {
 fun VimarshManchScreenPreview() {
     // A placeholder for your actual VedaTheme implementation.
     MaterialTheme(
-        colorScheme = MaterialTheme.colorScheme.copy(primary = VedaTheme.Orange)
+        colorScheme = MaterialTheme.colorScheme.copy(Color.Transparent)
     ) {
         Scaffold { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {

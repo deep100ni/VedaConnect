@@ -98,9 +98,8 @@ fun HomeHeader(navController: NavController) { // Accept NavController
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
             .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
-            .padding(horizontal = 24.dp, vertical = 32.dp)
+            .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
     ) {
         Column(
             modifier = Modifier.align(Alignment.TopStart)
@@ -109,11 +108,13 @@ fun HomeHeader(navController: NavController) { // Accept NavController
                 text = "Namaste 🙏",
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Welcome back to your spiritual journey",
                 style = MaterialTheme.typography.bodyMedium,
+                fontSize = 14.sp,
                 color = Color.White.copy(alpha = 0.9f)
             )
         }

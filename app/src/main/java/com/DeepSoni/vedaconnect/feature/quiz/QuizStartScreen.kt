@@ -293,14 +293,12 @@ fun QuizStartScreen(navController: NavController) {
                 .fillMaxWidth()
                 .background(
                     Bhagwa,
-                    shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
+                    shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                 )
-                .padding(16.dp)
-            //.fillMaxHeight()
+                .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(10.dp)
+
             ) {
                 Row(
                     modifier = Modifier
@@ -310,21 +308,18 @@ fun QuizStartScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "Weekly Quiz",
-                        fontSize = 30.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         modifier = Modifier
                     )
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 20.dp, start = 20.dp, bottom = 20.dp)
-                    ) {
+                    Row{
                         Image(
                             painter = painterResource(R.drawable.alarmclock),
                             contentDescription = " ",
                             modifier = Modifier.size(20.dp)
                         )
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
                         Text(
                             text = "2:25",
                             fontSize = 18.sp,
@@ -333,7 +328,7 @@ fun QuizStartScreen(navController: NavController) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(15.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),

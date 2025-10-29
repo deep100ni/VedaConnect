@@ -112,7 +112,7 @@ fun QuizCompleteScreen(
 
         // View Full Leaderboard Button
         item {
-            ViewFullLeaderboardButton(onClick = {navController.popBackStack()}) //onViewFullLeaderboard)
+            ViewFullLeaderboardButton(onClick = { navController.popBackStack() }) //onViewFullLeaderboard)
         }
 
         // Bottom spacing
@@ -123,30 +123,33 @@ fun QuizCompleteScreen(
 }
 
 @Composable
-private fun QuizCompleteHeader() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Bhagwa)
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp)
+fun QuizCompleteHeader() {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            //.padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp)
+            .background(
+                Bhagwa,
+                shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
+            ),
+
         ) {
-            Text(
-                text = "Quiz Complete! 🎉",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Great effort this week",
-                fontSize = 16.sp,
-                color = Color.White.copy(alpha = 0.9f)
-            )
-        }
+        Text(
+            text = "Quiz Complete! 🎉",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+
+        Text(
+            text = "Great effort this week",
+            fontSize = 14.sp,
+            color = Color.White.copy(alpha = 0.9f)
+        )
     }
 }
+
 
 @Composable
 private fun ScoreCard(
@@ -154,7 +157,7 @@ private fun ScoreCard(
     totalQuestions: Int,
     totalScore: Int,
     pointsEarned: Int
-){
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
