@@ -52,7 +52,3 @@ data class LeaderboardEntry(
     val isCurrentUser: Boolean = false,
     val medal: Medal? = null
 )
-
-enum class Medal {
-    GOLD, SILVER, BRONZE
-}

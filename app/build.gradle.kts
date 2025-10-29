@@ -73,6 +73,12 @@ android {
         implementation(libs.androidx.navigation.runtime.ktx)
         implementation(libs.androidx.navigation.compose)
 
+        implementation(libs.androidx.navigation.common.ktx)
+        implementation(libs.firebase.crashlytics.buildtools)
+        implementation(libs.androidx.datastore.core)
+        implementation("androidx.datastore:datastore-preferences:1.0.0")
+        implementation("com.google.code.gson:gson:2.10.1")
+
         // Testing dependencies
         testImplementation(libs.junit)
         androidTestImplementation(libs.androidx.junit)
@@ -85,3 +91,4 @@ android {
         debugImplementation(libs.androidx.ui.test.manifest)
     }
 }
+

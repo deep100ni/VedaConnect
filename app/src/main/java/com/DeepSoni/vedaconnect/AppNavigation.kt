@@ -21,6 +21,7 @@ import androidx.navigation.navArgument
 import com.DeepSoni.vedaconnect.data.LeaderboardEntry
 import com.DeepSoni.vedaconnect.data.Medal
 import com.DeepSoni.vedaconnect.data.QuizResult
+import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.repository.MantraRepository
 // <<< CHANGED: Use the new generalized repository
 import com.DeepSoni.vedaconnect.repository.RigvedaRepository
@@ -29,7 +30,6 @@ import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
 import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
-import com.DeepSoni.vedaconnect.feature.quiz.QuizScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
 // <<< ADDED: Import the new generic SuktasScreen and MandalaListScreen

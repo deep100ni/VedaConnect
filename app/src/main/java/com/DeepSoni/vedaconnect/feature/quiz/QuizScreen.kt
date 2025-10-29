@@ -1,14 +1,30 @@
-package com.DeepSoni.vedaconnect.feature.quiz
+package com.DeepSoni.vedaconnect.feature.weeklyquiz
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.WorkspacePremium
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -131,9 +147,9 @@ fun PreviousWeekSection(modifier: Modifier = Modifier, navController: NavControl
                     .clickable {
                         // Navigate to the completion screen when a previous quiz is clicked.
                         // In a real app, you would pass a specific quiz ID here.
-                        navController.navigate(Screen.QuizComplete.route)
+                        navController.navigate(Screen.Quiz.route)
                     }
-                    .background(Color.LightGray) // The shape is now handled by the clip modifier
+                    .background(LightOrangeBg) // The shape is now handled by the clip modifier
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -141,7 +157,7 @@ fun PreviousWeekSection(modifier: Modifier = Modifier, navController: NavControl
                 Text(
                     text = week,
                     fontSize = 16.sp,
-                    color = Color.Gray
+                    color = Color.Black
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
@@ -157,14 +173,14 @@ fun PreviousWeekSection(modifier: Modifier = Modifier, navController: NavControl
                     Text(
                         text = "${(progress * 100).toInt()}/100",
                         fontSize = 16.sp,
-                        color = Color.Gray
+                        color = Color.Black
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     imageVector = Icons.Outlined.WorkspacePremium,
                     contentDescription = "Trophy Icon",
-                    tint = Color.Gray
+                    tint = Bhagwa
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -197,6 +213,7 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavControl
                 imageVector = Icons.Outlined.WorkspacePremium,
                 contentDescription = "Weekly Challenge Icon",
                 modifier = Modifier.size(60.dp),
+                //.graphicsLayer(rotationX = 30f, rotationY = 30f, cameraDistance = 12f),
                 tint = Bhagwa
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -213,7 +230,7 @@ fun WeeklyChallengeCard(modifier: Modifier = Modifier, navController: NavControl
             Text(
                 text = "Answer 10 questions to get points and climb the leaderboard",
                 fontSize = 15.sp,
-                color = Color.Gray,
+                color = Color.Black,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
@@ -255,7 +272,7 @@ fun QuizInfoItem(value: String, label: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = value, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text(text = label, fontSize = 15.sp, color = Color.Gray)
+        Text(text = value, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+        Text(text = label, fontSize = 15.sp, color = Color.Black)
     }
 }
