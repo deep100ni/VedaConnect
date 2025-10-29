@@ -10,7 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.StarOutline
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.*
@@ -36,11 +36,25 @@ import com.DeepSoni.vedaconnect.repository.RigvedaRepository
 fun SuktasScreen(navController: NavHostController, mandalaNumber: Int) {
     val context = LocalContext.current
     var suktas by remember { mutableStateOf<List<Sukta>>(emptyList()) }
+    var searchQuery by remember { mutableStateOf("") } // State for the search query
 
     // Load the suktas for the specific mandala number
     LaunchedEffect(mandalaNumber) {
         RigvedaRepository.initialize(context) // Ensure it's initialized
         suktas = RigvedaRepository.getSuktasForMandala(mandalaNumber)
+    }
+
+    // Filtered list of suktas based on search query
+    val filteredSuktas = remember(suktas, searchQuery) {
+        if (searchQuery.isBlank()) {
+            suktas
+        } else {
+            suktas.filter {
+                it.name.contains(searchQuery, ignoreCase = true) ||
+                        it.preview.contains(searchQuery, ignoreCase = true) ||
+                        it.suktaNumber.toString().contains(searchQuery, ignoreCase = true)
+            }
+        }
     }
 
     Surface(
@@ -49,7 +63,6 @@ fun SuktasScreen(navController: NavHostController, mandalaNumber: Int) {
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopAppBar(
-                // The title is now dynamic
                 title = { Text("Mandala $mandalaNumber Suktas") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -66,7 +79,47 @@ fun SuktasScreen(navController: NavHostController, mandalaNumber: Int) {
                 )
             )
 
-            if (suktas.isEmpty()) {
+            // Search Bar
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                placeholder = { Text("Search suktas...") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search icon"
+                    )
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(24.dp), // Rounded corners for the search bar
+                colors = OutlinedTextFieldDefaults.colors( // Use OutlinedTextFieldDefaults.colors
+                    focusedBorderColor = Color(0xFFF57C00),
+                    unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),
+                    focusedLabelColor = Color(0xFFF57C00),
+                    cursorColor = Color(0xFFF57C00),
+                    focusedTextColor = Color.Black,   // Set text color to Black when focused
+                    unfocusedTextColor = Color.Black, // Set text color to Black when unfocused
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
+                )
+            )
+
+            if (filteredSuktas.isEmpty() && searchQuery.isNotBlank()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No suktas found for \"$searchQuery\"",
+                        fontSize = 18.sp,
+                        color = Color.Gray
+                    )
+                }
+            } else if (suktas.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -80,10 +133,10 @@ fun SuktasScreen(navController: NavHostController, mandalaNumber: Int) {
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(suktas) { sukta ->
+                    items(filteredSuktas) { sukta ->
                         SuktaCard(
                             sukta = sukta,
                             onClick = {
@@ -97,7 +150,6 @@ fun SuktasScreen(navController: NavHostController, mandalaNumber: Int) {
     }
 }
 
-// SuktaCard remains unchanged as it was already generic.
 @Composable
 fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
     val (isPlaying, togglePlayPause) = if (sukta.audioUrl != null) {
@@ -119,7 +171,7 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(rigvedaCardGradient, shape = RoundedCornerShape(16.dp))
-                .clickable(onClick = onClick)
+                .clickable(onClick = onClick) // The whole card is clickable
         ) {
             Column(
                 modifier = Modifier
@@ -150,15 +202,19 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp), // Added horizontal padding to shift buttons inwards
+                    horizontalArrangement = Arrangement.Start, // Start arrangement for control
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Play/Pause Button (shifted right by the Row's padding)
                     if (sukta.audioUrl != null) {
-                        Spacer(modifier = Modifier.height(16.dp))
                         IconButton(
                             onClick = { togglePlayPause() },
-                            modifier = Modifier.size(48.dp).clip(CircleShape)
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
                                 .background(if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A))
                         ) {
                             Icon(
@@ -167,24 +223,24 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                                 tint = Color.White
                             )
                         }
+                    } else {
+                        // This Spacer helps maintain consistent layout when there's no audio
+                        Spacer(modifier = Modifier.width(48.dp))
                     }
+
+                    Spacer(modifier = Modifier.weight(1f)) // This pushes the next item to the right
+
+                    // View Details Button (shifted left by the Row's padding)
                     IconButton(
                         onClick = onClick,
-                        modifier = Modifier.size(48.dp).clip(CircleShape).background(Color(0xFFDAA520))
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFDAA520))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Visibility,
                             contentDescription = "View Details",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(
-                        onClick = { /* TODO: Handle favorite action */ },
-                        modifier = Modifier.size(48.dp).clip(CircleShape).background(Color(0xFFB0C4DE))
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.StarOutline,
-                            contentDescription = "Favorite",
                             tint = Color.White
                         )
                     }
