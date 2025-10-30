@@ -42,7 +42,13 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
     object QuizStart : Screen("quizStart", "QuizStart")
-    object QuizComplete : Screen("quizComplete", "QuizComplete")
+    object QuizComplete : Screen("quizComplete", "QuizComplete") {
+        fun createRoute(score: Int, totalQuestions: Int, totalPoints: Int): String {
+            return "quizComplete/$score/$totalQuestions/$totalPoints"
+        }
+
+    }
+
     object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
     object Notification : Screen("notification")
 
@@ -107,75 +113,74 @@ fun AppNavigation() {
             composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController) }
 
             composable(
-                "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints",
-                        arguments = listOf (
-                        navArgument("correctAnswers") { type = NavType.IntType },
-                                navArgument("totalQuestions") {
-                    type = NavType.IntType
-                    defaultValue = 0
-                },
-                navArgument("totalPoints") { type = NavType.IntType }
-
-
-            )){backstackEntry ->
+                route = "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints}",
+                arguments = listOf(
+                    navArgument("correctAnswers") { type = NavType.IntType },
+                    navArgument("totalQuestions") {
+                        type = NavType.IntType
+                        defaultValue = 0
+                    },
+                    navArgument("totalPoints") { type = NavType.IntType }
+                )
+            ) { backstackEntry ->
                 val correctAnswers = backstackEntry.arguments?.getInt("correctAnswers") ?: 0
                 val totalQuestions = backstackEntry.arguments?.getInt("totalQuestions") ?: 1
                 val totalPoints = backstackEntry.arguments?.getInt("totalPoints") ?: 0
-            QuizCompleteScreen(
-                correctAnswers = correctAnswers,
-                totalQuestions = totalQuestions,
-                totalPoints = totalPoints,
-                pointsEarned = totalPoints,
-                leaderboardEntries = emptyList(),
-                onViewFullLeaderboard = {
-                    navController.navigate(Screen.Quiz.route) {
-                        popUpTo(
-                            Screen.Quiz.route
-                        ) { inclusive = true }
-                    }
-                },
-                navController = navController
-            )
-        }
-        composable(Screen.Community.route) { AwarenessScreen(navController = navController) }
-        composable(Screen.Notification.route) { NotificationScreen(navController = navController) }
+                QuizCompleteScreen(
+                    correctAnswers = correctAnswers,
+                    totalQuestions = totalQuestions,
+                    totalPoints = totalPoints,
+                    pointsEarned = totalPoints,
+                    leaderboardEntries = emptyList(),
+                    onViewFullLeaderboard = {
+                        navController.navigate(Screen.Quiz.route) {
+                            popUpTo(
+                                Screen.Quiz.route
+                            ) { inclusive = true }
+                        }
+                    },
+                    navController = navController
+                )
+            }
+            composable(Screen.Community.route) { AwarenessScreen(navController = navController) }
+            composable(Screen.Notification.route) { NotificationScreen(navController = navController) }
 
-        // <<< REMOVED: The composable for the old MandalaOneSuktasScreen
-        // composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
+            // <<< REMOVED: The composable for the old MandalaOneSuktasScreen
+            // composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
 
-        // <<< ADDED: New composables for the dynamic Mandala/Sukta flow
-        composable(Screen.MandalaList.route) {
-            MandalaListScreen(navController = navController)
-        }
+            // <<< ADDED: New composables for the dynamic Mandala/Sukta flow
+            composable(Screen.MandalaList.route) {
+                MandalaListScreen(navController = navController)
+            }
 
-        composable(
-            route = Screen.Suktas.route,
-            arguments = listOf(navArgument("mandalaNumber") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val mandalaNumber = backStackEntry.arguments?.getInt("mandalaNumber")
-            // Ensure the argument is not null before proceeding
-            requireNotNull(mandalaNumber) { "Mandala number is required as an argument." }
-            SuktasScreen(navController = navController, mandalaNumber = mandalaNumber)
-        }
+            composable(
+                route = Screen.Suktas.route,
+                arguments = listOf(navArgument("mandalaNumber") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val mandalaNumber = backStackEntry.arguments?.getInt("mandalaNumber")
+                // Ensure the argument is not null before proceeding
+                requireNotNull(mandalaNumber) { "Mandala number is required as an argument." }
+                SuktasScreen(navController = navController, mandalaNumber = mandalaNumber)
+            }
 
 
-        composable(
-            route = Screen.SuktaDetail.route,
-            arguments = listOf(navArgument("suktaId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val suktaId = backStackEntry.arguments?.getString("suktaId")
+            composable(
+                route = Screen.SuktaDetail.route,
+                arguments = listOf(navArgument("suktaId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val suktaId = backStackEntry.arguments?.getString("suktaId")
 
-            // <<< CHANGED: Use the new RigvedaRepository to find the Sukta
-            val sukta = suktaId?.let { RigvedaRepository.getSuktaById(it) }
+                // <<< CHANGED: Use the new RigvedaRepository to find the Sukta
+                val sukta = suktaId?.let { RigvedaRepository.getSuktaById(it) }
 
-            if (sukta != null) {
-                SuktaDetailScreen(navController = navController, sukta = sukta)
-            } else {
-                // Handle case where sukta is not found
+                if (sukta != null) {
+                    SuktaDetailScreen(navController = navController, sukta = sukta)
+                } else {
+                    // Handle case where sukta is not found
+                }
             }
         }
     }
-}
 }
 
 @Composable
