@@ -1,5 +1,7 @@
 package com.DeepSoni.vedaconnect
 
+// <<< CHANGED: Use the new generalized repository
+// <<< ADDED: Import the new generic SuktasScreen and MandalaListScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
@@ -18,25 +20,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.DeepSoni.vedaconnect.data.LeaderboardEntry
-import com.DeepSoni.vedaconnect.data.Medal
-import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
-import com.DeepSoni.vedaconnect.repository.MantraRepository
-// <<< CHANGED: Use the new generalized repository
-import com.DeepSoni.vedaconnect.repository.RigvedaRepository
-import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
-import com.DeepSoni.vedaconnect.feature.home.HomeScreen
-import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
-import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
-import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
-// <<< ADDED: Import the new generic SuktasScreen and MandalaListScreen
+import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.mandalas.MandalaListScreen
-import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
+import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
+import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktaDetailScreen
+import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
+import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
+import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
+import com.DeepSoni.vedaconnect.repository.RigvedaRepository
 
 
 sealed class Screen(val route: String, val label: String? = null, val icon: ImageVector? = null) {
@@ -109,58 +105,77 @@ fun AppNavigation() {
             composable(Screen.Content.route) { ContentScreen(navController = navController) }
             composable(Screen.Quiz.route) { QuizScreen(navController = navController) }
             composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController) }
-            composable(Screen.QuizComplete.route) {
-                val dummyQuizResult = QuizResult(7, 10, 70, 850)
-                val dummyLeaderboard = listOf(
-                    LeaderboardEntry("Priya K.", 1, 950, medal = Medal.GOLD),
-                    LeaderboardEntry("You", 4, 850, isCurrentUser = true)
-                )
-                QuizCompleteScreen(
-                    quizResult = dummyQuizResult,
-                    leaderboardEntries = dummyLeaderboard,
-                    onViewFullLeaderboard = { navController.navigate(Screen.Quiz.route) { popUpTo(Screen.Quiz.route) { inclusive = true } } },
-                    navController = navController
-                )
-            }
-            composable(Screen.Community.route) { AwarenessScreen(navController = navController) }
-            composable(Screen.Notification.route) { NotificationScreen(navController = navController) }
-
-            // <<< REMOVED: The composable for the old MandalaOneSuktasScreen
-            // composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
-
-            // <<< ADDED: New composables for the dynamic Mandala/Sukta flow
-            composable(Screen.MandalaList.route) {
-                MandalaListScreen(navController = navController)
-            }
 
             composable(
-                route = Screen.Suktas.route,
-                arguments = listOf(navArgument("mandalaNumber") { type = NavType.IntType })
-            ) { backStackEntry ->
-                val mandalaNumber = backStackEntry.arguments?.getInt("mandalaNumber")
-                // Ensure the argument is not null before proceeding
-                requireNotNull(mandalaNumber) { "Mandala number is required as an argument." }
-                SuktasScreen(navController = navController, mandalaNumber = mandalaNumber)
-            }
+                "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints",
+                        arguments = listOf (
+                        navArgument("correctAnswers") { type = NavType.IntType },
+                                navArgument("totalQuestions") {
+                    type = NavType.IntType
+                    defaultValue = 0
+                },
+                navArgument("totalPoints") { type = NavType.IntType }
 
 
-            composable(
-                route = Screen.SuktaDetail.route,
-                arguments = listOf(navArgument("suktaId") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val suktaId = backStackEntry.arguments?.getString("suktaId")
+            )){backstackEntry ->
+                val correctAnswers = backstackEntry.arguments?.getInt("correctAnswers") ?: 0
+                val totalQuestions = backstackEntry.arguments?.getInt("totalQuestions") ?: 1
+                val totalPoints = backstackEntry.arguments?.getInt("totalPoints") ?: 0
+            QuizCompleteScreen(
+                correctAnswers = correctAnswers,
+                totalQuestions = totalQuestions,
+                totalPoints = totalPoints,
+                pointsEarned = totalPoints,
+                leaderboardEntries = emptyList(),
+                onViewFullLeaderboard = {
+                    navController.navigate(Screen.Quiz.route) {
+                        popUpTo(
+                            Screen.Quiz.route
+                        ) { inclusive = true }
+                    }
+                },
+                navController = navController
+            )
+        }
+        composable(Screen.Community.route) { AwarenessScreen(navController = navController) }
+        composable(Screen.Notification.route) { NotificationScreen(navController = navController) }
 
-                // <<< CHANGED: Use the new RigvedaRepository to find the Sukta
-                val sukta = suktaId?.let { RigvedaRepository.getSuktaById(it) }
+        // <<< REMOVED: The composable for the old MandalaOneSuktasScreen
+        // composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
 
-                if (sukta != null) {
-                    SuktaDetailScreen(navController = navController, sukta = sukta)
-                } else {
-                    // Handle case where sukta is not found
-                }
+        // <<< ADDED: New composables for the dynamic Mandala/Sukta flow
+        composable(Screen.MandalaList.route) {
+            MandalaListScreen(navController = navController)
+        }
+
+        composable(
+            route = Screen.Suktas.route,
+            arguments = listOf(navArgument("mandalaNumber") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val mandalaNumber = backStackEntry.arguments?.getInt("mandalaNumber")
+            // Ensure the argument is not null before proceeding
+            requireNotNull(mandalaNumber) { "Mandala number is required as an argument." }
+            SuktasScreen(navController = navController, mandalaNumber = mandalaNumber)
+        }
+
+
+        composable(
+            route = Screen.SuktaDetail.route,
+            arguments = listOf(navArgument("suktaId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val suktaId = backStackEntry.arguments?.getString("suktaId")
+
+            // <<< CHANGED: Use the new RigvedaRepository to find the Sukta
+            val sukta = suktaId?.let { RigvedaRepository.getSuktaById(it) }
+
+            if (sukta != null) {
+                SuktaDetailScreen(navController = navController, sukta = sukta)
+            } else {
+                // Handle case where sukta is not found
             }
         }
     }
+}
 }
 
 @Composable
