@@ -23,21 +23,21 @@ import com.DeepSoni.vedaconnect.data.Medal
 import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.repository.MantraRepository
-// <<< CHANGED: Use the new generalized repository
 import com.DeepSoni.vedaconnect.repository.RigvedaRepository
-import com.DeepSoni.vedaconnect.feature.quiz.QuizCompleteScreen
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
 import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
 import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
-// <<< ADDED: Import the new generic SuktasScreen and MandalaListScreen
 import com.DeepSoni.vedaconnect.feature.mandalas.MandalaListScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
 import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktaDetailScreen
+import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
+
+
 
 
 sealed class Screen(val route: String, val label: String? = null, val icon: ImageVector? = null) {
