@@ -32,7 +32,6 @@ import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
 import com.DeepSoni.vedaconnect.feature.mandalas.MandalaListScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
-import com.DeepSoni.vedaconnect.feature.content.MantraDetailScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktaDetailScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
@@ -144,16 +143,6 @@ fun AppNavigation() {
                 SuktasScreen(navController = navController, mandalaNumber = mandalaNumber)
             }
 
-
-            // --- Detail Screens ---
-
-            composable(Screen.MantraDetail.route) { backStackEntry ->
-                val mantraId = backStackEntry.arguments?.getString("mantraId")
-                val mantra = MantraRepository.mantras.find { it.id == mantraId }
-                mantra?.let {
-                    MantraDetailScreen(navController = navController, mantra = it)
-                }
-            }
 
             composable(
                 route = Screen.SuktaDetail.route,

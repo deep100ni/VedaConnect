@@ -159,17 +159,19 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
     }
 
     val rigvedaCardGradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFFD2B48C))
+        colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFF8B4513))
     )
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 85.dp), // Set a minimum height for the card
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize() // Fill the whole card area
                 .background(rigvedaCardGradient, shape = RoundedCornerShape(16.dp))
                 .clickable(onClick = onClick) // The whole card is clickable
         ) {
@@ -199,51 +201,24 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
                     overflow = TextOverflow.Ellipsis,
                     lineHeight = 20.sp
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+            }
 
-                Row(
+            // Play/Pause Button positioned at top-right
+            if (sukta.audioUrl != null) {
+                IconButton(
+                    onClick = { togglePlayPause() },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp), // Added horizontal padding to shift buttons inwards
-                    horizontalArrangement = Arrangement.Start, // Start arrangement for control
-                    verticalAlignment = Alignment.CenterVertically
+                        .align(Alignment.TopEnd) // Align to the top-right corner of the Box
+                        .padding(8.dp) // Add some padding from the edges
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A))
                 ) {
-                    // Play/Pause Button (shifted right by the Row's padding)
-                    if (sukta.audioUrl != null) {
-                        IconButton(
-                            onClick = { togglePlayPause() },
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
-                                .background(if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A))
-                        ) {
-                            Icon(
-                                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Outlined.PlayArrow,
-                                contentDescription = if (isPlaying) "Pause" else "Play",
-                                tint = Color.White
-                            )
-                        }
-                    } else {
-                        // This Spacer helps maintain consistent layout when there's no audio
-                        Spacer(modifier = Modifier.width(48.dp))
-                    }
-
-                    Spacer(modifier = Modifier.weight(1f)) // This pushes the next item to the right
-
-                    // View Details Button (shifted left by the Row's padding)
-                    IconButton(
-                        onClick = onClick,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFDAA520))
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Visibility,
-                            contentDescription = "View Details",
-                            tint = Color.White
-                        )
-                    }
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Default.Pause else Icons.Outlined.PlayArrow,
+                        contentDescription = if (isPlaying) "Pause" else "Play",
+                        tint = Color.White
+                    )
                 }
             }
         }
