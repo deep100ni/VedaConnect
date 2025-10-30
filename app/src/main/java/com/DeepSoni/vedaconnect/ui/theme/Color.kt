@@ -1,5 +1,6 @@
 package com.DeepSoni.vedaconnect.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -17,3 +18,6 @@ val GrayText = Color(0xFF757575)
 val BorderGold = Color(0xFFD4AF37)
 
 val Red = Color(0xFFEB676C)
+val headerOrangeGradient: Brush = Brush.verticalGradient(
+    colors = listOf(Color(0xFFF57C00), Color(0xFFFB8C00), Color(0xFFFF9800))
+)

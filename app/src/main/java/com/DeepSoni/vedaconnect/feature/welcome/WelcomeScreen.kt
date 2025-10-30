@@ -1,13 +1,33 @@
 package com.DeepSoni.vedaconnect.feature.welcome
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -19,14 +39,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.R
+import com.DeepSoni.vedaconnect.ui.theme.LightOrangeBg
+import kotlinx.coroutines.launch
 
 @Composable
-fun WelcomeScreen(navController: NavController) { // <-- MODIFIED: Parameter is now NavController
+fun WelcomeScreen(
+    navController: NavController,
+    nameRepository: NameRepository
+) { // <-- MODIFIED: Parameter is now NavController
     var name by remember { mutableStateOf(TextFieldValue("")) }
+    val scope = rememberCoroutineScope()
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(0xFFFFF7F0)
+        color = LightOrangeBg
     ) {
         Column(
             modifier = Modifier
@@ -90,12 +117,21 @@ fun WelcomeScreen(navController: NavController) { // <-- MODIFIED: Parameter is 
             Button(
                 // MODIFIED: This is the new navigation logic
                 onClick = {
-                    navController.navigate("home") {
-                        // This removes the WelcomeScreen from the back stack
-                        popUpTo("welcome") {
-                            inclusive = true
+                    if (name.text.isNotBlank()) {
+                        scope.launch {
+
+                            nameRepository.saveName(name.text)
+
+
+                            navController.navigate("home") {
+                                // This removes the WelcomeScreen from the back stack
+                                popUpTo("welcome") {
+                                    inclusive = true
+                                }
+                            }
                         }
                     }
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,6 +173,7 @@ fun WelcomeScreen(navController: NavController) { // <-- MODIFIED: Parameter is 
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
+    val context = LocalContext.current
     // MODIFIED: The preview now uses a dummy NavController
-    WelcomeScreen(navController = rememberNavController())
+    WelcomeScreen(navController = rememberNavController(), nameRepository = NameRepository(context))
 }

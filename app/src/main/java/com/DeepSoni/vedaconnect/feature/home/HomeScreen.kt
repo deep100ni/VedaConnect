@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,16 +70,17 @@ fun rememberMantraPlayer(audioResId: Int?): Pair<Boolean, () -> Unit> {
 }
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, paddingValues: PaddingValues, userName: String) {
     // The Scaffold is now in AppNavigation.kt, so we just provide the content.
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .background(Color(0xFFFFF7F0)) // Set background here
+            .background(Color(0xFFFFF7F0))
+
     ) {
-        HomeHeader(navController = navController) // Pass NavController
-        Spacer(modifier = Modifier.height(24.dp))
+        HomeHeader(navController = navController, userName = userName) // Pass NavController
+        Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             DailyDharmaDropCard()
             Spacer(modifier = Modifier.height(24.dp))
@@ -91,29 +93,30 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun HomeHeader(navController: NavController) { // Accept NavController
+fun HomeHeader(navController: NavController, userName: String) { // Accept NavController
     val headerOrangeGradient = Brush.verticalGradient(
         colors = listOf(Color(0xFFF57C00), Color(0xFFFB8C00), Color(0xFFFF9800))
     )
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
             .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
-            .padding(horizontal = 24.dp, vertical = 32.dp)
+            .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
     ) {
         Column(
             modifier = Modifier.align(Alignment.TopStart)
         ) {
             Text(
-                text = "Namaste 🙏",
+                text = "Namaste 🙏 $userName",
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Welcome back to your spiritual journey",
                 style = MaterialTheme.typography.bodyMedium,
+                fontSize = 14.sp,
                 color = Color.White.copy(alpha = 0.9f)
             )
         }
@@ -335,5 +338,5 @@ fun QuickActionItem(icon: ImageVector, text: String, onClick: () -> Unit, modifi
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController())
+    HomeScreen(navController = rememberNavController(), paddingValues = PaddingValues(), userName = "User")
 }
