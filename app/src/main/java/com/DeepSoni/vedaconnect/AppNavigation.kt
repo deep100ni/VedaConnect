@@ -1,6 +1,7 @@
 package com.DeepSoni.vedaconnect
 
 // ✅ FIX: Added the missing import for MandalaOneSuktasScreen
+import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.outlined.AutoStories
@@ -14,9 +15,15 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -35,8 +42,10 @@ import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
 import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
 import com.DeepSoni.vedaconnect.feature.suktas.MandalaOneSuktasScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
+import com.DeepSoni.vedaconnect.feature.welcome.NameRepository
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.repository.MantraRepository
+import kotlinx.coroutines.flow.first
 
 
 /**
@@ -69,7 +78,19 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val nameRepository = remember { NameRepository(context) }
+    val savedName: String? by nameRepository.userName.collectAsState(initial = null)
+    var isDataLoaded by remember { mutableStateOf(false) }
 
+    LaunchedEffect(savedName) {
+        if (savedName != null) {
+            isDataLoaded = true
+        }
+    }
+    if (!isDataLoaded) {
+        return
+    }
     // List of screens that will be displayed in the bottom navigation bar.
     val bottomBarItems = listOf(
         Screen.Home,
@@ -81,9 +102,14 @@ fun AppNavigation() {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    // Determine if the bottom bar should be shown based on the current screen's route.
     val shouldShowBottomBar = bottomBarItems.any { it.route == currentRoute }
+
+
+    val startDestination =
+        if (!savedName.isNullOrBlank()) Screen.Home.route else Screen.Welcome.route
+    var isReady by remember { mutableStateOf(false) }
+
+
 
     Scaffold(
         bottomBar = {
@@ -98,16 +124,24 @@ fun AppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Welcome.route, // Start on the Welcome screen
+            startDestination = startDestination, // Start on the Welcome screen
+
         ) {
             // Welcome Screen (no bottom bar)
             composable(Screen.Welcome.route) {
-                WelcomeScreen(navController = navController)
+                WelcomeScreen(
+                    navController = navController,
+                    nameRepository = nameRepository
+                )
             }
 
             // Home Screen (with bottom bar)
             composable(Screen.Home.route) {
-                HomeScreen(navController = navController)
+                HomeScreen(
+                    navController = navController,
+                    paddingValues = innerPadding,
+                    userName = savedName ?: "User"
+                )
             }
 
             // Streak Screen (with bottom bar)
@@ -183,7 +217,6 @@ fun AppNavigation() {
                     MantraDetailScreen(navController = navController, mantra = it)
                 }
             }
-
         }
     }
 }
