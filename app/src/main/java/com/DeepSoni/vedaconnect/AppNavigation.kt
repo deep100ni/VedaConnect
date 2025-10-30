@@ -1,5 +1,4 @@
 package com.DeepSoni.vedaconnect
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
@@ -18,25 +17,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.DeepSoni.vedaconnect.data.LeaderboardEntry
-import com.DeepSoni.vedaconnect.data.Medal
-import com.DeepSoni.vedaconnect.data.QuizResult
 import com.DeepSoni.vedaconnect.feature.QuizCompleteScreen
-import com.DeepSoni.vedaconnect.repository.MantraRepository
-import com.DeepSoni.vedaconnect.repository.RigvedaRepository
 import com.DeepSoni.vedaconnect.feature.community.AwarenessScreen
-import com.DeepSoni.vedaconnect.feature.home.HomeScreen
-import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
-import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
-import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.feature.content.ContentScreen
+import com.DeepSoni.vedaconnect.feature.home.HomeScreen
 import com.DeepSoni.vedaconnect.feature.mandalas.MandalaListScreen
-import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
+import com.DeepSoni.vedaconnect.feature.notification.NotificationScreen
 import com.DeepSoni.vedaconnect.feature.quiz.QuizStartScreen
+import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktaDetailScreen
+import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
-
-
+import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
+import com.DeepSoni.vedaconnect.repository.RigvedaRepository
 
 
 sealed class Screen(val route: String, val label: String? = null, val icon: ImageVector? = null) {
@@ -46,7 +39,13 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
     object Content : Screen("content", "Content", Icons.Outlined.AutoStories)
     object Quiz : Screen("quiz", "Quiz", Icons.Outlined.WorkspacePremium)
     object QuizStart : Screen("quizStart", "QuizStart")
-    object QuizComplete : Screen("quizComplete", "QuizComplete")
+    object QuizComplete : Screen("quizComplete", "QuizComplete") {
+        fun createRoute(score: Int, totalQuestions: Int, totalPoints: Int): String {
+            return "quizComplete/$score/$totalQuestions/$totalPoints"
+        }
+
+    }
+
     object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
     object Notification : Screen("notification")
 
@@ -109,16 +108,34 @@ fun AppNavigation() {
             composable(Screen.Content.route) { ContentScreen(navController = navController) }
             composable(Screen.Quiz.route) { QuizScreen(navController = navController) }
             composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController) }
-            composable(Screen.QuizComplete.route) {
-                val dummyQuizResult = QuizResult(7, 10, 70, 850)
-                val dummyLeaderboard = listOf(
-                    LeaderboardEntry("Priya K.", 1, 950, medal = Medal.GOLD),
-                    LeaderboardEntry("You", 4, 850, isCurrentUser = true)
+
+            composable(
+                route = "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints}",
+                arguments = listOf(
+                    navArgument("correctAnswers") { type = NavType.IntType },
+                    navArgument("totalQuestions") {
+                        type = NavType.IntType
+                        defaultValue = 0
+                    },
+                    navArgument("totalPoints") { type = NavType.IntType }
                 )
+            ) { backstackEntry ->
+                val correctAnswers = backstackEntry.arguments?.getInt("correctAnswers") ?: 0
+                val totalQuestions = backstackEntry.arguments?.getInt("totalQuestions") ?: 1
+                val totalPoints = backstackEntry.arguments?.getInt("totalPoints") ?: 0
                 QuizCompleteScreen(
-                    quizResult = dummyQuizResult,
-                    leaderboardEntries = dummyLeaderboard,
-                    onViewFullLeaderboard = { navController.navigate(Screen.Quiz.route) { popUpTo(Screen.Quiz.route) { inclusive = true } } },
+                    correctAnswers = correctAnswers,
+                    totalQuestions = totalQuestions,
+                    totalPoints = totalPoints,
+                    pointsEarned = totalPoints,
+                    leaderboardEntries = emptyList(),
+                    onViewFullLeaderboard = {
+                        navController.navigate(Screen.Quiz.route) {
+                            popUpTo(
+                                Screen.Quiz.route
+                            ) { inclusive = true }
+                        }
+                    },
                     navController = navController
                 )
             }
