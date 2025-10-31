@@ -113,7 +113,6 @@ fun AppNavigation() {
         NavHost(
             navController = navController,
             startDestination = startDestination,
-            modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Welcome.route) {
                 WelcomeScreen(
