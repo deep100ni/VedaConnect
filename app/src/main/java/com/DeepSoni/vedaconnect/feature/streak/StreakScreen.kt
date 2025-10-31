@@ -62,18 +62,20 @@ fun StreakHeader() {
         modifier = Modifier
             .fillMaxWidth()
             .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
-            .padding(horizontal = 24.dp, vertical = 40.dp)
+            .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
     ) {
         Column {
             Text(
                 text = "Your Progress",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Track your spiritual journey",
                 style = MaterialTheme.typography.bodyLarge,
+                fontSize = 14.sp,
                 color = Color.White.copy(alpha = 0.9f)
             )
         }

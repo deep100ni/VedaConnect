@@ -55,6 +55,7 @@ import com.DeepSoni.vedaconnect.ui.theme.GreyBorder
 import com.DeepSoni.vedaconnect.ui.theme.LightOrangeBg
 import com.DeepSoni.vedaconnect.ui.theme.LightBlue
 import com.DeepSoni.vedaconnect.ui.theme.Red
+import com.DeepSoni.vedaconnect.ui.theme.headerOrangeGradient
 
 
 data class QuizQuestions(
@@ -292,10 +293,10 @@ fun QuizStartScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    Bhagwa,
+                    headerOrangeGradient,
                     shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
                 )
-                .padding(16.dp)
+                .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
             //.fillMaxHeight()
         ) {
             Column(
@@ -438,14 +439,14 @@ fun QuizStartScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (currentLanguage == "en") "Language" else "भाषा बदलें",
+                        text = if (currentLanguage == "en") "Language" else "भाषा",
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Button(
                         onClick = {
-                            currentLanguage = if (currentLanguage == "en") "Hindi" else "en"
+                            currentLanguage = if (currentLanguage == "en") "हिंदी" else "en"
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Bhagwa),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),

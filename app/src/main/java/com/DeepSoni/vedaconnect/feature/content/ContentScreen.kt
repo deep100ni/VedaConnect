@@ -115,7 +115,7 @@ fun ContentScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 22.dp))
-                .padding(horizontal = 24.dp, vertical = 32.dp)
+                .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
         ) {
             Column(modifier = Modifier.align(Alignment.TopStart)) {
                 Text(
