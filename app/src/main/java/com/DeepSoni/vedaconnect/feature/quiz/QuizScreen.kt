@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import com.DeepSoni.vedaconnect.Screen
 import com.DeepSoni.vedaconnect.ui.theme.Bhagwa
 import com.DeepSoni.vedaconnect.ui.theme.LightOrangeBg
+import com.DeepSoni.vedaconnect.ui.theme.headerOrangeGradient
 
 
 /**
@@ -58,23 +59,22 @@ fun QuizScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    Bhagwa,
+                    headerOrangeGradient,
                     shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
                 )
-                .padding(16.dp)
-                .height(100.dp)
+                .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
         ) {
             Column {
                 Text(
                     text = "Weekly Quiz",
                     color = Color.White,
-                    fontSize = 24.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "Test your Vedic Knowledge",
                     color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Normal
                 )
             }

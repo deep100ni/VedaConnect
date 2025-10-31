@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.DeepSoni.vedaconnect.R
+import com.DeepSoni.vedaconnect.ui.theme.headerOrangeGradient
 
 // Assuming VedaTheme and its Orange color are defined elsewhere in your project.
 // For demonstration, I'll include a placeholder definition here.
@@ -392,30 +393,33 @@ fun AwarenessScreen(navController: NavController) {
             TopAppBar(
                 title = {
                     Column(
-                        modifier = Modifier.padding(bottom = 16.dp),
+                        modifier = Modifier.padding(top = 10.dp),
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(
                             text = "Samvaad",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = Color.White,
+                            fontSize = 22.sp
                         )
                         Text(
                             text = "Awareness & enlightenment",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.White
+                            color = Color.White,
+                            fontSize = 14.sp
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = VedaTheme.Orange),
-                expandedHeight = 150.dp,
+                colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
                 modifier = Modifier.clip(
                     androidx.compose.foundation.shape.RoundedCornerShape(
-                        bottomStart = 16.dp,
-                        bottomEnd = 16.dp
+                        bottomStart = 24.dp,
+                        bottomEnd = 24.dp
                     )
                 )
+                    .height(120.dp)
+                    .background(brush = headerOrangeGradient)
             )
         },
         containerColor = Color(0xFFFFF7F0) // Background color matching the image
@@ -430,7 +434,7 @@ fun AwarenessScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 4.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -446,8 +450,12 @@ fun AwarenessScreen(navController: NavController) {
 
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                contentPadding = PaddingValues(
+                    start = 15.dp,
+                    end = 15.dp,
+                    top = 1.dp,
+                    bottom = 100.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val recentArticles =
                     sampleArticles.filter { !it.isFeatured && (selectedCategory == "All" || it.category == selectedCategory) }
@@ -457,7 +465,7 @@ fun AwarenessScreen(navController: NavController) {
                             text = "Rigveda Studies",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 8.dp),
+                            modifier = Modifier.padding(bottom = 4.dp),
                             color = Color.Black
                         )
                     }
@@ -580,7 +588,7 @@ fun RecentArticleCard(article: Article, onClick: () -> Unit) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(1.dp))
                 Text(
                     text = article.title,
                     style = MaterialTheme.typography.titleMedium,
