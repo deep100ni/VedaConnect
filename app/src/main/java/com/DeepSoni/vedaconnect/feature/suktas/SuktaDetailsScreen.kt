@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.DeepSoni.vedaconnect.data.Sukta
 
-// Placeholder for your theme colors to make this file self-contained.
-// You can replace this with your actual VedaTheme object if it's accessible.
 private object VedaThemeColors {
     val DarkOrange = Color(0xFFE65100)
     val Orange = Color(0xFFF57C00)
