@@ -4,57 +4,96 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.io.IOException
 
-@Composable
-fun rememberMantraPlayer(audioUrl: String?): Pair<Boolean, () -> Unit> {
-    var isPlaying by remember { mutableStateOf(false) }
-    var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
+enum class PlayerState {
+    IDLE,
+    LOADING,
+    PLAYING,
+    PAUSED
+}
 
-    fun togglePlayPause() {
-        if (audioUrl.isNullOrEmpty()) return
+// Data class to hold the state
+data class PlayerStatus(
+    val state: PlayerState = PlayerState.IDLE,
+    val url: String? = null
+)
 
-        if (isPlaying) {
-            mediaPlayer?.pause()
-            isPlaying = false
+object MantraPlayerManager {
+    private var mediaPlayer: MediaPlayer? = null
+    private val _playerStatus = MutableStateFlow(PlayerStatus())
+    val playerStatus = _playerStatus.asStateFlow()
+
+    fun togglePlayPause(audioUrl: String) {
+        if (_playerStatus.value.url == audioUrl && _playerStatus.value.state == PlayerState.PLAYING) {
+            pause()
+        } else if (_playerStatus.value.url == audioUrl && _playerStatus.value.state == PlayerState.PAUSED) {
+            resume()
         } else {
-            if (mediaPlayer == null) {
-                mediaPlayer = MediaPlayer().apply {
-                    setAudioAttributes(
-                        AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .build()
-                    )
-                    try {
-                        setDataSource(audioUrl)
-                        prepareAsync() // Use prepareAsync for network streams
-                        setOnPreparedListener {
-                            start()
-                            isPlaying = true
-                        }
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                        // Handle exceptions, perhaps by showing a Toast message
-                    }
+            play(audioUrl)
+        }
+    }
+
+    private fun play(audioUrl: String) {
+        stop()
+        _playerStatus.value = PlayerStatus(state = PlayerState.LOADING, url = audioUrl)
+        mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+            try {
+                setDataSource(audioUrl)
+                prepareAsync()
+                setOnPreparedListener {
+                    start()
+                    _playerStatus.value = PlayerStatus(state = PlayerState.PLAYING, url = audioUrl)
                 }
-            } else {
-                mediaPlayer?.start()
-                isPlaying = true
+                setOnCompletionListener {
+                    stop()
+                }
+                setOnErrorListener { _, _, _ ->
+                    stop()
+                    true
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                stop()
             }
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            mediaPlayer?.release()
-            mediaPlayer = null
-        }
+    private fun pause() {
+        mediaPlayer?.pause()
+        _playerStatus.value = _playerStatus.value.copy(state = PlayerState.PAUSED)
     }
 
-    return Pair(isPlaying, ::togglePlayPause)
+    private fun resume() {
+        mediaPlayer?.start()
+        _playerStatus.value = _playerStatus.value.copy(state = PlayerState.PLAYING)
+    }
+
+    fun stop() {
+        mediaPlayer?.release()
+        mediaPlayer = null
+        _playerStatus.value = PlayerStatus()
+    }
+}
+
+@Composable
+fun rememberMantraPlayer(audioUrl: String): Pair<PlayerState, () -> Unit> {
+    val playerStatus by MantraPlayerManager.playerStatus.collectAsState()
+
+    val isThisAudio = playerStatus.url == audioUrl
+    val currentState = if (isThisAudio) playerStatus.state else PlayerState.IDLE
+
+    val onToggle: () -> Unit = { MantraPlayerManager.togglePlayPause(audioUrl) }
+
+    return Pair(currentState, onToggle)
 }

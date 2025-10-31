@@ -2,7 +2,17 @@ package com.DeepSoni.vedaconnect.feature.suktas
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -11,10 +21,25 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.PlayArrow
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.DeepSoni.vedaconnect.Screen
+import com.DeepSoni.vedaconnect.audio.PlayerState
 import com.DeepSoni.vedaconnect.audio.rememberMantraPlayer
 import com.DeepSoni.vedaconnect.data.Sukta
 import com.DeepSoni.vedaconnect.repository.RigvedaRepository
@@ -152,12 +178,6 @@ fun SuktasScreen(navController: NavHostController, mandalaNumber: Int) {
 
 @Composable
 fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
-    val (isPlaying, togglePlayPause) = if (sukta.audioUrl != null) {
-        rememberMantraPlayer(sukta.audioUrl)
-    } else {
-        remember { false to {} }
-    }
-
     val rigvedaCardGradient = Brush.horizontalGradient(
         colors = listOf(Color(0xFF8B4513), Color(0xFFA0522D), Color(0xFF8B4513))
     )
@@ -205,20 +225,45 @@ fun SuktaCard(sukta: Sukta, onClick: () -> Unit) {
 
             // Play/Pause Button positioned at top-right
             if (sukta.audioUrl != null) {
-                IconButton(
-                    onClick = { togglePlayPause() },
+                val (playerState, togglePlayPause) = rememberMantraPlayer(sukta.audioUrl)
+
+                Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .align(Alignment.TopEnd) // Align to the top-right corner of the Box
                         .padding(8.dp) // Add some padding from the edges
                         .size(48.dp)
                         .clip(CircleShape)
-                        .background(if (isPlaying) Color(0xFFCD5C5C) else Color(0xFFFFA07A))
+                        .background(
+                            if (playerState == PlayerState.PLAYING) Color(0xFFCD5C5C) else Color(
+                                0xFFFFA07A
+                            )
+                        )
+                        .clickable(onClick = { togglePlayPause() })
                 ) {
-                    Icon(
-                        imageVector = if (isPlaying) Icons.Default.Pause else Icons.Outlined.PlayArrow,
-                        contentDescription = if (isPlaying) "Pause" else "Play",
-                        tint = Color.White
-                    )
+                    when (playerState) {
+                        PlayerState.LOADING -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(30.dp),
+                                color = Color.White,
+                                strokeWidth = 3.dp
+                            )
+                        }
+                        PlayerState.PLAYING -> {
+                            Icon(
+                                imageVector = Icons.Default.Pause,
+                                contentDescription = "Pause",
+                                tint = Color.White
+                            )
+                        }
+                        else -> { // IDLE, PAUSED
+                            Icon(
+                                imageVector = Icons.Outlined.PlayArrow,
+                                contentDescription = "Play",
+                                tint = Color.White
+                            )
+                        }
+                    }
                 }
             }
         }

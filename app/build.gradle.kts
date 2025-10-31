@@ -78,6 +78,8 @@ android {
         implementation(libs.androidx.datastore.core)
         implementation("androidx.datastore:datastore-preferences:1.0.0")
         implementation("com.google.code.gson:gson:2.10.1")
+        implementation("com.google.android.exoplayer:exoplayer:2.19.1")
+// Or the latest version
 
         // Testing dependencies
         testImplementation(libs.junit)
