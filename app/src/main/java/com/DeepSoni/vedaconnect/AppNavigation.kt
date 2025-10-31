@@ -1,17 +1,22 @@
 package com.DeepSoni.vedaconnect
 
-// <<< CHANGED: Use the new generalized repository
-// <<< ADDED: Import the new generic SuktasScreen and MandalaListScreen
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -31,6 +36,7 @@ import com.DeepSoni.vedaconnect.feature.streak.StreakScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktaDetailScreen
 import com.DeepSoni.vedaconnect.feature.suktas.SuktasScreen
 import com.DeepSoni.vedaconnect.feature.weeklyquiz.QuizScreen
+import com.DeepSoni.vedaconnect.feature.welcome.NameRepository
 import com.DeepSoni.vedaconnect.feature.welcome.WelcomeScreen
 import com.DeepSoni.vedaconnect.repository.RigvedaRepository
 
@@ -46,26 +52,13 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
         fun createRoute(score: Int, totalQuestions: Int, totalPoints: Int): String {
             return "quizComplete/$score/$totalQuestions/$totalPoints"
         }
-
     }
-
     object Community : Screen("community", "Awareness", Icons.AutoMirrored.Outlined.Article)
     object Notification : Screen("notification")
-
-    // <<< REMOVED: The old, hardcoded MandalaOneSuktas route
-    // object MandalaOneSuktas : Screen("mandalaOneSuktas")
-
-    // <<< ADDED: New routes for the dynamic Mandala/Sukta flow
     object MandalaList : Screen("mandala_list")
     object Suktas : Screen("suktas/{mandalaNumber}") {
         fun createRoute(mandalaNumber: Int) = "suktas/$mandalaNumber"
     }
-
-    // --- Detail Screens ---
-    object MantraDetail : Screen("detail/{mantraId}") {
-        fun createRoute(mantraId: String) = "detail/$mantraId"
-    }
-
     object SuktaDetail : Screen("sukta_detail/{suktaId}") {
         fun createRoute(suktaId: String) = "sukta_detail/$suktaId"
     }
@@ -73,7 +66,25 @@ sealed class Screen(val route: String, val label: String? = null, val icon: Imag
 
 @Composable
 fun AppNavigation() {
+    // 1. Set up repository and collect the saved name state.
+    // `initial = null` means we are waiting for the value to be loaded.
+    val context = LocalContext.current.applicationContext
+    val nameRepository = remember { NameRepository(context) }
+    val savedName by nameRepository.userName.collectAsState(initial = null)
+
+    // 2. Display a loading screen while `savedName` is null (i.e., being loaded).
+    if (savedName == null) {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            Box(contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+        return // Prevents the rest of the UI from composing until the name is loaded.
+    }
+
+    // 3. Once loaded, determine the starting screen.
     val navController = rememberNavController()
+    val startDestination = if (savedName!!.isBlank()) Screen.Welcome.route else Screen.Home.route
 
     val bottomBarItems = listOf(
         Screen.Home,
@@ -85,7 +96,6 @@ fun AppNavigation() {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
     val shouldShowBottomBar = bottomBarItems.any { it.route == currentRoute }
 
     Scaffold(
@@ -101,12 +111,24 @@ fun AppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Welcome.route,
-            modifier = Modifier.padding(innerPadding)
+            startDestination = startDestination,
         ) {
-            // ... (Other composables like Welcome, Home, etc., remain the same)
-            composable(Screen.Welcome.route) { WelcomeScreen(navController = navController) }
-            composable(Screen.Home.route) { HomeScreen(navController = navController) }
+            composable(Screen.Welcome.route) {
+                WelcomeScreen(
+                    navController = navController,
+                    nameRepository = nameRepository
+                )
+            }
+
+            composable(Screen.Home.route) {
+                HomeScreen(
+                    navController = navController,
+                    paddingValues = innerPadding,
+                    // Non-null assertion is safe here because of the loading check above.
+                    userName = savedName!!.ifBlank { "User" }
+                )
+            }
+
             composable(Screen.Streaks.route) { StreakScreen(navController = navController) }
             composable(Screen.Content.route) { ContentScreen(navController = navController) }
             composable(Screen.Quiz.route) { QuizScreen(navController = navController) }
@@ -116,10 +138,7 @@ fun AppNavigation() {
                 route = "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints}",
                 arguments = listOf(
                     navArgument("correctAnswers") { type = NavType.IntType },
-                    navArgument("totalQuestions") {
-                        type = NavType.IntType
-                        defaultValue = 0
-                    },
+                    navArgument("totalQuestions") { type = NavType.IntType; defaultValue = 0 },
                     navArgument("totalPoints") { type = NavType.IntType }
                 )
             ) { backstackEntry ->
@@ -134,9 +153,7 @@ fun AppNavigation() {
                     leaderboardEntries = emptyList(),
                     onViewFullLeaderboard = {
                         navController.navigate(Screen.Quiz.route) {
-                            popUpTo(
-                                Screen.Quiz.route
-                            ) { inclusive = true }
+                            popUpTo(Screen.Quiz.route) { inclusive = true }
                         }
                     },
                     navController = navController
@@ -145,10 +162,6 @@ fun AppNavigation() {
             composable(Screen.Community.route) { AwarenessScreen(navController = navController) }
             composable(Screen.Notification.route) { NotificationScreen(navController = navController) }
 
-            // <<< REMOVED: The composable for the old MandalaOneSuktasScreen
-            // composable(Screen.MandalaOneSuktas.route) { MandalaOneSuktasScreen(navController = navController) }
-
-            // <<< ADDED: New composables for the dynamic Mandala/Sukta flow
             composable(Screen.MandalaList.route) {
                 MandalaListScreen(navController = navController)
             }
@@ -158,19 +171,15 @@ fun AppNavigation() {
                 arguments = listOf(navArgument("mandalaNumber") { type = NavType.IntType })
             ) { backStackEntry ->
                 val mandalaNumber = backStackEntry.arguments?.getInt("mandalaNumber")
-                // Ensure the argument is not null before proceeding
                 requireNotNull(mandalaNumber) { "Mandala number is required as an argument." }
                 SuktasScreen(navController = navController, mandalaNumber = mandalaNumber)
             }
-
 
             composable(
                 route = Screen.SuktaDetail.route,
                 arguments = listOf(navArgument("suktaId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val suktaId = backStackEntry.arguments?.getString("suktaId")
-
-                // <<< CHANGED: Use the new RigvedaRepository to find the Sukta
                 val sukta = suktaId?.let { RigvedaRepository.getSuktaById(it) }
 
                 if (sukta != null) {
