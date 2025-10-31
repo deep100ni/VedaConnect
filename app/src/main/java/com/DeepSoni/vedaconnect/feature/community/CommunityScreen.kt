@@ -32,8 +32,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.WorkspacePremium
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -101,7 +99,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "The Rig Veda, as one of the oldest and most significant texts in the history of Hinduism, provides profound insights into the spiritual...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_27,
         videoUrl = "https://youtu.be/YXfRsS8MzX4"
     ), // Replace with a real link
 
@@ -112,7 +110,7 @@ val sampleArticles = listOf(
         8,
         "",
         description = "The Rig Veda, as one of the oldest and most significant texts in the history of Hinduism, provides profound insights into the spiritual...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_25,
         articalUrl = "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5165911"
     ),
     Article(
@@ -142,7 +140,7 @@ val sampleArticles = listOf(
         7,
         "",
         description = "वेद , दूसरी सहस्राब्दी ईसा पूर्व के दौरान उत्तर-पश्चिम भारत में रहने वाले इंडो-यूरोपीय भाषी लोगों द्वारा प्राचीन संस्कृत में रचित कविताओं या भजनों का एक संग्रह है।...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_20,
         articalUrl = "https://britannica.com/topic/Veda"
     ),
     Article(
@@ -152,7 +150,7 @@ val sampleArticles = listOf(
         9,
         "",
         description = "The Vedas are generally known as the scriptures of the Hindu community...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_15,
         articalUrl = "https://unesco.org/en/memory-world/rigveda"
     ),
     Article(
@@ -162,7 +160,7 @@ val sampleArticles = listOf(
         15,
         "",
         description = "Investigating the archaeological significance of the mythical Saraswati River...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_21,
         articalUrl = "https://youtube.com/watch?v=vDZ0Jig5avE"
     ),
     Article(
@@ -171,7 +169,7 @@ val sampleArticles = listOf(
         "Rigved : The History and Lessons Of Rigved",
         11, "",
         description = "The Rigved (or Rig Ved) is the oldest and most important of the four Vedas, which are the foundational scriptures of Sanatan Dharm (Hinduism)....",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_18,
         articalUrl = "https://sameedh.com/the-history-and-lessons-of-rigved/"
     ),
     Article(
@@ -181,9 +179,6 @@ val sampleArticles = listOf(
         12,
         "",
         description = "Almost every month in every part of India, some festival or the other is celebrated. That is one ofthe most joyful aspects about Hinduism....",
-
-
-
         imageUrl = R.drawable.therigveda,
         videoUrl = "https://youtube.com/watch?v=tIGbOZNDupk"
     ),
@@ -194,7 +189,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "Why Shalagramas - Fossils older than Dinosaurs, being worshipped today?..",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_10,
         videoUrl = "https://youtube.com/watch?v=3HhTlGH6J8c&t=11s"
     ),
     Article(
@@ -204,7 +199,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "What if ancient India had a martial art that could paralyze an opponent with just a touch? Discover Marma Kala , the forgotten science of nerve strikes, healing, and human energy taught by Agastya Maharshi....",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_11,
         videoUrl = "https://youtube.com/watch?v=mcgJaJSqmVo&t=39s"
     ),
     Article(
@@ -214,7 +209,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "Vedabhoomi - this is the name of India and for a very good reason. In this documentary, we presented all the ancient scriptures of Bhaarat....",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_12,
         videoUrl = "https://youtube.com/watch?v=S1-17TeZvV0&t=133s"
     ),
     Article(
@@ -224,7 +219,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "Bulk of what we have as a medical advancement in the field of biology or medicine has developed over last 500 years. But then how did humans survive...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_13,
         videoUrl = "https://www.youtube.com/watch?v=cQDE9hJbd2w"
     ),
     Article(
@@ -234,7 +229,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "A powerful documentary that explores the history of the 108 Upanishads, illuminating their deep spiritual and philosophical wisdom of Bharat...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_14,
         videoUrl = "https://youtube.com/watch?v=NJvTPrmxkGQ"
     ),
     Article(
@@ -244,7 +239,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "इस वीडियो के माध्यम से आप हमारे प्राचीन भारतीय वेदों और अन्य प्राचीन शास्त्रों की महानता को समझ सकेंगे...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_15,
         videoUrl = "https://youtube.com/watch?v=usOLmzsxKIk"
     ),
     Article(
@@ -254,7 +249,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "The Hymn to Nikkal, that has very close similarities with Rig Vedam - this is an ongoing research in this space and this video is all about this research....",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_16,
         videoUrl = "https://youtube.com/watch?v=EQZGl7V4a10"
     ),
     Article(
@@ -264,7 +259,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "Discover the origins of Narasimha Avatar, the fierce form of Vishnu who emerged to protect Prahlada and restore dharma. Uncover the sacred legends and places tied to this divine manifestation....",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_17,
         videoUrl = "https://youtube.com/watch?v=YzyfTs_B4SY"
     ),
     Article(
@@ -274,7 +269,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "The Ancient History of how Food evolved in Bharat from the times of Vedic Period, through the times of Ramayan & Mahabharat, all the way through Indus Valley Civilization up until today... all packed in this documentary...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_18,
         videoUrl = "https://youtube.com/watch?v=40_M0m4SFIk"
     ),
     Article(
@@ -284,7 +279,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "Discover the 5000+ year legacy of the sacred Peepal tree,  from Vedas to Buddha’s Bodhi. A timeless symbol of life, wisdom, and Indian heritage that continues to thrive across generations...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_19,
         videoUrl = "https://youtube.com/watch?v=_wCVfox2O7s"
     ),
     Article(
@@ -294,7 +289,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "The Rama, one of the most sacred epics of Bharat, chronicles the extraordinary journey of Bhagwan Sri Rama, Masita and...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_20,
         videoUrl = "https://youtube.com/watch?v=jo1M8nf4lIc"
     ),
     Article(
@@ -304,7 +299,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "Kurma Avatar is not well known as no known temples, no worship like that of Narasimha Avatar. Why so? Discover in this video......",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_21,
         videoUrl = "https://youtube.com/watch?v=8t_x4K49JAs"
     ),
     Article(
@@ -314,7 +309,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "Cattle are not just animals; they are Civilization Pillars – from Ancient India to Ancient Persia, they nurtured entire civilizations.. This video is about Desi Cattle – the Zebu & its less known history.....",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_22,
         videoUrl = "https://youtube.com/watch?v=CGN3quq5by8"
     ),
     Article(
@@ -324,7 +319,7 @@ val sampleArticles = listOf(
         12,
         "",
         description = "About 3,600 years ago in the late Bronze Age, a civilization known as Minians lived in what we now call today as...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_23,
         videoUrl = "https://youtube.com/watch?v=_1mp9m3UkQQ"
     ),
     Article(
@@ -334,47 +329,47 @@ val sampleArticles = listOf(
         12,
         "",
         description = "This is a chapter of history about a lost statue of Vishnu from the times of Mahabharat – but still found in a remote part of Himalayas even today...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_24,
         videoUrl = "https://youtube.com/watch?v=iD_FBNIVDcs"
     ),
     Article(
-        26,
+        25,
         "History",
         "A brief history of 108 Upanishads",
         12,
         "",
         description = "A powerful documentary that explores the history of the 108 Upanishads, illuminating their deep spiritual and philosophical wisdom of Bharat...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_25,
         videoUrl = "https://youtube.com/watch?v=NJvTPrmxkGQ"
     ),
     Article(
-        27,
+        26,
         "History",
         "The Vedas",
         12,
         "",
         description = "The Vedas are the religious texts which inform the religion of Hinduism (also known as Sanatan Dharma meaning “Eternal Order” or “Eternal Path”).....",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_26,
         articalUrl = "https://worldhistory.org/The_Vedas/"
     ),
     Article(
-        28,
+        27,
         "History",
         "The Vedas: the Once and Future Scriptless Texts",
         12,
         "",
         description = "In the history of global culture, perhaps the best known example of an elite tradition that preserved and circulated a large corpus of canonical literature across an entire continent...",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_27,
         articalUrl = "https://www.humanities.ox.ac.uk/vedas-once-and-future-scriptless-texts"
     ),
     Article(
-        29,
+        28,
         "History",
         "The Significance of Vedas and Their Rituals",
         12,
         "",
         description = "When we talk about the Veda, we have to differentiate between Vedic poetry, Vedic prose, and Vedic philosophy....",
-        imageUrl = R.drawable.therigveda,
+        imageUrl = R.drawable.image_28,
         articalUrl = "https://devdutt.com/the-significance-of-vedas-and-their-rituals/"
     ),
 )
