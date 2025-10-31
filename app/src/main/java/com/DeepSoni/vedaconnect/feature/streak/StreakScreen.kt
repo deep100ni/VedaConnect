@@ -28,7 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun StreakScreen(navController: NavController) {
+fun StreakScreen(navController: NavController, paddingValues: PaddingValues) {
     // The Scaffold is now in AppNavigation.kt
     Column(
         modifier = Modifier
@@ -37,7 +37,7 @@ fun StreakScreen(navController: NavController) {
             .background(Color(0xFFFFF7F0)) // Set background here
     ) {
         StreakHeader()
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             CurrentStreakCard()
             Spacer(modifier = Modifier.height(24.dp))
@@ -358,5 +358,5 @@ fun ShareProgressButton() {
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable
 fun StreakScreenPreview() {
-    StreakScreen(navController = rememberNavController())
+    StreakScreen(navController = rememberNavController(), paddingValues = PaddingValues())
 }

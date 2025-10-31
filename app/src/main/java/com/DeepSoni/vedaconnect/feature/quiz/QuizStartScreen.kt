@@ -199,7 +199,7 @@ val masterQuizData = listOf(
     )
 
 @Composable
-fun QuizStartScreen(navController: NavController) {
+fun QuizStartScreen(navController: NavController, paddingValues: PaddingValues) {
     val context = LocalContext.current
     val scoreManager = remember { ScoreManager(context) }
     val selectedQuestions = remember { masterQuizData.shuffled().take(10) }
@@ -334,7 +334,7 @@ fun QuizStartScreen(navController: NavController) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),

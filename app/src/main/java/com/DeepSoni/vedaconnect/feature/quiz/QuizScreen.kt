@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,7 +47,7 @@ import com.DeepSoni.vedaconnect.ui.theme.headerOrangeGradient
  * It displays the header, the current weekly challenge, and a list of previous quizzes.
  */
 @Composable
-fun QuizScreen(navController: NavController) {
+fun QuizScreen(navController: NavController, paddingValues: PaddingValues) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -87,7 +88,7 @@ fun QuizScreen(navController: NavController) {
                 .padding(horizontal = 16.dp)
                 .verticalScroll(scrollState)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
 
             WeeklyChallengeCard(
                 modifier = Modifier.fillMaxWidth(),
@@ -99,10 +100,11 @@ fun QuizScreen(navController: NavController) {
             // The list of previous weeks now requires the NavController
             PreviousWeekSection(
                 modifier = Modifier.fillMaxWidth(),
-                navController = navController
+                navController = navController,
+
             )
 
-            Spacer(modifier = Modifier.height(60.dp)) // Padding at the bottom
+            Spacer(modifier = Modifier.height(100.dp)) // Padding at the bottom
         }
     }
 }
