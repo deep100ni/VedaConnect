@@ -89,7 +89,7 @@ fun rememberMantraPlayer(audioUrl: String?): Pair<Boolean, () -> Unit> {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContentScreen(navController: NavHostController) {
+fun ContentScreen(navController: NavHostController, paddingValues: PaddingValues) {
     var searchQuery by remember { mutableStateOf("") }
     // Only Mandalas tab is needed
     val selectedTab by remember { mutableIntStateOf(0) } // Always 0 for Mandalas
@@ -114,8 +114,10 @@ fun ContentScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 22.dp))
-                .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
+                .background(
+                    headerOrangeGradient,
+                    shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 22.dp)
+                )           .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
         ) {
             Column(modifier = Modifier.align(Alignment.TopStart)) {
                 Text(
@@ -164,14 +166,16 @@ fun ContentScreen(navController: NavHostController) {
         )
 
 
-
-
-
         // 📜 Content List (Only Mandalas)
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                top = 0.dp,
+                bottom = paddingValues.calculateBottomPadding() + 1.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(filteredMandalas) { mandala ->
