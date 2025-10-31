@@ -103,6 +103,7 @@ val sampleArticles = listOf(
         imageUrl = R.drawable.therigveda,
         videoUrl = "https://youtu.be/YXfRsS8MzX4"
     ), // Replace with a real link
+
     Article(
         2,
         "History",
@@ -171,7 +172,210 @@ val sampleArticles = listOf(
         description = "The Rigved (or Rig Ved) is the oldest and most important of the four Vedas, which are the foundational scriptures of Sanatan Dharm (Hinduism)....",
         imageUrl = R.drawable.therigveda,
         articalUrl = "https://sameedh.com/the-history-and-lessons-of-rigved/"
-    )
+    ),
+    Article(
+        9,
+        "History",
+        "Which is the most Ancient Festival in Hinduism?",
+        12,
+        "",
+        description = "Almost every month in every part of India, some festival or the other is celebrated. That is one ofthe most joyful aspects about Hinduism....",
+
+
+
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=tIGbOZNDupk"
+    ),
+    Article(
+        10,
+        "History",
+        "Why Hindus Worship this DINOSAUR FOSSIL?",
+        12,
+        "",
+        description = "Why Shalagramas - Fossils older than Dinosaurs, being worshipped today?..",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=3HhTlGH6J8c&t=11s"
+    ),
+    Article(
+        11,
+        "History",
+        "MARMA VIDYA - The Divine Marital Art",
+        12,
+        "",
+        description = "What if ancient India had a martial art that could paralyze an opponent with just a touch? Discover Marma Kala , the forgotten science of nerve strikes, healing, and human energy taught by Agastya Maharshi....",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=mcgJaJSqmVo&t=39s"
+    ),
+    Article(
+        12,
+        "History",
+        "What exactly are the Vedas?",
+        12,
+        "",
+        description = "Vedabhoomi - this is the name of India and for a very good reason. In this documentary, we presented all the ancient scriptures of Bhaarat....",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=S1-17TeZvV0&t=133s"
+    ),
+    Article(
+        13,
+        "History",
+        "The Human Anatomy as per Vedas",
+        12,
+        "",
+        description = "Bulk of what we have as a medical advancement in the field of biology or medicine has developed over last 500 years. But then how did humans survive...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://www.youtube.com/watch?v=cQDE9hJbd2w"
+    ),
+    Article(
+        14,
+        "History",
+        "A brief history of 108 Upanishads",
+        12,
+        "",
+        description = "A powerful documentary that explores the history of the 108 Upanishads, illuminating their deep spiritual and philosophical wisdom of Bharat...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=NJvTPrmxkGQ"
+    ),
+    Article(
+        15,
+        "History",
+        "वेदों का संक्षिप्त इतिहास || A brief history of the Vedas",
+        12,
+        "",
+        description = "इस वीडियो के माध्यम से आप हमारे प्राचीन भारतीय वेदों और अन्य प्राचीन शास्त्रों की महानता को समझ सकेंगे...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=usOLmzsxKIk"
+    ),
+    Article(
+        16,
+        "History",
+        "Vedic Culture of Pre-Islamic Syria",
+        12,
+        "",
+        description = "The Hymn to Nikkal, that has very close similarities with Rig Vedam - this is an ongoing research in this space and this video is all about this research....",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=EQZGl7V4a10"
+    ),
+    Article(
+        17,
+        "History",
+        "Why 90% of Narasimha Temples are in Telugu States?",
+        12,
+        "",
+        description = "Discover the origins of Narasimha Avatar, the fierce form of Vishnu who emerged to protect Prahlada and restore dharma. Uncover the sacred legends and places tied to this divine manifestation....",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=YzyfTs_B4SY"
+    ),
+    Article(
+        18,
+        "History",
+        "The History of Food in Ancient India - From Vedic Period till today...",
+        12,
+        "",
+        description = "The Ancient History of how Food evolved in Bharat from the times of Vedic Period, through the times of Ramayan & Mahabharat, all the way through Indus Valley Civilization up until today... all packed in this documentary...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=40_M0m4SFIk"
+    ),
+    Article(
+        19,
+        "History",
+        "The Untold History of PEEPAL LEAF",
+        12,
+        "",
+        description = "Discover the 5000+ year legacy of the sacred Peepal tree,  from Vedas to Buddha’s Bodhi. A timeless symbol of life, wisdom, and Indian heritage that continues to thrive across generations...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=_wCVfox2O7s"
+    ),
+    Article(
+        20,
+        "History",
+        "VONTIMITTA - The Time Capsule of Ramayanam",
+        12,
+        "",
+        description = "The Rama, one of the most sacred epics of Bharat, chronicles the extraordinary journey of Bhagwan Sri Rama, Masita and...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=jo1M8nf4lIc"
+    ),
+    Article(
+        21,
+        "History",
+        "Why no temples for Kurma Avatar?",
+        12,
+        "",
+        description = "Kurma Avatar is not well known as no known temples, no worship like that of Narasimha Avatar. Why so? Discover in this video......",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=8t_x4K49JAs"
+    ),
+    Article(
+        22,
+        "History",
+        "8000 years History of The Indian Cow (Bos Indicus)",
+        12,
+        "",
+        description = "Cattle are not just animals; they are Civilization Pillars – from Ancient India to Ancient Persia, they nurtured entire civilizations.. This video is about Desi Cattle – the Zebu & its less known history.....",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=CGN3quq5by8"
+    ),
+    Article(
+        23,
+        "History",
+        "Why Bhishma was worshipped in Europe?",
+        12,
+        "",
+        description = "About 3,600 years ago in the late Bronze Age, a civilization known as Minians lived in what we now call today as...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=_1mp9m3UkQQ"
+    ),
+    Article(
+        24,
+        "History",
+        "The Lost Statue of VISHNU",
+        12,
+        "",
+        description = "This is a chapter of history about a lost statue of Vishnu from the times of Mahabharat – but still found in a remote part of Himalayas even today...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=iD_FBNIVDcs"
+    ),
+    Article(
+        26,
+        "History",
+        "A brief history of 108 Upanishads",
+        12,
+        "",
+        description = "A powerful documentary that explores the history of the 108 Upanishads, illuminating their deep spiritual and philosophical wisdom of Bharat...",
+        imageUrl = R.drawable.therigveda,
+        videoUrl = "https://youtube.com/watch?v=NJvTPrmxkGQ"
+    ),
+    Article(
+        27,
+        "History",
+        "The Vedas",
+        12,
+        "",
+        description = "The Vedas are the religious texts which inform the religion of Hinduism (also known as Sanatan Dharma meaning “Eternal Order” or “Eternal Path”).....",
+        imageUrl = R.drawable.therigveda,
+        articalUrl = "https://worldhistory.org/The_Vedas/"
+    ),
+    Article(
+        28,
+        "History",
+        "The Vedas: the Once and Future Scriptless Texts",
+        12,
+        "",
+        description = "In the history of global culture, perhaps the best known example of an elite tradition that preserved and circulated a large corpus of canonical literature across an entire continent...",
+        imageUrl = R.drawable.therigveda,
+        articalUrl = "https://www.humanities.ox.ac.uk/vedas-once-and-future-scriptless-texts"
+    ),
+    Article(
+        29,
+        "History",
+        "The Significance of Vedas and Their Rituals",
+        12,
+        "",
+        description = "When we talk about the Veda, we have to differentiate between Vedic poetry, Vedic prose, and Vedic philosophy....",
+        imageUrl = R.drawable.therigveda,
+        articalUrl = "https://devdutt.com/the-significance-of-vedas-and-their-rituals/"
+    ),
 )
 
 // -----------------------------------------------------------
@@ -297,7 +501,6 @@ fun AwarenessFilterChip(text: String, selected: Boolean, onClick: () -> Unit) {
         shape = RoundedCornerShape(12.dp)
     )
 }
-
 
 
 @Composable
