@@ -311,14 +311,14 @@ fun QuizStartScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "Weekly Quiz",
-                        fontSize = 30.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         modifier = Modifier
                     )
                     Row(
                         modifier = Modifier
-                            .padding(top = 20.dp, start = 20.dp, bottom = 20.dp)
+
                     ) {
                         Image(
                             painter = painterResource(R.drawable.alarmclock),
@@ -334,7 +334,7 @@ fun QuizStartScreen(navController: NavController) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(15.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),

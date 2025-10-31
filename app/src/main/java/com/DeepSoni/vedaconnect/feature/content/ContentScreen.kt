@@ -172,6 +172,11 @@ fun ContentScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(
+                start = 15.dp,
+                end = 15.dp,
+                top = 1.dp,
+                bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(filteredMandalas) { mandala ->
