@@ -1,9 +1,7 @@
 package com.DeepSoni.vedaconnect
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.outlined.*
@@ -130,10 +128,13 @@ fun AppNavigation() {
                 )
             }
 
-            composable(Screen.Streaks.route) { StreakScreen(navController = navController) }
-            composable(Screen.Content.route) { ContentScreen(navController = navController) }
-            composable(Screen.Quiz.route) { QuizScreen(navController = navController) }
-            composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController) }
+            composable(Screen.Streaks.route) {
+                StreakScreen(
+                    navController = navController,
+                    paddingValues = innerPadding) }
+            composable(Screen.Content.route) { ContentScreen(navController = navController, paddingValues = innerPadding) }
+            composable(Screen.Quiz.route) { QuizScreen(navController = navController, paddingValues = innerPadding) }
+            composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController, paddingValues = innerPadding) }
 
             composable(
                 route = "${Screen.QuizComplete.route}/{correctAnswers}/{totalQuestions}/{totalPoints}",
@@ -142,7 +143,8 @@ fun AppNavigation() {
                     navArgument("totalQuestions") { type = NavType.IntType; defaultValue = 0 },
                     navArgument("totalPoints") { type = NavType.IntType }
                 )
-            ) { backstackEntry ->
+                )
+             { backstackEntry ->
                 val correctAnswers = backstackEntry.arguments?.getInt("correctAnswers") ?: 0
                 val totalQuestions = backstackEntry.arguments?.getInt("totalQuestions") ?: 1
                 val totalPoints = backstackEntry.arguments?.getInt("totalPoints") ?: 0

@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -72,24 +73,32 @@ fun rememberMantraPlayer(audioResId: Int?): Pair<Boolean, () -> Unit> {
 @Composable
 fun HomeScreen(navController: NavController, paddingValues: PaddingValues, userName: String) {
     // The Scaffold is now in AppNavigation.kt, so we just provide the content.
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .background(Color(0xFFFFF7F0))
+            //.verticalScroll(rememberScrollState())
+            .background(Color(0xFFFFF7F0)),
+        contentPadding = paddingValues,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+
 
     ) {
-        HomeHeader(navController = navController, userName = userName) // Pass NavController
-        Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            DailyDharmaDropCard()
+        item {
+            Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding() + 30.dp))
+        }
+        item {
             Spacer(modifier = Modifier.height(24.dp))
-            SadhanaStreakCard()
-            Spacer(modifier = Modifier.height(24.dp))
-            QuickActions(navController = navController) // Pass NavController
-            Spacer(modifier = Modifier.height(24.dp))
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                DailyDharmaDropCard()
+                Spacer(modifier = Modifier.height(24.dp))
+                SadhanaStreakCard()
+                Spacer(modifier = Modifier.height(24.dp))
+                QuickActions(navController = navController) // Pass NavController
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
+    HomeHeader(navController = navController, userName = userName)
 }
 
 @Composable
@@ -100,7 +109,10 @@ fun HomeHeader(navController: NavController, userName: String) { // Accept NavCo
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
+            .background(
+                headerOrangeGradient,
+                shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+            )
             .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
     ) {
         Column(
@@ -282,16 +294,31 @@ fun QuickActions(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.WorkspacePremium, text = "Weekly Quiz", onClick = { navController.navigate("quiz") }, modifier = Modifier.weight(1f))
+            QuickActionItem(
+                icon = Icons.Outlined.WorkspacePremium,
+                text = "Weekly Quiz",
+                onClick = { navController.navigate("quiz") },
+                modifier = Modifier.weight(1f)
+            )
 
-            QuickActionItem(icon = Icons.Outlined.AutoStories, text = "Content", onClick = { navController.navigate(route = "content") }, modifier = Modifier.weight(1f))
+            QuickActionItem(
+                icon = Icons.Outlined.AutoStories,
+                text = "Content",
+                onClick = { navController.navigate(route = "content") },
+                modifier = Modifier.weight(1f)
+            )
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            QuickActionItem(icon = Icons.Outlined.Article, text = "Awareness", onClick = { navController.navigate("community") }, modifier = Modifier.weight(1f))
+            QuickActionItem(
+                icon = Icons.Outlined.Article,
+                text = "Awareness",
+                onClick = { navController.navigate("community") },
+                modifier = Modifier.weight(1f)
+            )
             QuickActionItem(
                 icon = Icons.Outlined.Whatshot,
                 text = "My Streaks",
@@ -303,7 +330,12 @@ fun QuickActions(navController: NavController) {
 }
 
 @Composable
-fun QuickActionItem(icon: ImageVector, text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun QuickActionItem(
+    icon: ImageVector,
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
         modifier = modifier.clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
@@ -338,5 +370,9 @@ fun QuickActionItem(icon: ImageVector, text: String, onClick: () -> Unit, modifi
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController(), paddingValues = PaddingValues(), userName = "User")
+    HomeScreen(
+        navController = rememberNavController(),
+        paddingValues = PaddingValues(),
+        userName = "User"
+    )
 }
