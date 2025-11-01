@@ -3,6 +3,7 @@ package com.DeepSoni.vedaconnect.feature.streak
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,27 +31,35 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun StreakScreen(navController: NavController, paddingValues: PaddingValues) {
     // The Scaffold is now in AppNavigation.kt
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .background(Color(0xFFFFF7F0)) // Set background here
+            //.verticalScroll(rememberScrollState())
+            .background(Color(0xFFFFF7F0)), // Set background here
+        contentPadding = paddingValues,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        StreakHeader()
-        Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            CurrentStreakCard()
-            Spacer(modifier = Modifier.height(24.dp))
-            WeeklyProgressCard()
-            Spacer(modifier = Modifier.height(24.dp))
-            StatsOverview()
-            Spacer(modifier = Modifier.height(24.dp))
-            BadgesSection()
-            Spacer(modifier = Modifier.height(24.dp))
-            ShareProgressButton()
-            Spacer(modifier = Modifier.height(24.dp))
+        item {
+            Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding() + 50.dp))
         }
+        item {
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                CurrentStreakCard()
+                Spacer(modifier = Modifier.height(24.dp))
+                WeeklyProgressCard()
+                Spacer(modifier = Modifier.height(24.dp))
+                StatsOverview()
+                Spacer(modifier = Modifier.height(24.dp))
+                BadgesSection()
+                Spacer(modifier = Modifier.height(24.dp))
+                ShareProgressButton()
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
+
+
     }
+    StreakHeader()
 }
 
 @Composable
@@ -61,7 +70,10 @@ fun StreakHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(headerOrangeGradient, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
+            .background(
+                headerOrangeGradient,
+                shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+            )
             .padding(top = 50.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
     ) {
         Column {
@@ -268,21 +280,63 @@ fun BadgesSection() {
         Spacer(modifier = Modifier.height(16.dp))
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                BadgeItem(icon = Icons.Outlined.Spa, title = "First Step", tier = "Bronze", earned = true, modifier = Modifier.weight(1f))
-                BadgeItem(icon = Icons.Outlined.StarOutline, title = "Dedicated", tier = "Silver", earned = true, modifier = Modifier.weight(1f))
-                BadgeItem(icon = Icons.Outlined.EmojiEvents, title = "Enlightened", tier = "Gold", earned = false, modifier = Modifier.weight(1f))
+                BadgeItem(
+                    icon = Icons.Outlined.Spa,
+                    title = "First Step",
+                    tier = "Bronze",
+                    earned = true,
+                    modifier = Modifier.weight(1f)
+                )
+                BadgeItem(
+                    icon = Icons.Outlined.StarOutline,
+                    title = "Dedicated",
+                    tier = "Silver",
+                    earned = true,
+                    modifier = Modifier.weight(1f)
+                )
+                BadgeItem(
+                    icon = Icons.Outlined.EmojiEvents,
+                    title = "Enlightened",
+                    tier = "Gold",
+                    earned = false,
+                    modifier = Modifier.weight(1f)
+                )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                BadgeItem(icon = Icons.Outlined.MenuBook, title = "Wisdom Seeker", tier = "Bronze", earned = true, modifier = Modifier.weight(1f))
-                BadgeItem(icon = Icons.Outlined.Forum, title = "Community Hero", tier = "Silver", earned = false, modifier = Modifier.weight(1f))
-                BadgeItem(icon = Icons.Outlined.WorkspacePremium, title = "Quiz Master", tier = "Gold", earned = true, modifier = Modifier.weight(1f))
+                BadgeItem(
+                    icon = Icons.Outlined.MenuBook,
+                    title = "Wisdom Seeker",
+                    tier = "Bronze",
+                    earned = true,
+                    modifier = Modifier.weight(1f)
+                )
+                BadgeItem(
+                    icon = Icons.Outlined.Forum,
+                    title = "Community Hero",
+                    tier = "Silver",
+                    earned = false,
+                    modifier = Modifier.weight(1f)
+                )
+                BadgeItem(
+                    icon = Icons.Outlined.WorkspacePremium,
+                    title = "Quiz Master",
+                    tier = "Gold",
+                    earned = true,
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
 }
 
 @Composable
-fun BadgeItem(icon: ImageVector, title: String, tier: String, earned: Boolean, modifier: Modifier = Modifier) {
+fun BadgeItem(
+    icon: ImageVector,
+    title: String,
+    tier: String,
+    earned: Boolean,
+    modifier: Modifier = Modifier
+) {
     val contentColor = if (earned) Color.Black else Color.LightGray
     val cardBackgroundColor = if (earned) Color.White else Color.White.copy(alpha = 0.7f)
     val tierColor = when (tier) {
@@ -296,7 +350,7 @@ fun BadgeItem(icon: ImageVector, title: String, tier: String, earned: Boolean, m
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = cardBackgroundColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = if(earned) 2.dp else 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = if (earned) 2.dp else 0.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
