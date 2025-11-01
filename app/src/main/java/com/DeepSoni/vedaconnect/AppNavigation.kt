@@ -130,7 +130,10 @@ fun AppNavigation() {
                 )
             }
 
-            composable(Screen.Streaks.route) { StreakScreen(navController = navController) }
+            composable(Screen.Streaks.route) {
+                StreakScreen(
+                    navController = navController,
+                    paddingValues = innerPadding) }
             composable(Screen.Content.route) { ContentScreen(navController = navController) }
             composable(Screen.Quiz.route) { QuizScreen(navController = navController) }
             composable(Screen.QuizStart.route) { QuizStartScreen(navController = navController) }
